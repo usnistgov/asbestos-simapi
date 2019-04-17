@@ -108,4 +108,42 @@ class Installation {
         return val;
     }
 
+    File actorsDir() {
+        return new File(externalCache() + File.separator + "actors");
+    }
+
+    File actorsDir(TestSession testSession) {
+        assert testSession : "TestSession is null"
+        File f = new File(actorsDir(), testSession.getValue());
+        f.mkdirs();
+        return f;
+    }
+
+    List<TestSession> getTestSessions() {
+        Set<TestSession> ts = new HashSet<>();
+        File tlsFile
+
+        tlsFile = simDbFile();
+        if (tlsFile.exists()) {
+            for (File tlFile : tlsFile.listFiles()) {
+                if (tlFile.isDirectory() && !tlFile.getName().startsWith("."))
+                    ts.add(new TestSession(tlFile.getName()));
+            }
+        }
+
+        tlsFile = actorsDir();
+        if (tlsFile.exists()) {
+            for (File tlFile : tlsFile.listFiles()) {
+                if (tlFile.isDirectory() && !tlFile.getName().startsWith("."))
+                    ts.add(new TestSession(tlFile.getName()));
+            }
+        }
+        List<TestSession> testSessions = new ArrayList<>();
+        testSessions.addAll(ts);
+        return testSessions;
+    }
+
+    boolean testSessionExists(TestSession testSession) {
+        return getTestSessions().contains(testSession);
+    }
 }

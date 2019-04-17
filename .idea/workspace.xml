@@ -2,29 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="32a6fcae-8ad1-4d2d-997a-9d8d2169e34c" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/gov/nist/tk/installation/PropertyServiceManager.groovy" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/gov/nist/tk/simCommon/BaseActorSimulator.groovy" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/gov/nist/tk/simCommon/RuntimeManager.groovy" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/gov/nist/tk/simCommon/SimCommon.groovy" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/gov/nist/tk/simCommon/SimulatorConfigIo.groovy" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/gov/nist/tk/simCommon/SimulatorConfigIoFactory.groovy" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/gov/nist/tk/simCommon/SimulatorConfigIoJackson.groovy" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/gov/nist/tk/simCommon/SiteServiceManager.groovy" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/gov/nist/tk/stubs/MessageValidatorEngine.groovy" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/gov/nist/tk/stubs/ValidationContext.groovy" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/gov/nist/tk/util/UuidAllocator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/gov/nist/toolkit/envSettings/EnvSetting.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/gov/nist/tk/siteManagement/SeparateSiteLoader.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/gov/nist/tk/siteManagement/SiteLoader.groovy" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/gov/nist/tk/installation/Installation.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gov/nist/tk/installation/Installation.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gov/nist/tk/simCommon/AbstractActorFactory.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gov/nist/tk/simCommon/AbstractActorFactory.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gov/nist/tk/simCommon/FSimDb.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gov/nist/tk/simCommon/FSimDb.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gov/nist/tk/simCommon/GenericSimulatorFactory.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gov/nist/tk/simCommon/GenericSimulatorFactory.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gov/nist/tk/simCommon/SimDb.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gov/nist/tk/simCommon/SimDb.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gov/nist/tk/simCommon/SimManager.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gov/nist/tk/simCommon/SimManager.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gov/nist/toolkit/toolkitApi/AbstractActor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gov/nist/toolkit/toolkitApi/AbstractActor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/gov/nist/toolkit/toolkitApi/AbstractActorInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gov/nist/toolkit/toolkitApi/AbstractActorInterface.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/gov/nist/tk/simCommon/SiteServiceManager.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/gov/nist/tk/simCommon/SiteServiceManager.groovy" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -39,14 +21,14 @@
     <option name="delegatedBuild" value="true" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.6967404">
+    <splitter split-orientation="horizontal" split-proportion="0.57683355">
       <split-first>
         <leaf>
-          <file pinned="false" current-in-tab="true">
+          <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/main/java/gov/nist/tk/simCommon/AbstractActorFactory.groovy">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="196">
-                  <caret line="14" selection-start-line="14" selection-end-line="14" />
+                <state relative-caret-position="335">
+                  <caret line="239" column="33" selection-start-line="239" selection-start-column="33" selection-end-line="239" selection-end-column="33" />
                   <folding>
                     <element signature="e#31#66#0" expanded="true" />
                   </folding>
@@ -78,10 +60,34 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/main/java/gov/nist/tk/simCommon/SiteServiceManager.groovy">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="630">
-                  <caret line="57" column="42" selection-start-line="57" selection-start-column="42" selection-end-line="57" selection-end-column="42" />
+                <state relative-caret-position="294">
+                  <caret line="120" column="41" selection-start-line="120" selection-start-column="23" selection-end-line="120" selection-end-column="41" />
                   <folding>
                     <element signature="e#31#66#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/src/main/java/gov/nist/tk/siteManagement/SeparateSiteLoader.groovy">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="434">
+                  <caret line="31" column="48" lean-forward="true" selection-start-line="31" selection-start-column="48" selection-end-line="31" selection-end-column="48" />
+                  <folding>
+                    <element signature="e#36#76#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/main/java/gov/nist/tk/siteManagement/SiteLoader.groovy">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="350">
+                  <caret line="25" column="12" selection-start-line="25" selection-start-column="12" selection-end-line="25" selection-end-column="12" />
+                  <folding>
+                    <element signature="e#36#76#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
@@ -123,44 +129,20 @@
               </provider>
             </entry>
           </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/main/java/gov/nist/toolkit/envSettings/EnvSetting.groovy">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="880">
-                  <caret line="93" selection-start-line="93" selection-end-line="93" />
-                  <folding>
-                    <element signature="e#38#82#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/main/java/gov/nist/tk/simCommon/RuntimeManager.groovy">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="852">
-                  <caret line="70" selection-start-line="70" selection-end-line="70" />
-                  <folding>
-                    <element signature="e#31#66#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
         </leaf>
       </split-first>
       <split-second>
         <leaf>
-          <file pinned="false" current-in-tab="false">
+          <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/main/java/gov/nist/tk/installation/Installation.groovy">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="335">
-                  <caret line="55" column="9" selection-start-line="55" selection-start-column="9" selection-end-line="55" selection-end-column="9" />
+                <state relative-caret-position="558">
+                  <caret line="116" selection-start-line="116" selection-end-line="116" />
                 </state>
               </provider>
             </entry>
           </file>
-          <file pinned="false" current-in-tab="true">
+          <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/main/java/gov/nist/tk/installation/PropertyServiceManager.groovy">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="140">
@@ -199,7 +181,6 @@
         <option value="$PROJECT_DIR$/src/main/java/gov/nist/tk/simCommon/BaseActorSimulator.groovy" />
         <option value="$PROJECT_DIR$/src/main/java/gov/nist/tk/simCommon/RuntimeManager.groovy" />
         <option value="$PROJECT_DIR$/src/main/java/gov/nist/toolkit/envSettings/EnvSetting.java" />
-        <option value="$PROJECT_DIR$/src/main/java/gov/nist/tk/installation/Installation.groovy" />
         <option value="$PROJECT_DIR$/src/main/java/gov/nist/toolkit/envSettings/EnvSetting.groovy" />
         <option value="$PROJECT_DIR$/src/main/java/gov/nist/tk/simCommon/SimulatorConfigIoFactory.java" />
         <option value="$PROJECT_DIR$/src/main/java/gov/nist/tk/simCommon/SimulatorConfigIo.java" />
@@ -211,8 +192,13 @@
         <option value="$PROJECT_DIR$/src/main/java/gov/nist/tk/simCommon/SiteServiceManager.java" />
         <option value="$PROJECT_DIR$/src/main/java/gov/nist/tk/installation/PropertyServiceManager.groovy" />
         <option value="$PROJECT_DIR$/src/main/java/gov/nist/tk/simCommon/SimManager.groovy" />
-        <option value="$PROJECT_DIR$/src/main/java/gov/nist/tk/simCommon/SiteServiceManager.groovy" />
         <option value="$PROJECT_DIR$/src/main/java/gov/nist/tk/simCommon/AbstractActorFactory.groovy" />
+        <option value="$PROJECT_DIR$/src/main/java/gov/nist/tk/simCommon/SiteServiceManager.groovy" />
+        <option value="$PROJECT_DIR$/src/main/java/gov/nist/tk/installation/Installation.groovy" />
+        <option value="$PROJECT_DIR$/src/main/java/gov/nist/tk/siteManagement/SeparateSiteLoader.java" />
+        <option value="$PROJECT_DIR$/src/main/java/gov/nist/tk/siteManagement/SeparateSiteLoader.groovy" />
+        <option value="$PROJECT_DIR$/src/main/java/gov/nist/tk/siteManagement/SiteLoader.java" />
+        <option value="$PROJECT_DIR$/src/main/java/gov/nist/tk/siteManagement/SiteLoader.groovy" />
       </list>
     </option>
   </component>
@@ -361,6 +347,7 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="gov.nist.tk.siteManagement" />
       <recent name="gov.nist.tk.simCommon" />
       <recent name="gov.nist.toolkit.envSettings" />
       <recent name="gov.nist.tk.util" />
@@ -391,12 +378,20 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1555511472092</updated>
-      <workItem from="1555511473833" duration="9282000" />
+      <workItem from="1555511473833" duration="10447000" />
     </task>
+    <task id="LOCAL-00001" summary="Pulling more of sim runtime">
+      <created>1555526421516</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1555526421516</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="9282000" />
+    <option name="totallyTimeSpent" value="10447000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="2007" y="27" width="1760" height="1173" extended-state="0" />
@@ -406,8 +401,8 @@
       <window_info id="Capture Tool" />
       <window_info id="UI Designer" />
       <window_info id="Favorites" side_tool="true" />
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49787235" visible="true" weight="0.18277067" />
-      <window_info id="Structure" order="1" sideWeight="0.50212765" side_tool="true" visible="true" weight="0.18277067" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49809885" visible="true" weight="0.18277067" />
+      <window_info id="Structure" order="1" sideWeight="0.50190115" side_tool="true" weight="0.18277067" />
       <window_info anchor="bottom" id="Terminal" />
       <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" side_tool="true" />
@@ -436,6 +431,12 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="CHECK_NEW_TODO" value="false" />
+    <MESSAGE value="Pulling more of sim runtime" />
+    <option name="LAST_COMMIT_MESSAGE" value="Pulling more of sim runtime" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/main/java/gov/nist/toolkit/toolkitApi/AbstractActorInterface.java">
@@ -551,20 +552,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/gov/nist/tk/installation/Installation.groovy">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="335">
-          <caret line="55" column="9" selection-start-line="55" selection-start-column="9" selection-end-line="55" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/gov/nist/tk/simCommon/SimDb.groovy">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="39" column="4" selection-start-line="39" selection-start-column="4" selection-end-line="39" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/gov/nist/tk/simCommon/GenericSimulatorFactory.groovy">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="686">
@@ -575,13 +562,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/gov/nist/tk/installation/PropertyServiceManager.groovy">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="140">
-          <caret line="10" column="39" selection-start-line="10" selection-start-column="39" selection-end-line="10" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/gov/nist/tk/simCommon/SimManager.groovy">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="446">
@@ -589,22 +569,63 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/gov/nist/tk/simCommon/SiteServiceManager.groovy">
+    <entry file="file://$PROJECT_DIR$/src/main/java/gov/nist/tk/simCommon/AbstractActorFactory.groovy">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="630">
-          <caret line="57" column="42" selection-start-line="57" selection-start-column="42" selection-end-line="57" selection-end-column="42" />
+        <state relative-caret-position="335">
+          <caret line="239" column="33" selection-start-line="239" selection-start-column="33" selection-end-line="239" selection-end-column="33" />
           <folding>
             <element signature="e#31#66#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/gov/nist/tk/simCommon/AbstractActorFactory.groovy">
+    <entry file="file://$PROJECT_DIR$/src/main/java/gov/nist/tk/simCommon/SimDb.groovy">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="196">
-          <caret line="14" selection-start-line="14" selection-end-line="14" />
+        <state relative-caret-position="342">
+          <caret line="39" column="4" selection-start-line="39" selection-start-column="4" selection-end-line="39" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/gov/nist/tk/installation/PropertyServiceManager.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="140">
+          <caret line="10" column="39" selection-start-line="10" selection-start-column="39" selection-end-line="10" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/gov/nist/tk/installation/Installation.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="558">
+          <caret line="116" selection-start-line="116" selection-end-line="116" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/gov/nist/tk/simCommon/SiteServiceManager.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="294">
+          <caret line="120" column="41" selection-start-line="120" selection-start-column="23" selection-end-line="120" selection-end-column="41" />
           <folding>
             <element signature="e#31#66#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/gov/nist/tk/siteManagement/SiteLoader.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="350">
+          <caret line="25" column="12" selection-start-line="25" selection-start-column="12" selection-end-line="25" selection-end-column="12" />
+          <folding>
+            <element signature="e#36#76#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/gov/nist/tk/siteManagement/SeparateSiteLoader.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="434">
+          <caret line="31" column="48" lean-forward="true" selection-start-line="31" selection-start-column="48" selection-end-line="31" selection-end-column="48" />
+          <folding>
+            <element signature="e#36#76#0" expanded="true" />
           </folding>
         </state>
       </provider>

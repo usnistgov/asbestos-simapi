@@ -55,9 +55,8 @@ import javax.xml.parsers.FactoryConfigurationError;
 		for (SimId simId : simIds) {
 			SimulatorConfig config = new SimDb().getSimulator(simId);
 			if (config != null) {
-				AbstractActorFactory af = getActorFactory(config);
-				if (af == null)
-					throw new ToolkitRuntimeException("No ActorFactory for " + config);
+				AbstractActorFactory af = AbstractActorFactory.getActorFactory(config);
+				assert af : "No ActorFactory for " + config
 				Site site = af.getActorSite(config, null);
 				sites.put(site.getName(), site);
 			}
@@ -66,7 +65,7 @@ import javax.xml.parsers.FactoryConfigurationError;
 		for (SimId simId : simIds) {
 			SimulatorConfig config = new SimDb().getSimulator(simId);
 			if (config!=null) {
-				AbstractActorFactory af = getActorFactory(config);
+				AbstractActorFactory af = AbstractActorFactory.getActorFactory(config);
 				Site site = af.getActorSite(config, null);
 				sites.put(site.getName(), site);
 			}
@@ -82,9 +81,7 @@ import javax.xml.parsers.FactoryConfigurationError;
 
 
 	 List<String> getSiteNames(String sessionId, boolean reload, boolean returnSimAlso, TestSession testSession, boolean qualified)   {
-		logger.debug(sessionId + ": " + "getSiteNames");
 
-		try {
 			if (returnSimAlso) {  // implemented as return sim ONLY???
 				List<String> names = new ArrayList<>();
 				for (Site s : getAllSites(sessionId, testSession))
@@ -108,12 +105,6 @@ import javax.xml.parsers.FactoryConfigurationError;
 				nameList.addAll(names);
 				return nameList;
 			}
-		} catch (Exception e) {
-			String msg = "Error collection site names for " + ((returnSimAlso) ? "common sites and simulators" : "common sites");
-			logger.error(msg);
-			logger.error(ExceptionUtil.exception_details(e));
-			return new ArrayList<>();
-		}
 	}
 
 	private String getQualifiedName(Site s) {
