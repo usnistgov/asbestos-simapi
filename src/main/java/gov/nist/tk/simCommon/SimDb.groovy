@@ -507,7 +507,7 @@ import java.text.ParseException
 	 * @throws IOException
 	 * @throws ClassNotFoundException
 	 */
-	 SimulatorConfig getSimulator(SimId simId) throws SimDoesNotExistException {
+	 SimulatorConfig getSimulator(SimId simId)  {
 		SimulatorConfig config = null;
 		boolean okIfNotExist = true;
 		int retry = 3;
@@ -879,9 +879,8 @@ import java.text.ParseException
 
 	 byte[] getRequestMessageBody(String filenamebase) throws IOException {
 		File f = getRequestMsgBodyFile(filenamebase);
-		if (!f.exists())
-			throw new IOException("SimDB: Do not understand filename " + f);
-		return Io.bytesFromFile(f);
+		 assert f.exists() : "SimDB: ${f} does not exist"
+		 return f.bytes
 	}
 
 	 byte[] getResponseMessageBody() throws IOException {
@@ -890,9 +889,8 @@ import java.text.ParseException
 
 	 byte[] getResponseMessageBody(String filenamebase) throws IOException {
 		File f = getResponseMsgBodyFile(filenamebase);
-		if (!f.exists())
-			throw new IOException("SimDB: Do not understand filename " + f);
-		return Io.bytesFromFile(f);
+		 assert f.exists() : "SimDB: ${f} does not exist"
+		 return f.bytes
 	}
 
 	 File getLogFile() {
@@ -905,7 +903,7 @@ import java.text.ParseException
 	}
 
 	 void delete(File f) {
-		Io.delete(f);
+		 f.delete()
 	}
 
 	void rename(String fileNameBase, String newFileNameBase) throws IOException {

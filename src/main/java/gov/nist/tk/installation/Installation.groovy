@@ -6,6 +6,23 @@ import groovy.transform.TypeChecked
 @TypeChecked
 class Installation {
     private static Installation me = null;
+    private File externalCache
+
+    File  externalCache() {
+        assert externalCache : "External Cache location not set"
+        assert externalCache.exists() : "External Cache does not exist - ${externalCache}"
+        externalCache
+    }
+
+    void setExternalCache(File externalCache) {
+        this.externalCache = externalCache
+    }
+
+    File fsimDbFile() {
+        File f = new File(externalCache(), 'fsimDb')
+        f.mkdirs()
+        f
+    }
 
     static Installation instance() {
         if (me == null) {
@@ -18,23 +35,23 @@ class Installation {
     }
 
     String toString() {
-        "External Cache is ${externalCache}"
+        "External Cache is ${externalCache()}"
     }
 
-    public File fhirSimDbFile(TestSession testSession) {
+    File fhirSimDbFile(TestSession testSession) {
         return simDbFile(testSession);
     }
 
-    public File simDbFile(TestSession testSession) {
+    File simDbFile(TestSession testSession) {
         assert testSession : "TestSession is null"
         return new File(simDbFile(), testSession.getValue());
     }
 
-    public File simDbFile() {
+    File simDbFile() {
         return new File(externalCache(), "simdb");
     }
 
-    public static String asFilenameBase(Date date) {
+    static String asFilenameBase(Date date) {
         Calendar c  = Calendar.getInstance();
         c.setTime(date);
 
