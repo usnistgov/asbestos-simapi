@@ -7,6 +7,13 @@ import groovy.transform.TypeChecked
 class Installation {
     private static Installation me = null;
     private File externalCache
+    String servletContextName = 'asbestos'
+    PropertyServiceManager propertyServiceManager = new PropertyServiceManager()
+    File defaultEnvironmentFile = new File("${externalCache}/environment/default")
+
+    File environmentFile(String name) {
+        new File("${externalCache}/environment/${name}")
+    }
 
     File  externalCache() {
         assert externalCache : "External Cache location not set"
@@ -34,6 +41,10 @@ class Installation {
     private Installation() {
     }
 
+    PropertyServiceManager propertyServiceManager() {
+        propertyServiceManager
+    }
+
     String toString() {
         "External Cache is ${externalCache()}"
     }
@@ -48,7 +59,7 @@ class Installation {
     }
 
     File simDbFile() {
-        return new File(externalCache(), "simdb");
+        return new File(externalCache(), "fsimdb");
     }
 
     static String asFilenameBase(Date date) {

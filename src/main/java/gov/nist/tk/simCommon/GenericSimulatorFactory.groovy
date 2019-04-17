@@ -1,8 +1,7 @@
-package gov.nist.tk.simCommon;
+package gov.nist.tk.simCommon
 
-import gov.nist.toolkit.configDatatypes.client.TransactionType;
-import gov.nist.toolkit.simcommon.client.Simulator;
-import gov.nist.toolkit.sitemanagement.client.Site
+import gov.nist.tk.actors.TransactionType
+import gov.nist.tk.siteManagement.Site;
 import groovy.transform.TypeChecked;
 
 import java.util.List;
@@ -43,7 +42,7 @@ import java.util.List;
 	}
 
 	@Override
-	 Site buildActorSite(SimulatorConfig asc, Site site) {
+	Site buildActorSite(SimulatorConfig asc, Site site) {
 		return null;
 	}
 

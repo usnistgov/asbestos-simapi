@@ -9,6 +9,14 @@ import groovy.transform.TypeChecked
 @TypeChecked
 class FSimDb {
     File fsimDb = Installation.instance().fsimDbFile()
+    SimDb simDb
 
+    FSimDb() {
+        simDb = new SimDb()
+    }
+
+    FSimDb(SimId simId) {
+        simDb = new SimDb(simId)
+    }
 
 }

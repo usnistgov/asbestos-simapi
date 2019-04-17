@@ -1,7 +1,8 @@
 package gov.nist.tk.simCommon
 
 import gov.nist.tk.actors.ActorType
-import gov.nist.tk.siteManagement.Site;
+import gov.nist.tk.siteManagement.Site
+import gov.nist.tk.siteManagement.Sites;
 import groovy.transform.TypeChecked;
 import org.apache.log4j.Logger;
 
@@ -32,15 +33,11 @@ import org.apache.log4j.Logger;
 //  class is compiled for the client and some of these classes (ActorFactory)
 //	do not belong on the client side.
 //*****************************************
-	static  Site getSite(SimulatorConfig config) throws ToolkitRuntimeException, NoSimulatorException {
+	static  Site getSite(SimulatorConfig config) {
 		AbstractActorFactory af = getActorFactory(config);
 //        logger.info("Getting original actor factory to generate site - " + af.getClass().getName());
 		Site site = af.getActorSite(config, null);
-		if (site == null) {
-			String err = "Simulator " + config.getId() + "(type " + af.getClass().getName() + ") threw error when asked to generate site object";
-			logger.error(err);
-			throw new ToolkitRuntimeException(err);
-		}
+		assert site : "Simulator " + config.getId() + "(type " + af.getClass().getName() + ") threw error when asked to generate site object"
 		return site.setSimulator(true);
 	}
 
@@ -51,11 +48,9 @@ import org.apache.log4j.Logger;
 		return af;
 	}
 
-	static  Site getSite(SimId simId) throws SimDoesNotExistException, ToolkitRuntimeException, NoSimulatorException {
+	static  Site getSite(SimId simId)  {
 		SimulatorConfig config = new SimDb().getSimulator(simId);
-		if (config == null) {
-			throw new SimDoesNotExistException("Simulator " + simId.toString() + " does not exist");
-		}
+		assert config : "Simulator " + simId.toString() + " does not exist"
 		return getSite(config);
 	}
 
@@ -89,8 +84,7 @@ import org.apache.log4j.Logger;
 				Site site = getSite(simId);
 				if (site != null)
 					sites.putSite(site);
-			} catch (NoSimulatorException nse) {
-			} catch (SimDoesNotExistException sdnee) {
+			} catch (Throwable nse) {
 			}
 		}
 

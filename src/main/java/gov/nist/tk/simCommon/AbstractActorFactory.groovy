@@ -1,11 +1,18 @@
 package gov.nist.tk.simCommon
 
 import gov.nist.tk.actors.ActorType
-import gov.nist.tk.actors.TransactionType;
+import gov.nist.tk.actors.TransactionType
+import gov.nist.tk.installation.Installation
+import gov.nist.tk.installation.PropertyServiceManager
+import gov.nist.tk.siteManagement.Site
+import gov.nist.tk.util.UuidAllocator
+import gov.nist.toolkit.configDatatypes.client.FhirVerb
+import gov.nist.toolkit.configDatatypes.client.PatientErrorMap
+import gov.nist.toolkit.configDatatypes.server.SimulatorProperties
+import gov.nist.toolkit.envSettings.EnvSetting;
 import groovy.transform.TypeChecked;
 import org.apache.log4j.Logger;
 
-import java.lang.reflect.InvocationTargetException;
 
 /**
  * Factory class for simulators.  Technically ActorFactry is no longer accurate
@@ -23,9 +30,9 @@ import java.lang.reflect.InvocationTargetException;
 	 *  Abstracts
 	 *
 	 */
-	protected abstract Simulator buildNew(SimManager simm, SimId simId, String environment, boolean configureBase) throws Exception;
-	protected abstract void verifyActorConfigurationOptions(SimulatorConfig config) throws Exception;
-	 abstract Site buildActorSite(SimulatorConfig asc, Site site) throws NoSimulatorException;
+	protected abstract Simulator buildNew(SimManager simm, SimId simId, String environment, boolean configureBase)
+	protected abstract void verifyActorConfigurationOptions(SimulatorConfig config)
+	 abstract Site buildActorSite(SimulatorConfig asc, Site site)
 	 abstract List<TransactionType> getIncomingTransactions();
 
 	private static boolean initialized = false;
@@ -43,23 +50,19 @@ import java.lang.reflect.InvocationTargetException;
 		// 1. Extend class AbstractActorFactory
 
 
-		for (ActorType actorType : ActorType.values()) {
+		for (ActorType actorType : ActorType.types) {
 			String factoryClassName = actorType.getSimulatorFactoryName();
-			if (factoryClassName == null || factoryClassName.equals("")) continue;
-			try {
+			if (!factoryClassName) continue;
 				Class c = Class.forName(factoryClassName);
 				AbstractActorFactory inf = (AbstractActorFactory) c.newInstance();
 				logger.info("Loading ActorType " + actorType.getName());
 				theFactories.put(actorType.getName(), inf);
-			} catch (Throwable t) {
-				logger.fatal("AbstractActorFactory: Cannot load factory class for Actor Type " + actorType.getName() + " - " + ExceptionUtil.exception_details(t));
-			}
 		}
 		initialized = true;
 		return theFactories;
 	}
 
-	 Site getActorSite(SimulatorConfig asc, Site site) throws NoSimulatorException {
+	Site getActorSite(SimulatorConfig asc, Site site)  {
 		Site finalSite = buildActorSite(asc, site);
 		if (finalSite == null) return null;
 		finalSite.setOwner(asc.getTestSession().getValue());
@@ -156,8 +159,7 @@ import java.lang.reflect.InvocationTargetException;
         logger.info("Build New Simulator " + simtype);
 		ActorType at = ActorType.findActor(simtype);
 
-		if (at == null)
-			throw new NoSimException("Simulator type [" + simtype + "] does not exist");
+		 assert at : "Simulator type [" + simtype + "] does not exist"
 
 		return buildNewSimulator(simm, at, simID, environment, save);
 
@@ -258,14 +260,8 @@ import java.lang.reflect.InvocationTargetException;
 		String id = UuidAllocator.allocate();
 		String[] parts = id.split(":");
 		id = parts[2];
-		//		id = id.replaceAll("-", "_");
 
-        try {
             return new SimId(testSession, id);
-        }
-        catch (Exception e) {
-            throw new ToolkitRuntimeException("Internal error: " + e.getMessage(), e);
-        }
 	}
 
 	String mkEndpoint(SimulatorConfig asc, SimulatorConfigElement ele, boolean isTLS) throws Exception {
@@ -345,10 +341,9 @@ import java.lang.reflect.InvocationTargetException;
         delete(config.getId());
     }
 
-    static  void delete(SimId simId) throws Exception {
+    static  void delete(SimId simId) {
         logger.info("delete simulator " + simId);
 		SimDb simdb;
-		try {
 			BaseActorSimulator sim = RuntimeManager.getSimulatorRuntime(simId);
 			SimulatorConfig config = loadSimulator(simId, true);
 			if (config != null)
@@ -356,33 +351,9 @@ import java.lang.reflect.InvocationTargetException;
 
 			simdb = new SimDb(simId);
 			simdb.delete();
-        } catch (NoSimException e) {
-			return;
-		} catch (ClassNotFoundException e) {
-			logger.error(ExceptionUtil.exception_details(e));
-		} catch (InvocationTargetException e) {
-			logger.error(ExceptionUtil.exception_details(e));
-		} catch (InstantiationException e) {
-			logger.error(ExceptionUtil.exception_details(e));
-		} catch (IllegalAccessException e) {
-			logger.error(ExceptionUtil.exception_details(e));
-		}
-
-//		AbstractActorFactory actorFactory = getActorFactory(config);
 	}
 
-//	static  boolean simExists(SimulatorConfig config) throws IOException {
-//		SimDb simdb;
-//		try {
-//			simdb = new SimDb(config.getId());
-//		} catch (NoSimException e) {
-//			return false;
-//		}
-//		File simDir = simdb.getSimDir();
-//		return simDir.exists();
-//	}
-
-	static  List<TransactionInstance> getTransInstances(SimId simid, String xactor, String trans) throws NoSimException
+	static  List<TransactionInstance> getTransInstances(SimId simid, String xactor, String trans)
 	{
 		SimDb simdb;
 		simdb = new SimDb(simid);
@@ -404,11 +375,9 @@ import java.lang.reflect.InvocationTargetException;
 		new SimDb(simId).updateSimConfiguration();
 	}
 
-	@Obsolete
 	static  void renameSimFile(String simFileSpec, String newSimFileSpec)
 			throws Exception {
 		throw new Exception("Not Implemented");
-//		new SimDb().rename(simFileSpec, newSimFileSpec);
 	}
 
 	static  List<SimulatorConfig> getSimConfigs(ActorType actorType, TestSession testSession) {
@@ -419,14 +388,10 @@ import java.lang.reflect.InvocationTargetException;
 		List<SimId> allSimIds = SimDb.getAllSimIds(testSession);
 		List<SimulatorConfig> simConfigs = new ArrayList<>();
 
-		try {
 			for (SimulatorConfig simConfig : loadSimulators(allSimIds)) {
 				if (actorTypeName.equals(simConfig.getActorType()))
 					simConfigs.add(simConfig);
 			}
-		} catch (Exception e) {
-			throw new ToolkitRuntimeException("Error loading simulators of type " + actorTypeName + ".", e);
-		}
 
 		return simConfigs;
 	}
@@ -436,11 +401,8 @@ import java.lang.reflect.InvocationTargetException;
 	 * Load simulators - IOException if sim not found
 	 * @param ids
 	 * @return
-	 * @throws IOException
-	 * @throws ClassNotFoundException
-	 * @throws NoSimException
 	 */
-	static  List<SimulatorConfig> loadSimulators(List<SimId> ids) throws Exception {
+	static  List<SimulatorConfig> loadSimulators(List<SimId> ids)  {
 		List<SimulatorConfig> configs = new ArrayList<SimulatorConfig>();
 
 		for (SimId id : ids) {
@@ -464,14 +426,11 @@ import java.lang.reflect.InvocationTargetException;
 		List<SimulatorConfig> configs = new ArrayList<SimulatorConfig>();
 
 		for (SimId id : ids) {
-			try {
+				if (!SimDb.exists(id)) continue
 				SimDb simdb = new SimDb(id);
 				File simCntlFile = simdb.getSimulatorControlFile();
 				SimulatorConfig config = restoreSimulator(simCntlFile.toString());
 				configs.add(config);
-			} catch (NoSimException e) {
-				continue;
-			}
 		}
 
 		return configs;
@@ -479,16 +438,6 @@ import java.lang.reflect.InvocationTargetException;
 
 	private static SimulatorConfig restoreSimulator(String filename) throws Exception {
 		return SimulatorConfigIoFactory.impl().restoreSimulator(filename);
-//		return SimulatorConfigIoJava.restoreSimulator(filename);
-//		FileInputStream fis = null;
-//		ObjectInputStream in = null;
-//		SimulatorConfig config;
-//		fis = new FileInputStream(filename);
-//		in = new ObjectInputStream(fis);
-//		config = (SimulatorConfig)in.readObject();
-//		in.close();
-//
-//		return config;
 	}
 
 	 static SimulatorConfig loadSimulator(SimId simid, boolean okifNotExist) throws Exception {
@@ -510,13 +459,11 @@ import java.lang.reflect.InvocationTargetException;
 
 	}
 
-	static  SimulatorConfig getSimConfig(SimId simulatorId) throws Exception {
-		if (SimDb.exists(simulatorId)) {
+	static  SimulatorConfig getSimConfig(SimId simulatorId)  {
+		assert SimDb.exists(simulatorId) : "No simulator for simId: " + simulatorId.toString()
 			SimDb simdb = new SimDb(simulatorId);
 			File simCntlFile = simdb.getSimulatorControlFile();
 			return restoreSimulator(simCntlFile.toString());
-		}
-		throw new ToolkitRuntimeException("No simulator for simId: " + simulatorId.toString());
 	}
 
 	protected boolean isEndpointSecure(String endpoint) {
@@ -573,13 +520,13 @@ import java.lang.reflect.InvocationTargetException;
 
 	 void setConfig(SimulatorConfig sc, String name, String value) {
 		SimulatorConfigElement ele = sc.getUserByName(name);
-		if (ele == null) throw new ToolkitRuntimeException("Simulator " + sc.getId() + " does not have a parameter named " + name + " or cannot set its value");
+		 assert ele : "Simulator " + sc.getId() + " does not have a parameter named " + name + " or cannot set its value"
 		ele.setStringValue(value);
 	}
 
 	 void setConfig(SimulatorConfig sc, String name, Boolean value) {
 		SimulatorConfigElement ele = sc.getUserByName(name);
-		if (ele == null) throw new ToolkitRuntimeException("Simulator " + sc.getId() + " does not have a parameter named " + name + " or cannot set its value");
+		 assert ele : "Simulator " + sc.getId() + " does not have a parameter named " + name + " or cannot set its value"
 		ele.setBooleanValue(value);
 	}
 

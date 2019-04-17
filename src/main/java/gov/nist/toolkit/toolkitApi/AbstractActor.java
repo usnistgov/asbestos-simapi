@@ -1,5 +1,6 @@
 package gov.nist.toolkit.toolkitApi;
 
+import gov.nist.tk.actors.TransactionType;
 import gov.nist.toolkit.configDatatypes.client.PatientErrorMap;
 import gov.nist.toolkit.configDatatypes.server.SimulatorProperties;
 import gov.nist.toolkit.toolkitServicesCommon.RefList;

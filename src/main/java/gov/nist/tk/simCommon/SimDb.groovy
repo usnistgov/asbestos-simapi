@@ -6,8 +6,6 @@ import gov.nist.tk.installation.Installation
 import groovy.transform.TypeChecked
 import org.apache.log4j.Logger
 
-import java.text.ParseException
-
 
 /**
  * Each simulator has an on-disk presence that keeps track of its long
@@ -22,7 +20,7 @@ import java.text.ParseException
 	private final PidDb pidDb = new PidDb(this);
 	SimId simId = null;    // ip is the simulator id
 	private String event = null;
-	private Date eventDate;
+	private String eventDate;
 	private File simDir = null;   // directory within simdb that represents this simulator
 	private String actor = null;
 	private String transaction = null;
@@ -40,7 +38,7 @@ import java.text.ParseException
 	 * @param simId
 	 */
 	SimDb(SimId simId) {
-		assert simId : "SimDb - cannot build SimDb with null simId"
+		assert simId : "SimDb - cannot open SimDb with null simId"
 		assert simId?.testSession?.value : "SimId not assigned to a TestSession - ${simId}"
 		File dbRoot = getSimDbFile(simId);
 		this.simId = simId;
@@ -80,10 +78,10 @@ import java.text.ParseException
 		if (openToLastTransaction) {
 			openMostRecentEvent(actor, transaction)
 		} else {
-			eventDate = new Date();
+			eventDate = new Date().getDateTimeString()
 			File eventDir = mkEventDir(eventDate);
 			eventDir.mkdirs();
-			Serialize.out(new File(eventDir, "date.ser"), eventDate);
+			new File(eventDir, 'date.txt').text = eventDate
 		}
 	}
 
@@ -92,13 +90,8 @@ import java.text.ParseException
 	SimDb mkSim(SimId simid, String actor) {
 		assert simid?.testSession?.value
 
-		// if this is a FHIR sim there is a different factory method to use
-		ActorType actorType = ActorType.findActor(actor);
-		if (actorType == ActorType.FHIR_SERVER)
 			simid.forFhir()
-		if (simid.isFhir()) {
 			return mkfSim(simid)
-		}
 
 		File dbRoot = getSimDbFile(simid.testSession);
 		validateSimId(simid);
@@ -139,24 +132,17 @@ import java.text.ParseException
 
 
 	/**
-	 * Return base dir of SimDb storage
-	 * or its FHIR equivalent if the SimId is from a FHIR sim
+	 * All sims in this package are FHIR
 	 * @return
 	 */
 
-	static public File getSimDbFile(SimId simId) {
+	static File getSimDbFile(SimId simId) {
 		assert simId?.testSession?.value
-		if (simId.isFhir())
-			return Installation.instance().fhirSimDbFile(simId.testSession);
 		return Installation.instance().simDbFile(simId.testSession);
 	}
 
-	static  File getSimDbFile(TestSession testSession) {
+	static File getSimDbFile(TestSession testSession) {
 		return Installation.instance().simDbFile(testSession)
-	}
-
-	static  File getFSimDbFile(TestSession testSession) {
-		return Installation.instance().fhirSimDbFile(testSession)
 	}
 
 	static boolean isFSim(SimId simId) {
@@ -171,8 +157,7 @@ import java.text.ParseException
 	 * simdb directory, false otherwise.
 	 */
 	static boolean exists(SimId simId) {
-		File f = new File(getSimDbFile(simId), simId.toString())
-		return f.exists()
+		new File(getSimDbFile(simId), simId.toString())?.exists()
 	}
 
 	void createSimSafetyFile() {
@@ -212,22 +197,17 @@ import java.text.ParseException
 
 	 PidDb getPidDb() { return pidDb; }
 
-	 static void validateSimId(SimId simId) throws IOException {
+	 static void validateSimId(SimId simId)  {
 		String badChars = " \t\n<>{}.";
-		if (simId == null)
-			throw new IOException("Simulator ID is null");
+		 assert simId : "Simulator ID is null"
 		String id = simId.getId();
 		if (id != null) {
 			for (int i = 0; i < badChars.length(); i++) {
 				String c = new String(badChars.charAt(i));
-				if (id.indexOf(c) != -1)
-					throw new IOException(String.format("Simulator ID contains bad character at position %d (%s)(%04x)", i, c, (int) c.charAt(0)));
-				if (id.indexOf(c) != -1)
-					throw new IOException(String.format("Simulator User (testSession) contains bad character at position %d", i));
+				assert id.indexOf(c) == -1 : String.format("Simulator ID contains bad character at position %d (%s)(%04x)", i, c, (int) c.charAt(0))
 			}
 		}
-		if (simId.testSession == null)
-			throw new IOException("Simulator ID TestSession is null");
+		 assert simId.testSession : "Simulator ID TestSession is null"
 	}
 
 	private File simSafetyFile() { return new File(simDir, "simId.txt"); }
@@ -239,7 +219,7 @@ import java.text.ParseException
 	private static boolean isSimDir(File dir) { return new File(dir, "simId.txt").exists(); }
 
 
-	Date getEventDate() {
+	String getEventDate() {
 		return eventDate;
 	}
 
@@ -284,7 +264,7 @@ import java.text.ParseException
 		eventDate = otherSimDb.getEventDate()
 		File eventDir = mkEventDir(event)
 		eventDir.mkdirs()
-		Serialize.out(new File(eventDir, 'date.ser'), eventDate)
+		new File(eventDir, 'date.txt').text = eventDate
 	}
 
 	File transactionDirectory(String actor, String transaction) {
@@ -294,8 +274,7 @@ import java.text.ParseException
 		String transdir = new File(new File(simDir, actor), transaction).path;
 		File dir = new File(transdir);
 		dir.mkdirs();
-		if (!dir.isDirectory())
-			throw new IOException("Cannot create content in Simulator database, creation of " + transactionDir + " failed");
+		assert dir.isDirectory() : "Cannot create content in Simulator database, creation of " + transactionDir + " failed"
 		return dir
 	}
 
@@ -350,7 +329,7 @@ import java.text.ParseException
 	String getClientIpAddress() {
 		File eventDir = getEventDir()
 		if (eventDir?.isDirectory()) {
-			return Io.stringFromFile(new File(eventDir, 'ip.txt'))
+			return new File(eventDir, 'ip.txt').text
 		}
 		return null;
 	}
@@ -359,15 +338,14 @@ import java.text.ParseException
 		String transdir = new File(new File(simDir, actor), transaction).path;
 		transactionDir = new File(transdir);
 		transactionDir.mkdirs();
-		if (!transactionDir.isDirectory())
-			throw new IOException("Cannot create content in Simulator database, creation of " + transactionDir + " failed");
+		assert transactionDir.isDirectory() : "Cannot create content in Simulator database, creation of " + transactionDir + " failed"
 	}
 
 	// actor, transaction, and event must be filled in
-	private Date retrieveEventDate() throws IOException, ClassNotFoundException {
+	private String retrieveEventDate() {
 		if (transactionDir == null || event == null) return null;
 		File eventDir = new File(transactionDir, event);
-		eventDate = (Date) Serialize.in(new File(eventDir, "date.ser"));
+		eventDate = new File(eventDir, "date.txt").text
 		return eventDate;
 	}
 
@@ -451,26 +429,9 @@ import java.text.ParseException
 		return true;
 	}
 
-	static void scanAllSims() {
-		List<TestSession> testSessions = Installation.instance().getTestSessions()
-		testSessions.each { TestSession testSession ->
-			List<SimId> simIds = getAllSimIds(testSession)
-			simIds.each { SimId simId ->
-				if (!isValid(simId))
-					throw new ToolkitRuntimeException("Invalid SIM ${simId} found")
-			}
-		}
-	}
-
 	static List<SimId> getAllSimIds(TestSession testSession) {
 
-		List soapSimIds = getSimDbFile(testSession).listFiles().findAll { File file ->
-			isSimDir(file)
-		}.collect { File dir ->
-			internalSimIdBuilder (dir, testSession)
-		}
-
-		List fhirSimIds = getFSimDbFile(testSession).listFiles().findAll { File file ->
+		List fhirSimIds = getSimDbFile(testSession).listFiles().findAll { File file ->
 			isSimDir(file)
 		}.collect { File dir ->
 			internalSimIdBuilder(dir, testSession)
@@ -485,7 +446,7 @@ import java.text.ParseException
 			} as Set
 		}
 
-		def ids = (soapSimIds + fhirSimIds + defaultSims) as Set<SimId>
+		def ids = (fhirSimIds + defaultSims) as Set<SimId>
 		return ids as List<SimId>
 	}
 
@@ -504,8 +465,7 @@ import java.text.ParseException
 	/**
 	 * Get a simulator.
 	 * @return simulator if it exists or null
-	 * @throws IOException
-	 * @throws ClassNotFoundException
+	 *
 	 */
 	 SimulatorConfig getSimulator(SimId simId)  {
 		SimulatorConfig config = null;
@@ -521,8 +481,7 @@ import java.text.ParseException
 			}
 		}
 
-		if (!okIfNotExist && retry==0 && config==null)
-			throw new SimDoesNotExistException("Null config for " + simId.toString() + " even after retry attempts.");
+		 assert okIfNotExist || !retry || !config : "Null config for " + simId.toString() + " even after retry attempts."
 
 		return config;
 	}
@@ -538,21 +497,6 @@ import java.text.ParseException
 	 File getTransactionDir(TransactionType tt) {
 		String trans = getTransactionDirName(tt);
 		return new File(new File(simDir, actor), trans)
-	}
-
-	 File getObjectFile(DbObjectType type, String id) {
-		if (id == null)
-			return null;
-		if (!id.startsWith("urn:uuid:"))
-			return null;
-
-		// version of uuid that could be used as filename
-		String x = id.substring(9).replaceAll("-", "_");
-
-		File registryDir = new File(getDBFilePrefix(event), type.getName());
-		registryDir.mkdirs();
-
-		return new File(registryDir.toString() + File.separator + x + ".xml");
 	}
 
 	 List<String> getTransactionNames(String actorType) {
@@ -600,7 +544,7 @@ import java.text.ParseException
 		return new File(regDir.toString() + File.separator + "rep_db.ser");
 	}
 
-	String stripFileType(String filename, String filetype) {
+	static String stripFileType(String filename, String filetype) {
 		int dot = filename.lastIndexOf("." + filetype);
 		if (dot == -1) return filename;
 		return filename.substring(0, dot);
@@ -611,7 +555,7 @@ import java.text.ParseException
 		ActorType.findActor(config.actorType)
 	}
 
-	 List<SimId> getSimulatorIdsforActorType(ActorType actorType, TestSession testSession) throws IOException, NoSimException {
+	 static List<SimId> getSimulatorIdsforActorType(ActorType actorType, TestSession testSession)  {
 		List<SimId> allSimIds = getAllSimIds(testSession);
 		List<SimId> simIdsOfType = new ArrayList<>();
 		for (SimId simId : allSimIds) {
@@ -622,7 +566,7 @@ import java.text.ParseException
 		return simIdsOfType;
 	}
 
-	static  ActorType getSimulatorActorType(SimId simId) throws IOException, NoSimException {
+	static  ActorType getSimulatorActorType(SimId simId)  {
 		return new SimDb(simId).getSimulatorActorType();
 	}
 
@@ -642,7 +586,7 @@ import java.text.ParseException
 		return trans;
 	}
 
-	 String getSimulatorType() throws IOException {
+	 String getSimulatorType() {
 		SimulatorConfig config = AbstractActorFactory.getSimConfig(simId)
 		config.actorType
 	}
@@ -653,11 +597,11 @@ import java.text.ParseException
 		return new File(repDirFile.toString() + File.separator + oidToFilename(documentId) + ".bin");
 	}
 
-	private String oidToFilename(String oid) {
+	static private String oidToFilename(String oid) {
 		return oid.replaceAll("\\.", "_");
 	}
 
-	String filenameToOid(String filename) {
+	static String filenameToOid(String filename) {
 		return filename.replaceAll("_", ".");
 	}
 
@@ -727,11 +671,6 @@ import java.text.ParseException
 	// This messes with transactionDir which must be saved before and restored afterwards
 	TransactionInstance buildTransactionInstance(File actor, File inst, String name) {
 		TransactionInstance t = new TransactionInstance();
-		boolean isPif = false
-		if (name == TransactionType.PIF.shortName) {
-			isPif = true
-			t.isPif = true
-		}
 		t.simId = simId.toString();
 		t.actorType = ActorType.findActor(actor.getName());
 		t.messageId = inst.getName();
@@ -739,29 +678,25 @@ import java.text.ParseException
 		transactionDir = new File(actor, name);
 		//logger.debug("transaction dir is " + transactionDir);
 		event = t.messageId;
-		Date date = null;
+		String date = null;
 		try {
 			date = retrieveEventDate();
 		} catch (IOException e) {
 		} catch (ClassNotFoundException e) {
 		}
 //					if (date == null) continue;  // only interested in transactions that have dates
-		t.labelInterpretedAsDate = (date == null) ? event?:"" : date.toString();
+		t.labelInterpretedAsDate = (date == null) ? event?:"" : date
 		t.nameInterpretedAsTransactionType = TransactionType.find(t.trans);
 
 		String ipAddr = null;
 		File ipAddrFile = new File(inst, "ip.txt");
-		if (isPif) {
-
-		} else {
 			try {
-				ipAddr = Io.stringFromFile(ipAddrFile);
+				ipAddr = ipAddrFile.text
 				if (ipAddr != null && !ipAddr.equals("")) {
 					t.ipAddress = ipAddr;
 				}
 			} catch (IOException e) {
 			}
-		}
 		t
 	}
 
@@ -790,11 +725,11 @@ import java.text.ParseException
 		 getResponseBodyFile().text = content
 	}
 
-	 void putResponseBody(byte[] content) throws IOException {
+	 void putResponseBody(byte[] content) {
 		 getResponseBodyFile().withOutputStream { it.write content }
 	}
 
-	 String getResponseBody() throws IOException {
+	 String getResponseBody() {
 		 getResponseBodyFile().text
 	}
 
@@ -843,51 +778,41 @@ import java.text.ParseException
 		return new File(getDBFilePrefix(filenamebase), RESPONSE_BODY_TXT_FILE);
 	}
 
-	 String getRequestMessageHeader() throws IOException {
+	 String getRequestMessageHeader() {
 		return getRequestMessageHeader(event);
 	}
 
-	 String getRequestMessageHeader(String filenamebase) throws IOException {
+	 String getRequestMessageHeader(String filenamebase) {
 		File f = getRequestMsgHdrFile(filenamebase);
-		if (!f.exists())
-			throw new IOException("SimDb: Simulator Database file " + f.toString() + " does not exist");
-		return Io.stringFromFile(f);
+		 assert f.exists() : "SimDb: Simulator Database file " + f.toString() + " does not exist"
+		return f.text
 	}
 
-	 HttpMessage getParsedRequest() throws HttpParseException, ParseException, IOException, HttpHeader.HttpHeaderParseException {
-		HttpParser parser = new HttpParser(getRequestMessageHeader().getBytes());
-
-		HttpMessage msg = parser.getHttpMessage();
-		msg.setBody(new String(getRequestMessageBody()));
-		return msg;
-	}
-
-	 String getResponseMessageHeader() throws IOException {
+	 String getResponseMessageHeader() {
 		return getResponseMessageHeader(event);
 	}
 
-	 String getResponseMessageHeader(String filenamebase) throws IOException {
+	 String getResponseMessageHeader(String filenamebase) {
 		File f = getResponseMsgHdrFile(filenamebase);
-		if (!f.exists())
-			throw new IOException("SimDb: Simulator Database file " + f.toString() + " does not exist");
-		return Io.stringFromFile(f);
+		 assert f.exists() : "SimDb: Simulator Database file " + f.toString() + " does not exist"
+		return f.text
 	}
 
-	 byte[] getRequestMessageBody() throws IOException {
+	 byte[] getRequestMessageBody() {
 		return getRequestMessageBody(event);
 	}
 
-	 byte[] getRequestMessageBody(String filenamebase) throws IOException {
+	 byte[] getRequestMessageBody(String filenamebase)  {
 		File f = getRequestMsgBodyFile(filenamebase);
 		 assert f.exists() : "SimDB: ${f} does not exist"
 		 return f.bytes
 	}
 
-	 byte[] getResponseMessageBody() throws IOException {
+	 byte[] getResponseMessageBody()  {
 		return getResponseMessageBody(event);
 	}
 
-	 byte[] getResponseMessageBody(String filenamebase) throws IOException {
+	 byte[] getResponseMessageBody(String filenamebase)  {
 		File f = getResponseMsgBodyFile(filenamebase);
 		 assert f.exists() : "SimDB: ${f} does not exist"
 		 return f.bytes
@@ -897,7 +822,7 @@ import java.text.ParseException
 		return new File(getDBFilePrefix(event), "log.txt");
 	}
 
-	 void delete(String fileNameBase) throws IOException {
+	 void delete(String fileNameBase)  {
 		File f = getDBFilePrefix(fileNameBase);
 		delete(f);
 	}
@@ -906,7 +831,7 @@ import java.text.ParseException
 		 f.delete()
 	}
 
-	void rename(String fileNameBase, String newFileNameBase) throws IOException {
+	void rename(String fileNameBase, String newFileNameBase)  {
 
 		File from = getDBFilePrefix(fileNameBase);
 		File to = getDBFilePrefix(newFileNameBase);
@@ -1048,56 +973,19 @@ import java.text.ParseException
 		}
 	}
 
-	 void putRequestHeaderFile(byte[] bytes) throws IOException {
+	 void putRequestHeaderFile(byte[] bytes) {
 		File f = getRequestHeaderFile();
-		OutputStream out = new FileOutputStream(f);
-		try {
-			out.write(bytes);
-		} finally {
-			out.close();
-		}
+		 f.bytes = bytes
 	}
 
-	 void putRequestBodyFile(byte[] bytes) throws IOException {
-		OutputStream out = new FileOutputStream(getRequestBodyFile());
-		try {
-			out.write(bytes);
-		} finally {
-			out.close();
-		}
-		try {
-			Io.stringToFile(getAlternateRequestBodyFile(), new String(bytes));
-		} finally {
-			out.close();
-		}
+	 void putRequestBodyFile(byte[] bytes) {
+		 getRequestBodyFile().bytes = bytes
+		 getAlternateRequestBodyFile().text = new String(bytes)
 	}
 
 	void putResponseHeaderFile(byte[] bytes) {
-		Io.bytesToFile(getResponseHdrFile(), bytes)
+		getResponseHdrFile().bytes = bytes
 	}
-
-
-
-	 void putResponse(HttpMessage msg) throws IOException {
-		File hdrFile = getResponseHdrFile();
-		String hdrs = msg.getHeadersAsString();
-		OutputStream os = new FileOutputStream(hdrFile);
-		try {
-			os.write(hdrs.getBytes());
-		} finally {
-			os.close();
-		}
-
-		String body = msg.getBody();
-		File bodyFile = getResponseBodyFile();
-		os = new FileOutputStream(bodyFile);
-		try {
-			os.write(body.getBytes());
-		} finally {
-			os.close();
-		}
-	}
-
 
 	/**************************************************************************
 	 *
@@ -1155,7 +1043,7 @@ import java.text.ParseException
 	 */
 	static boolean fdelete(SimId simId) {
 		if (!fexists(simId)) return false
-		Io.delete(getSimBase(simId))
+		getSimBase(simId).delete()
 		return true
 	}
 
