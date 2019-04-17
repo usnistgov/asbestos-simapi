@@ -1,13 +1,8 @@
-package gov.nist.tk.actors;
+package gov.nist.tk.actors
 
-import com.google.gwt.user.client.rpc.IsSerializable;
-import gov.nist.toolkit.configDatatypes.client.FhirVerb;
-import gov.nist.toolkit.configDatatypes.client.TransactionType
+
 import groovy.json.JsonSlurper
-import groovy.transform.TypeChecked;
-
-import java.io.Serializable;
-import java.util.*;
+import groovy.transform.TypeChecked
 
 // This file must be kept up to date with SimulatorActorTypes.java
 

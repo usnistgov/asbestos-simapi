@@ -2,7 +2,6 @@ package gov.nist.tk.actors;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 import gov.nist.toolkit.configDatatypes.client.FhirVerb;
-import gov.nist.toolkit.configDatatypes.client.TransactionType;
 
 import java.io.Serializable;
 
