@@ -1,40 +1,40 @@
-package gov.nist.tk.actors;
+package gov.nist.tk.actors
 
-import com.google.gwt.user.client.rpc.IsSerializable;
-import gov.nist.toolkit.configDatatypes.client.FhirVerb;
+import com.google.gwt.user.client.rpc.IsSerializable
+import gov.nist.toolkit.configDatatypes.client.FhirVerb
+import groovy.transform.TypeChecked
 
-import java.io.Serializable;
-
-public class ProxyTransformConfig implements IsSerializable, Serializable {
+@TypeChecked
+ class ProxyTransformConfig implements IsSerializable, Serializable {
     private TransactionType transactionType;
     private TransactionDirection transactionDirection;
     private String transformClassName;
     private FhirVerb fhirVerb;
 
-    public ProxyTransformConfig(TransactionType transactionType, TransactionDirection transactionDirection, FhirVerb fhirVerb, String transformClassName) {
+     ProxyTransformConfig(TransactionType transactionType, TransactionDirection transactionDirection, FhirVerb fhirVerb, String transformClassName) {
         this.transactionType = transactionType;
         this.transactionDirection = transactionDirection;
         this.fhirVerb = fhirVerb;
         this.transformClassName = transformClassName;
     }
 
-    public TransactionType getTransactionType() {
+     TransactionType getTransactionType() {
         return transactionType;
     }
 
-    public FhirVerb getFhirVerb() {
+     FhirVerb getFhirVerb() {
         return fhirVerb;
     }
 
-    public TransactionDirection getTransactionDirection() {
+     TransactionDirection getTransactionDirection() {
         return transactionDirection;
     }
 
-    public String getTransformClassName() {
+     String getTransformClassName() {
         return transformClassName;
     }
 
-    public static ProxyTransformConfig parse(String encoded) throws Exception {
+     static ProxyTransformConfig parse(String encoded) throws Exception {
         String[] parts = encoded.split("\\^", 4);
         if (parts.length != 4)
             throw new Exception("ProxyTransformConfig: bad configuration: " + encoded);
@@ -49,7 +49,7 @@ public class ProxyTransformConfig implements IsSerializable, Serializable {
         return new ProxyTransformConfig(ttype, dir, FhirVerb.valueOf(parts[2]), parts[3]);
     }
 
-    public String toString() {
+     String toString() {
         return transactionType.getShortName() + "^" + transactionDirection.name() + "^" + fhirVerb.name() + "^" + transformClassName;
     }
 }

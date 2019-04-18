@@ -1,12 +1,12 @@
-package gov.nist.toolkit.toolkitApi;
+package gov.nist.toolkit.toolkitApi
 
-import gov.nist.toolkit.configDatatypes.client.PatientErrorMap;
-
-import java.io.IOException;
+import gov.nist.toolkit.configDatatypes.client.PatientErrorMap
+import groovy.transform.TypeChecked
 
 /**
  *
  */
+@TypeChecked
 class XdrDocumentRecipient extends AbstractActor implements DocumentRecipient {
 
    /* (non-Javadoc)
@@ -15,7 +15,7 @@ class XdrDocumentRecipient extends AbstractActor implements DocumentRecipient {
    @Override
    public void setPatientErrorMap(PatientErrorMap errorMap) throws IOException {
       // TODO Auto-generated method stub
-      
+
    }
 
    /* (non-Javadoc)

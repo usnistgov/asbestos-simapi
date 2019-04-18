@@ -1,12 +1,14 @@
-package gov.nist.toolkit.toolkitApi;
+package gov.nist.toolkit.toolkitApi
 
-import gov.nist.toolkit.toolkitServicesCommon.RawSendRequest;
-import gov.nist.toolkit.toolkitServicesCommon.RawSendResponse;
+import gov.nist.toolkit.toolkitServicesCommon.RawSendRequest
+import gov.nist.toolkit.toolkitServicesCommon.RawSendResponse
+import groovy.transform.TypeChecked
 
 /**
  * Service interface for a Document Source.
  */
-public interface DocumentSource extends AbstractActorInterface {
+@TypeChecked
+ interface DocumentSource extends AbstractActorInterface {
 
     /**
      * Send a raw Provide and Register transaction. Raw means that the user provides the SOAP Header,

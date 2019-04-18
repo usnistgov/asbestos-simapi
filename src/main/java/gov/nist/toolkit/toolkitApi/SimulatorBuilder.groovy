@@ -1,22 +1,24 @@
-package gov.nist.toolkit.toolkitApi;
+package gov.nist.toolkit.toolkitApi
 
-import gov.nist.toolkit.configDatatypes.server.SimulatorActorType;
-import gov.nist.toolkit.toolkitServicesCommon.SimConfig;
-import gov.nist.toolkit.toolkitServicesCommon.SimId;
-import gov.nist.toolkit.toolkitServicesCommon.resource.SimConfigResource;
-import gov.nist.toolkit.toolkitServicesCommon.resource.SimIdResource;
+import gov.nist.toolkit.configDatatypes.server.SimulatorActorType
+import gov.nist.toolkit.toolkitServicesCommon.SimConfig
+import gov.nist.toolkit.toolkitServicesCommon.SimId
+import gov.nist.toolkit.toolkitServicesCommon.resource.SimConfigResource
+import gov.nist.toolkit.toolkitServicesCommon.resource.SimIdResource
+import groovy.transform.TypeChecked
 
 /**
  * Build/modify a collection of different Actor simulators running in a remote copy of toolkit.
  */
-public class SimulatorBuilder {
+@TypeChecked
+ class SimulatorBuilder {
     String urlRoot;
     EngineSpi engine;
-    
+
     /**
     * @return EngineSpi for this builder.
     */
-   public EngineSpi getEngine() {
+    EngineSpi getEngine() {
        return engine;
    }
 
@@ -26,7 +28,7 @@ public class SimulatorBuilder {
      * http://hostname:port/xdstools2
      * @param urlRoot where engine is running - typical value would be http://localhost:8080/xdstools2
      */
-    public SimulatorBuilder(String urlRoot) {
+     SimulatorBuilder(String urlRoot) {
         this.urlRoot = urlRoot;
         engine = new EngineSpi(urlRoot);
     }
@@ -55,7 +57,7 @@ public class SimulatorBuilder {
      * @return Simulator configuration.
      * @throws ToolkitServiceException if anything goes wrong.
      */
-    public DocumentSource createDocumentSource(String id, String user, String environmentName) throws ToolkitServiceException {
+     DocumentSource createDocumentSource(String id, String user, String environmentName) throws ToolkitServiceException {
         XdrDocumentSource src = new XdrDocumentSource();
         src.engine = engine;
         src.config =  engine.create(id, user, SimulatorActorType.DOCUMENT_SOURCE, environmentName);
@@ -79,7 +81,7 @@ public class SimulatorBuilder {
      * @return Simulator configuration.
      * @throws ToolkitServiceException if anything goes wrong.
      */
-    public ImagingDocumentSource createImagingDocumentSource(String id, String user, String environmentName) throws ToolkitServiceException {
+     ImagingDocumentSource createImagingDocumentSource(String id, String user, String environmentName) throws ToolkitServiceException {
         XdsiImagingDocumentSource src = new XdsiImagingDocumentSource();
         src.engine = engine;
         src.config = engine.create(id, user, SimulatorActorType.DOCUMENT_SOURCE, environmentName);
@@ -101,7 +103,7 @@ public class SimulatorBuilder {
      * @return Simulator configuration.
      * @throws ToolkitServiceException if anything goes wrong.
      */
-    public DocumentConsumer createDocumentConsumer(String id, String user, String environmentName) throws ToolkitServiceException {
+     DocumentConsumer createDocumentConsumer(String id, String user, String environmentName) throws ToolkitServiceException {
         XdsDocumentConsumer cons = new XdsDocumentConsumer();
         cons.engine = engine;
         cons.config =  engine.create(id, user, SimulatorActorType.DOCUMENT_CONSUMER, environmentName);
@@ -115,7 +117,7 @@ public class SimulatorBuilder {
      * @return Simulator configuration.
      * @throws ToolkitServiceException if anything goes wrong.
      */
-//    public ImagingDocumentConsumer createImagingDocumentConsumer(String id, 
+//     ImagingDocumentConsumer createImagingDocumentConsumer(String id,
 //       String user, String env) throws ToolkitServiceException {
 //       XdsiImagingDocumentConsumer idc = new XdsiImagingDocumentConsumer();
 //       idc.engine = engine;
@@ -138,14 +140,14 @@ public class SimulatorBuilder {
      * @return Simulator configuration.
      * @throws ToolkitServiceException if anything goes wrong.
      */
-    public DocumentRecipient createDocumentRecipient(String id, String user, String environmentName) throws ToolkitServiceException {
+     DocumentRecipient createDocumentRecipient(String id, String user, String environmentName) throws ToolkitServiceException {
         XdrDocumentRecipient act = new XdrDocumentRecipient();
         act.engine = engine;
         act.config = engine.create(id, user, SimulatorActorType.DOCUMENT_RECIPIENT, environmentName);
         return act;
     }
 
-    public IFhirServer createFhirServer(String id, String user, String environmentName) throws ToolkitServiceException {
+     IFhirServer createFhirServer(String id, String user, String environmentName) throws ToolkitServiceException {
         FhirServer server = new FhirServer();
         server.engine = engine;
         server.config = engine.create(id, user, SimulatorActorType.FHIR_SERVER, environmentName);
@@ -168,35 +170,35 @@ public class SimulatorBuilder {
      * @return Simulator configuration.
      * @throws ToolkitServiceException if anything goes wrong.
      */
-    public DocumentRegRep createDocumentRegRep(String id, String user, String environmentName) throws ToolkitServiceException {
+     DocumentRegRep createDocumentRegRep(String id, String user, String environmentName) throws ToolkitServiceException {
         XdsDocumentRegRep act = new XdsDocumentRegRep();
         act.engine = engine;
         act.config = engine.create(id, user, SimulatorActorType.REPOSITORY_REGISTRY, environmentName);
         return act;
     }
 
-    public DocumentRepository createDocumentRepository(String id, String user, String environmentName)  throws ToolkitServiceException {
+     DocumentRepository createDocumentRepository(String id, String user, String environmentName)  throws ToolkitServiceException {
         XdsDocumentRepository act = new XdsDocumentRepository();
         act.engine = engine;
         act.config = engine.create(id, user, SimulatorActorType.REPOSITORY, environmentName);
         return act;
     }
 
-    public RespondingGateway createRespondingGateway(String id, String user, String environmentName) throws ToolkitServiceException {
+     RespondingGateway createRespondingGateway(String id, String user, String environmentName) throws ToolkitServiceException {
         XcaRespondingGateway act = new XcaRespondingGateway();
         act.engine = engine;
         act.config = engine.create(id, user, SimulatorActorType.RESPONDING_GATEWAY, environmentName);
         return act;
     }
 
-    public InitiatingGateway createInitiatingGateway(String id, String user, String environmentName) throws ToolkitServiceException {
+     InitiatingGateway createInitiatingGateway(String id, String user, String environmentName) throws ToolkitServiceException {
         XcaInitiatingGateway act = new XcaInitiatingGateway();
         act.engine = engine;
         act.config = engine.create(id, user, SimulatorActorType.INITIATING_GATEWAY, environmentName);
         return act;
     }
 
-    public InitiatingGateway asInitiatingGateway(SimConfig config) {
+     InitiatingGateway asInitiatingGateway(SimConfig config) {
         XcaInitiatingGateway act = new XcaInitiatingGateway();
         act.engine = engine;
         act.config = config;
@@ -214,7 +216,7 @@ public class SimulatorBuilder {
      * @return updated SimConfig if updates made or null if no changes accepted.
      * @throws ToolkitServiceException if anything goes wrong
      */
-    public SimConfig update(SimConfig config) throws ToolkitServiceException {
+     SimConfig update(SimConfig config) throws ToolkitServiceException {
         return engine.update(config);
     }
 
@@ -226,11 +228,11 @@ public class SimulatorBuilder {
      * @param user of simulator
      * @throws ToolkitServiceException if anything goes wrong.
      */
-    public void delete(String id, String user) throws ToolkitServiceException {
+     void delete(String id, String user) throws ToolkitServiceException {
         engine.delete(id, user);
     }
 
-    private void delete(BasicSimParameters p) throws ToolkitServiceException {
+    void delete(BasicSimParameters p) throws ToolkitServiceException {
         delete(p.getId(), p.getUser());
     }
 
@@ -242,7 +244,7 @@ public class SimulatorBuilder {
      * @param simId Simulator ID
      * @throws ToolkitServiceException if anything goes wrong
      */
-    public void delete(SimId simId) throws ToolkitServiceException {
+     void delete(SimId simId) throws ToolkitServiceException {
         engine.delete(simId);
     }
 
@@ -252,26 +254,26 @@ public class SimulatorBuilder {
      * @return simulator configuration
      * @throws ToolkitServiceException if anything goes wrong
      */
-    public SimConfig get(SimId simId) throws ToolkitServiceException {
+     SimConfig get(SimId simId) throws ToolkitServiceException {
         return engine.get(simId);
     }
 
    /**
     * Creates SimId instance for passed user (session) and sim id. Note: Does
     * not check to see if such a simulator exists.
-    * 
+    *
     * @param user (session)
     * @param id simulator id.
     * @return SimId instance.
     */
-   public SimId get(String user, String id) {
+    SimId get(String user, String id) {
         SimIdResource simId = new SimIdResource();
         simId.setUser(user);
         simId.setId(id);
         return simId;
     }
 
-    public XdmValidator createXdmValidator() {
+     XdmValidator createXdmValidator() {
         XdmValidatorImpl impl = new XdmValidatorImpl();
         impl.engine = engine;
         return impl;

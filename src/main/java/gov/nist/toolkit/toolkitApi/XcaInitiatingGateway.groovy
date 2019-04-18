@@ -1,18 +1,19 @@
-package gov.nist.toolkit.toolkitApi;
+package gov.nist.toolkit.toolkitApi
 
-import gov.nist.toolkit.configDatatypes.client.PatientErrorMap;
-import gov.nist.toolkit.toolkitServicesCommon.RefList;
-import gov.nist.toolkit.toolkitServicesCommon.resource.RefListResource;
+import gov.nist.toolkit.configDatatypes.client.PatientErrorMap
+import gov.nist.toolkit.toolkitServicesCommon.RefList
+import gov.nist.toolkit.toolkitServicesCommon.resource.RefListResource
+import groovy.transform.TypeChecked
 
-import javax.ws.rs.core.Response;
-import java.io.IOException;
+import javax.ws.rs.core.Response
 
 /**
  *
  */
-public class XcaInitiatingGateway  extends AbstractActor implements InitiatingGateway {
+@TypeChecked
+ class XcaInitiatingGateway  extends AbstractActor implements InitiatingGateway {
     @Override
-    public RefList FindDocuments(String patientID) throws ToolkitServiceException {
+     RefList FindDocuments(String patientID) throws ToolkitServiceException {
         Response response = engine.getTarget()
                 .path(String.format("simulators/%s/xds/GetAllDocs/%s", getConfig().getFullId(), patientID))
                 .request().get();
@@ -27,16 +28,16 @@ public class XcaInitiatingGateway  extends AbstractActor implements InitiatingGa
     * @see gov.nist.toolkit.toolkitServicesCommon.SimConfig#setPatientErrorMap(gov.nist.toolkit.configDatatypes.client.PatientErrorMap)
     */
    @Override
-   public void setPatientErrorMap(PatientErrorMap errorMap) throws IOException {
+    void setPatientErrorMap(PatientErrorMap errorMap) throws IOException {
       // TODO Auto-generated method stub
-      
+
    }
 
    /* (non-Javadoc)
     * @see gov.nist.toolkit.toolkitServicesCommon.SimConfig#getPatientErrorMap()
     */
    @Override
-   public PatientErrorMap getPatientErrorMap() throws IOException {
+    PatientErrorMap getPatientErrorMap() throws IOException {
       // TODO Auto-generated method stub
       return null;
    }

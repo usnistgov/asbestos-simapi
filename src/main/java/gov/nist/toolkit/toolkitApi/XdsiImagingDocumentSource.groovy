@@ -1,23 +1,23 @@
 /**
- * 
+ *
  */
-package gov.nist.toolkit.toolkitApi;
+package gov.nist.toolkit.toolkitApi
 
-import gov.nist.toolkit.configDatatypes.client.PatientErrorMap;
-import gov.nist.toolkit.toolkitServicesCommon.DcmImageSet;
-
-import java.io.IOException;
+import gov.nist.toolkit.configDatatypes.client.PatientErrorMap
+import gov.nist.toolkit.toolkitServicesCommon.DcmImageSet
+import groovy.transform.TypeChecked
 
 /**
  * Implementation class for XDSI Image Document Source
  */
-public class XdsiImagingDocumentSource extends AbstractActor implements ImagingDocumentSource {
+@TypeChecked
+ class XdsiImagingDocumentSource extends AbstractActor implements ImagingDocumentSource {
 
    /* (non-Javadoc)
     * @see gov.nist.toolkit.tookitApi.ImageDocumentSource#retrieveImagingDocumentSet(gov.nist.toolkit.toolkitServicesCommon.DcmImageSet)
     */
    @Override
-   public DcmImageSet retrieveImagingDocumentSet(DcmImageSet request) {
+    DcmImageSet retrieveImagingDocumentSet(DcmImageSet request) {
       // TODO Auto-generated method stub
       return null;
    }
@@ -26,16 +26,16 @@ public class XdsiImagingDocumentSource extends AbstractActor implements ImagingD
     * @see gov.nist.toolkit.toolkitServicesCommon.SimConfig#setPatientErrorMap(gov.nist.toolkit.configDatatypes.client.PatientErrorMap)
     */
    @Override
-   public void setPatientErrorMap(PatientErrorMap errorMap) throws IOException {
+    void setPatientErrorMap(PatientErrorMap errorMap) throws IOException {
       // TODO Auto-generated method stub
-      
+
    }
 
    /* (non-Javadoc)
     * @see gov.nist.toolkit.toolkitServicesCommon.SimConfig#getPatientErrorMap()
     */
    @Override
-   public PatientErrorMap getPatientErrorMap() throws IOException {
+    PatientErrorMap getPatientErrorMap() throws IOException {
       // TODO Auto-generated method stub
       return null;
    }

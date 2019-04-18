@@ -1,11 +1,13 @@
 package gov.nist.toolkit.toolkitApi;
 
-import gov.nist.toolkit.toolkitServicesCommon.DocumentContent;
+import gov.nist.toolkit.toolkitServicesCommon.DocumentContent
+import groovy.transform.TypeChecked;
 
 /**
  *
  */
-public interface DocumentRepository extends AbstractActorInterface {
+@TypeChecked
+ interface DocumentRepository extends AbstractActorInterface {
 
 
     /**

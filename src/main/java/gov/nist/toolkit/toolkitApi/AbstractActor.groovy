@@ -1,46 +1,45 @@
-package gov.nist.toolkit.toolkitApi;
+package gov.nist.toolkit.toolkitApi
 
-import gov.nist.tk.actors.TransactionType;
-import gov.nist.toolkit.configDatatypes.client.PatientErrorMap;
-import gov.nist.toolkit.configDatatypes.server.SimulatorProperties;
-import gov.nist.toolkit.toolkitServicesCommon.RefList;
-import gov.nist.toolkit.toolkitServicesCommon.SimConfig;
-import gov.nist.toolkit.toolkitServicesCommon.resource.RefListResource;
+import gov.nist.tk.actors.TransactionType
+import gov.nist.toolkit.configDatatypes.client.PatientErrorMap
+import gov.nist.toolkit.configDatatypes.server.SimulatorProperties
+import gov.nist.toolkit.toolkitServicesCommon.RefList
+import gov.nist.toolkit.toolkitServicesCommon.SimConfig
+import gov.nist.toolkit.toolkitServicesCommon.resource.RefListResource
+import groovy.transform.TypeChecked
 
-import javax.ws.rs.core.Response;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.List;
+import javax.ws.rs.core.Response
 
 /**
  *
  */
+@TypeChecked
 abstract class AbstractActor implements AbstractActorInterface {
    EngineSpi engine;
    SimConfig config;
 
-   public SimConfig getConfig() {
+    SimConfig getConfig() {
       return config;
    }
 
-   public SimConfig update(SimConfig config) throws ToolkitServiceException {
+    SimConfig update(SimConfig config) throws ToolkitServiceException {
       config = engine.update(config);
       return config;
    }
 
-   public void setConfig(SimConfig cnf) {
+    void setConfig(SimConfig cnf) {
       config = cnf;
    }
 
-   public EngineSpi getEngine() {
+    EngineSpi getEngine() {
       return engine;
    }
 
-   public void setEngine(EngineSpi eng) {
+    void setEngine(EngineSpi eng) {
       engine = eng;
    }
 
-   public void delete() throws ToolkitServiceException {
+    void delete() throws ToolkitServiceException {
       engine.delete(config.getId(), config.getUser());
    }
 
@@ -49,7 +48,7 @@ abstract class AbstractActor implements AbstractActorInterface {
      * @param name property name. See {@link SimulatorProperties} for property names.
      * @param value property value
      */
-    public void setProperty(String name, String value) {
+     void setProperty(String name, String value) {
         config.setProperty(name, value);
 //        if (SimulatorProperties.environment.equals((name))) {
 //            config.setEnvironmentName(value);
@@ -60,7 +59,7 @@ abstract class AbstractActor implements AbstractActorInterface {
      * @param name property name. See {@link SimulatorProperties} for property names.
      * @param value property value
      */
-    public void setProperty(String name, boolean value) {
+     void setProperty(String name, boolean value) {
         config.setProperty(name, value);
     }
     /**
@@ -68,13 +67,13 @@ abstract class AbstractActor implements AbstractActorInterface {
      * @param name property name. See {@link SimulatorProperties} for property names.
      * @return boolean
      */
-    public boolean isBoolean(String name) { return config.isBoolean(name);}
+     boolean isBoolean(String name) { return config.isBoolean(name);}
 
-   public boolean isString(String name) {
+    boolean isString(String name) {
       return config.isString(name);
    }
 
-   public boolean isList(String name) {
+    boolean isList(String name) {
       return config.isList(name);
    }
 
@@ -83,15 +82,15 @@ abstract class AbstractActor implements AbstractActorInterface {
      * @param name property name. See {@link SimulatorProperties} for property names.
      * @return String value
      */
-    public String asString(String name) { return config.asString(name); }
+     String asString(String name) { return config.asString(name); }
     /**
      * Return named property as a String
      * @param name property name. See {@link SimulatorProperties} for property names.
      * @return boolean value
      */
-    public boolean asBoolean(String name) { return config.asBoolean(name); }
+     boolean asBoolean(String name) { return config.asBoolean(name); }
 
-   public List <String> asList(String name) {
+    List <String> asList(String name) {
       return config.asList(name);
    }
 
@@ -100,39 +99,39 @@ abstract class AbstractActor implements AbstractActorInterface {
     *
     * @return Description string.
     */
-   public String describe() {
+    String describe() {
       return config.describe();
    }
 
-   public String getId() {
+    String getId() {
       return config.getId();
    }
 
-   public String getEnvironmentName() {
+    String getEnvironmentName() {
       return config.getEnvironmentName();
    }
 
-   public String getActorType() {
+    String getActorType() {
       return config.getActorType();
    }
 
-   public void setProperty(String name, List <String> value) {
+    void setProperty(String name, List <String> value) {
       config.setProperty(name, value);
    }
 
-   public String getFullId() {
+    String getFullId() {
       return config.getFullId();
    }
 
-   public String getUser() {
+    String getUser() {
       return config.getUser();
    }
 
-   public Collection <String> getPropertyNames() {
+    Collection <String> getPropertyNames() {
       return config.getPropertyNames();
    }
 
-   public RefList getEventIds(String simId, TransactionType transaction) throws ToolkitServiceException {
+    RefList getEventIds(String simId, TransactionType transaction) throws ToolkitServiceException {
       Response response = engine.getTarget()
          .path(String.format("simulators/%s/events/%s", getConfig().getFullId(), transaction.getShortName())).request()
          .get();
@@ -140,7 +139,7 @@ abstract class AbstractActor implements AbstractActorInterface {
       return response.readEntity(RefListResource.class);
    }
 
-   public RefList getEvent(String simId, TransactionType transaction, String eventId) throws ToolkitServiceException {
+    RefList getEvent(String simId, TransactionType transaction, String eventId) throws ToolkitServiceException {
       Response response =
          engine.getTarget()
             .path(
@@ -152,16 +151,16 @@ abstract class AbstractActor implements AbstractActorInterface {
    }
 
     @Override
-    public void setPatientErrorMap(PatientErrorMap errorMap) throws IOException {
+     void setPatientErrorMap(PatientErrorMap errorMap) throws IOException {
 //        config.setPatientErrorMap(errorMap);
     }
 
     @Override
-    public PatientErrorMap getPatientErrorMap() throws IOException {
+     PatientErrorMap getPatientErrorMap() throws IOException {
         return null;
 //        return config.getPatientErrorMap();
     }
 
     @Override
-    public boolean isFhir() { return false; }
+     boolean isFhir() { return false; }
 }

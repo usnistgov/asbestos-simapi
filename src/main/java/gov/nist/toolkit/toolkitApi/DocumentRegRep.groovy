@@ -1,12 +1,14 @@
-package gov.nist.toolkit.toolkitApi;
+package gov.nist.toolkit.toolkitApi
 
-import gov.nist.toolkit.toolkitServicesCommon.DocumentContent;
-import gov.nist.toolkit.toolkitServicesCommon.RefList;
+import gov.nist.toolkit.toolkitServicesCommon.DocumentContent
+import gov.nist.toolkit.toolkitServicesCommon.RefList
+import groovy.transform.TypeChecked
 
 /**
  *
  */
-public interface DocumentRegRep  extends AbstractActorInterface {
+@TypeChecked
+ interface DocumentRegRep  extends AbstractActorInterface {
 
     /**
      * This is the equivalent of a FindDocuments Stored Query.
