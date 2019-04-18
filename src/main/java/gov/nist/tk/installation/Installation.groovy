@@ -10,6 +10,7 @@ class Installation {
     String servletContextName = 'asbestos'
     PropertyServiceManager propertyServiceManager = new PropertyServiceManager()
     File defaultEnvironmentFile = new File("${externalCache}/environment/default")
+    String toolkitBaseUrl = 'http://localhost:8080/xdstools'
 
     File environmentFile(String name) {
         new File("${externalCache}/environment/${name}")
@@ -109,7 +110,7 @@ class Installation {
     }
 
     File actorsDir() {
-        return new File(externalCache() + File.separator + "actors");
+        return new File(externalCache(), File.separator + "actors");
     }
 
     File actorsDir(TestSession testSession) {
@@ -146,4 +147,5 @@ class Installation {
     boolean testSessionExists(TestSession testSession) {
         return getTestSessions().contains(testSession);
     }
+
 }

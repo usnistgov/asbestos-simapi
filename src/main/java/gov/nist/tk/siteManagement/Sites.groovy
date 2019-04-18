@@ -195,18 +195,18 @@ import groovy.transform.TypeChecked;
 
 	}
 
-	 List<Site> getSitesWithTransaction(TransactionType tt, TestSession testSession) throws Exception {
-		List<Site> rs = new ArrayList<Site>();
-
-		for (String siteName : siteMap.keySet()) {
-			Site site = getSite(siteName, testSession);
-			if (site.hasTransaction(tt))
-				rs.add(site);
-		}
-
-		return rs;
-
-	}
+//	 List<Site> getSitesWithTransaction(TransactionType tt, TestSession testSession) throws Exception {
+//		List<Site> rs = new ArrayList<Site>();
+//
+//		for (String siteName : siteMap.keySet()) {
+//			Site site = getSite(siteName, testSession);
+//			if (site.hasTransaction(tt))
+//				rs.add(site);
+//		}
+//
+//		return rs;
+//
+//	}
 
 	 Site getSiteForHome(String home) {
 		for (Site site : siteMap.values()) {
@@ -221,7 +221,7 @@ import groovy.transform.TypeChecked;
     * @param repType type of repository to search
     * @return Site instance with that id, or null if not found.
     */
-    Site getSiteForRepUid(String uid, RepositoryType repType) {
+    Site getSiteForRepUid(String uid, TransactionBean.RepositoryType repType) {
       for (Site site : siteMap.values()) {
          if (site.transactionBeanForRepositoryUniqueId(uid, repType) != null)
             return site;
@@ -239,15 +239,15 @@ import groovy.transform.TypeChecked;
 		return rs;
 	}
 
-	 List<String> getSiteNamesWithTransaction(TransactionType tt, TestSession testSession) throws Exception {
-		List<String> rs = new ArrayList<String>();
-
-		for (Site s : getSitesWithTransaction(tt, testSession)) {
-			rs.add(s.getName());
-		}
-
-		return rs;
-	}
+//	 List<String> getSiteNamesWithTransaction(TransactionType tt, TestSession testSession) throws Exception {
+//		List<String> rs = new ArrayList<String>();
+//
+//		for (Site s : getSitesWithTransaction(tt, testSession)) {
+//			rs.add(s.getName());
+//		}
+//
+//		return rs;
+//	}
 
 	 List<String> getSiteNamesWithRepository(TestSession testSession) throws Exception {
 		List<String> rs = new ArrayList<String>();

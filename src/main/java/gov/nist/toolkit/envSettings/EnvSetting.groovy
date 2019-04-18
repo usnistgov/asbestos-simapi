@@ -12,7 +12,7 @@ import org.apache.log4j.Logger;
     static  final String DEFAULTENVIRONMENTNAME = "default";
 	String envName;
 	File envDir;
-	
+
 	static Logger logger = Logger.getLogger(EnvSetting.class);
 
 	static  EnvSetting getEnvSetting(String sessionId) {
@@ -53,7 +53,7 @@ import org.apache.log4j.Logger;
 //		logger.info(sessionId + ": EnvSetting -  uses environment " + name + " ==> " + dir);
 		addSetting(sessionId, new EnvSetting(name, dir));
 	}
-	
+
 	 EnvSetting(String sessionId, String name) {
 		File dir = Installation.instance().environmentFile(name);
 //		logger.info("Session " + sessionId + " environment " + name + " ==> " + dir);
@@ -65,24 +65,24 @@ import org.apache.log4j.Logger;
         this.envDir = Installation.instance().environmentFile(envName);
         validateEnvironment();
     }
-	
+
 	private EnvSetting(String name, File dir) {
 		this.envName = name;
 		this.envDir = dir;
         validateEnvironment();
 	}
-	
+
 	 String getEnvName() {
 		return envName;
 	}
-	
+
 	 File getEnvDir() {
 		return envDir;
 	}
-	
+
 	 File getCodesFile() {
          assert envDir : "Environment ${envName} does not exist"
-		File f = new File(envDir + File.separator + "codes.xml");
+		File f = new File(envDir, "codes.xml");
 		if (f.exists())
 			return f;
 		logger.warn("Codes file " + f + " does not exist");

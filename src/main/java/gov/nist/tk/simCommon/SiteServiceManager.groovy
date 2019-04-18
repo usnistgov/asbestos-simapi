@@ -3,7 +3,8 @@ package gov.nist.tk.simCommon
 import gov.nist.tk.actors.ActorType
 import gov.nist.tk.installation.Installation
 import gov.nist.tk.siteManagement.Site
-import gov.nist.tk.siteManagement.Sites;
+import gov.nist.tk.siteManagement.Sites
+import gov.nist.tk.stubs.SeparateSiteLoader;
 import groovy.transform.TypeChecked;
 import org.apache.log4j.Logger;
 
@@ -30,9 +31,9 @@ import javax.xml.parsers.FactoryConfigurationError;
 
 	private SiteServiceManager() {
 	}
-	
+
 	static  SiteServiceManager getSiteServiceManager() {
-		if (siteServiceManager == null)	
+		if (siteServiceManager == null)
 			siteServiceManager = new SiteServiceManager();
 		return siteServiceManager;
 	}
@@ -192,38 +193,11 @@ import javax.xml.parsers.FactoryConfigurationError;
 	}
 
 
-	 String saveSite(String sessionId, Site site, TestSession testSession) throws Exception {
-		logger.debug(sessionId + ": " + "saveSite");
-		try {
-
-			if (!useActorsFile())
-				new SeparateSiteLoader(testSession).saveToFile(Installation.instance()
-						.actorsDir(testSession), site);
-			else {
-				throw new ToolkitRuntimeException("Combined site (all in one file) no longer supported");
-			}
-		} catch (Exception e) {
-			logger.error("saveSite", e);
-			throw new Exception(e.getMessage(), e);
-		} catch (Throwable t) {
-			logger.error(ExceptionUtil.exception_details(t));
-		}
+	 String saveSite(String sessionId, Site site, TestSession testSession)  {
 		return null;
 	}
 
 	 String deleteSite(String sessionId, String siteName, TestSession testSession) throws Exception {
-		logger.debug(sessionId + ": " + "deleteSite");
-		try {
-			// sites.saveToFile(configuredActorsFile(false));
-			if (!useActorsFile())
-				new SeparateSiteLoader(testSession).delete(Installation.instance()
-						.actorsDir(testSession), siteName);
-			else
-				throw new ToolkitRuntimeException("Combined site (all in one file) no longer supported");
-		} catch (Exception e) {
-			logger.error("deleteSite", e);
-			throw new Exception(e.getMessage());
-		}
 		return null;
 	}
 

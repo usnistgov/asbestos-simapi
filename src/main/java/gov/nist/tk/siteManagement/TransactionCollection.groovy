@@ -1,5 +1,7 @@
-package gov.nist.tk.siteManagement;
+package gov.nist.tk.siteManagement
 
+import gov.nist.tk.actors.ActorType
+import gov.nist.tk.actors.TransactionType;
 import groovy.transform.TypeChecked;
 
 @TypeChecked
@@ -99,18 +101,18 @@ import groovy.transform.TypeChecked;
 	}
 
 	static TransactionType getTransactionFromCode(String transactionCode) {
-		return ATFactory.getTransactionFromCode(transactionCode);
+		return TransactionType.find(transactionCode)
 	}
 
 	static  String getTransactionName(String transactionCode) {
-		TransactionType tt = ATFactory.getTransactionFromCode(transactionCode);
+		TransactionType tt = TransactionType.find(transactionCode);
 		if (tt == null)
 			return "";
 		return tt.getName();
 	}
 
 	static  List<ActorType> getActorTypes() {
-		return Arrays.asList(ActorType.values());
+		return ActorType.types
 	}
 
 	static List<String> asList(String[] arry) {
@@ -155,36 +157,6 @@ import groovy.transform.TypeChecked;
 			} catch (Exception e) {}
 		}
 		return false;
-	}
-
-	 boolean hasTransaction(TransactionType tt) {
-	    if (!isRepositories) {
-			for (TransactionBean t : transactions) {
-				if (!t.hasEndpoint())
-					continue;
-				try {
-					if (t.isType(tt))
-						return true;
-				} catch (Exception e) {
-				}
-			}
-			return false;
-		} else if (isRepositories) {
-			for (TransactionBean t : transactions) {
-				try {
-					if (tt.equals(TransactionType.RETRIEVE))
-				     return RepositoryType.REPOSITORY.equals(t.repositoryType);
-					else if (tt.equals(TransactionType.ODDS_RETRIEVE))
-					    return RepositoryType.ODDS.equals(t.repositoryType);
-					else if (tt.equals(TransactionType.ISR_RETRIEVE))
-						return RepositoryType.IDS.equals(t.repositoryType);
-				} catch (Exception e) {
-				}
-			}
-			return false;
-		}
-		return false;
-
 	}
 
 	 TransactionBean find(TransactionType transType, boolean isSecure, boolean isAsync) {
@@ -239,7 +211,7 @@ import groovy.transform.TypeChecked;
 		// Issue 98 TODO: set the repositoryType here
 		transactions.add(new TransactionBean(
 				transactionName,
-				isRepositories ? RepositoryType.REPOSITORY : RepositoryType.NONE,
+				isRepositories ? TransactionBean.RepositoryType.REPOSITORY : TransactionBean.RepositoryType.NONE,
 				endpoint,
 				isSecure,
 				isAsync));

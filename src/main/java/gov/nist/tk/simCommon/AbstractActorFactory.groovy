@@ -165,7 +165,7 @@ import org.apache.log4j.Logger;
 
 	}
 
-	private ActorType actorType = null;
+	ActorType actorType = null;
 
 	 ActorType getActorType() {
 		return actorType;
@@ -277,21 +277,21 @@ import org.apache.log4j.Logger;
 
 		String contextName = Installation.instance().getServletContextName();
 
-		return "http"
-		+ ((isTLS) ? "s" : "")
-		+ "://"
-		+ Installation.instance().propertyServiceManager().getToolkitHost()
-		+ ":"
-				+ getEndpointPort(isTLS, isProxy)
-//		+ ((isTLS) ? Installation.instance().propertyServiceManager().getToolkitTlsPort() : Installation.instance().propertyServiceManager().getToolkitPort())
-//		+ "/"  context name includes preceding /
-		+ contextName
-		+ (ele.transType.isHttpOnly() ? "/httpsim/" : "/sim/" )
-		+ asc.getId()
-		+ "/" +
-		actor           //asc.getActorType().toLowerCase()
-		+ "/"
-		+ transtype;
+		String tlsTail = isTLS ? "s" : ""
+
+		String endpoint =  "http" + tlsTail +
+				"://" +
+				Installation.instance().propertyServiceManager().getToolkitHost() +
+				":" +
+				getEndpointPort(isTLS, isProxy) +
+				contextName +
+				(ele.transType.isHttpOnly() ? "/httpsim/" : "/sim/" ) +
+				asc.getId() +
+				"/" +
+				actor +
+				"/" +
+				transtype;
+		return endpoint
 	}
 
 	protected String mkFhirEndpoint(SimulatorConfig asc, SimulatorConfigElement ele, String actor, boolean isTLS) throws Exception {
@@ -299,26 +299,22 @@ import org.apache.log4j.Logger;
 	}
 
 	protected String mkFhirEndpoint(SimulatorConfig asc, SimulatorConfigElement ele, String actor, TransactionType transactionType, boolean isTLS, boolean isProxy) throws Exception {
-//		String transtype = SimDb.getTransactionDirName(ele.transType);
 
 		String contextName = Installation.instance().getServletContextName();
 
-		return "http"
-				+ ((isTLS) ? "s" : "")
-				+ "://"
-				+ Installation.instance().propertyServiceManager().getToolkitHost()
-				+ ":"
-				+ getEndpointPort(isTLS, isProxy)
-//				+ ((isTLS) ? Installation.instance().propertyServiceManager().getToolkitTlsPort() : Installation.instance().propertyServiceManager().getToolkitPort())
-//		+ "/"  context name includes preceding /
-				+ contextName
-//				+ "/sim/"
-				+ ((isSimProxy) ? "/sim/" : "/fsim/")
-				+ asc.getId()
-				+ "/" + actor
-	//			+ "/fhir"
-				+ ((transactionType != null && transactionType.getFhirVerb() == FhirVerb.TRANSACTION ? "/" + transactionType.getShortName() : ""))
+		String endpoint =  "http" +
+				((isTLS) ? "s" : "") +
+				"://" +
+				Installation.instance().propertyServiceManager().getToolkitHost() +
+				":" +
+				getEndpointPort(isTLS, isProxy) +
+				contextName +
+				((isSimProxy) ? "/sim/" : "/fsim/") +
+				asc.getId() +
+				"/" + actor +
+				((transactionType != null && transactionType.getFhirVerb() == FhirVerb.TRANSACTION ? "/" + transactionType.getShortName() : ""))
 				;
+		return endpoint
 	}
 
 	private String getEndpointPort(boolean isTLS, boolean isProxy) throws Exception {

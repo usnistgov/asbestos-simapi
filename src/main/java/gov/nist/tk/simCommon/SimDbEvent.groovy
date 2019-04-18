@@ -2,6 +2,7 @@ package gov.nist.tk.simCommon
 
 import gov.nist.tk.actors.ActorType
 import gov.nist.tk.actors.TransactionType
+import gov.nist.tk.installation.Installation
 import groovy.transform.TypeChecked
 
 /**

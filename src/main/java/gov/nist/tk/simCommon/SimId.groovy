@@ -1,6 +1,7 @@
 package gov.nist.tk.simCommon
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect
+import gov.nist.tk.actors.ActorType
 import gov.nist.tk.siteManagement.SiteSpec
 import groovy.transform.TypeChecked
 
@@ -92,7 +93,7 @@ import groovy.transform.TypeChecked
         return result;
     }
 
-     String toString() { return testSession + SEPARATOR + id; }
+     String toString() { return testSession.toString() + SEPARATOR + id; }
 
      String validateState() {
         StringBuilder buf = new StringBuilder();

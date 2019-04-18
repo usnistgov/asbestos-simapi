@@ -9,6 +9,46 @@
     <version>1.0-SNAPSHOT</version>
 
     <dependencies>
+
+        <!--  Temporary    -->
+        <dependency>
+            <groupId>org.apache.ws.commons.axiom</groupId>
+            <artifactId>axiom-api</artifactId>
+            <version>1.2.10</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ws.commons.axiom</groupId>
+            <artifactId>axiom-impl</artifactId>
+            <version>1.2.10</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ws.commons.axiom</groupId>
+            <artifactId>axiom-dom</artifactId>
+            <version>1.2.10</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ws.commons.axiom</groupId>
+            <artifactId>axiom-common-impl</artifactId>
+            <version>1.2.14</version>
+        </dependency>
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+            <version>2.9.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.xmlbeans</groupId>
+            <artifactId>xmlbeans</artifactId>
+            <version>2.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons.io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.4</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/commons-io-2.6.jar</systemPath>
+        </dependency>
+
         <dependency>
             <groupId>gov.nist.toolkit</groupId>
             <artifactId>asbestos-adapter</artifactId>
@@ -26,11 +66,11 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.5</version>
         </dependency>
-        <dependency>
-            <groupId>com.sun.ebxml</groupId>
-            <artifactId>ebxmlrr-common</artifactId>
-            <version>1.0</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.sun.ebxml</groupId>-->
+            <!--<artifactId>ebxmlrr-common</artifactId>-->
+            <!--<version>1.0</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
