@@ -7,7 +7,7 @@
     <groupId>gov.nist.tkapi</groupId>
     <artifactId>simapi</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
 
     <dependencies>
 
@@ -44,17 +44,8 @@
         </dependency>
 
 
-
         <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-maven-plugin</artifactId>
-            <version>9.4.16.v20190411</version>
-        </dependency>
-
-
-
-
-        <dependency>
+            <!--Cannot reliably pull from net -->
             <groupId>org.apache.commons.io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.4</version>
@@ -161,43 +152,7 @@
                 </configuration>
             </plugin>
 
-            <plugin>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-maven-plugin</artifactId>
-                <version>9.4.16.v20190411</version>
-                <configuration>
-                    <scanIntervalSeconds>10</scanIntervalSeconds>
-                    <webApp>
-                        <contextPath>/test</contextPath>
-                    </webApp>
-                    <contextHandlers>
-                        <contextHandler implementation="org.eclipse.jetty.maven.plugin.JettyWebAppContext">
-                            <war>${user.home}/.m2/repository/gov/nist/toolkit/xdstools/7.2.8/xdstools2-7.2.8.war</war>
-                            <contextPath>/xdstools</contextPath>
-                        </contextHandler>
-                    </contextHandlers>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>start-jetty</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <!--<configuration>-->
-                            <!--<fork>true</fork>-->
-                        <!--</configuration>-->
-                    </execution>
-                    <!--<execution>-->
-                        <!--<id>stop-jetty</id>-->
-                        <!--<phase>post-integration-test</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>shutdown</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                </executions>
 
-            </plugin>
 
         </plugins>
     </build>
