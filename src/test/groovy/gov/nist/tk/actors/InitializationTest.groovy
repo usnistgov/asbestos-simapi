@@ -1,6 +1,6 @@
 package gov.nist.tk.actors
 
-import gov.nist.tk.installation.Initialization
+import gov.nist.asbestos.simapi.tk.installation.Initialization
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 import spock.lang.Specification

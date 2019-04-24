@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>gov.nist.tkapi</groupId>
+    <groupId>gov.nist.asbestos</groupId>
     <artifactId>simapi</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
@@ -46,11 +46,11 @@
 
         <dependency>
             <!--Cannot reliably pull from net -->
-            <groupId>org.apache.commons.io</groupId>
+            <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.4</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/commons-io-2.6.jar</systemPath>
+            <version>2.6</version>
+            <!--<scope>system</scope>-->
+            <!--<systemPath>${basedir}/lib/commons-io-2.6.jar</systemPath>-->
         </dependency>
 
         <dependency>
@@ -138,19 +138,50 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.codehaus.groovy</groupId>
-                <artifactId>groovy-eclipse-compiler</artifactId>
-                <version>2.8.0-01</version>
-                <extensions>true</extensions>
+                <groupId>org.apache.maven.plugins</groupId>
+                <!-- 2.8.0-01 and later require maven-compiler-plugin 3.1 or higher -->
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <showWarnings>true</showWarnings>
+                    <compilerId>groovy-eclipse-compiler</compilerId>
+                    <source>${jdk.version}</source>
+                    <target>${jdk.version}</target>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.groovy</groupId>
+                        <artifactId>groovy-eclipse-compiler</artifactId>
+                        <version>2.9.0-01</version>
+                    </dependency>
+                    <!-- for 2.8.0-01 and later you must have an explicit dependency on groovy-eclipse-batch -->
+                    <dependency>
+                        <groupId>org.codehaus.groovy</groupId>
+                        <artifactId>groovy-eclipse-batch</artifactId>
+                        <version>2.3.4-01</version>
+                    </dependency>
+                </dependencies>
             </plugin>
             <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-compiler-plugin.version}</version>
-                <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
-                </configuration>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-eclipse-compiler</artifactId>
+                <version>2.9.0-01</version>
+                <extensions>true</extensions>
             </plugin>
+            <!--<plugin>-->
+                <!--<groupId>org.codehaus.groovy</groupId>-->
+                <!--<artifactId>groovy-eclipse-compiler</artifactId>-->
+                <!--<version>2.8.0-01</version>-->
+                <!--<extensions>true</extensions>-->
+            <!--</plugin>-->
+            <!--<plugin>-->
+                <!--<artifactId>maven-compiler-plugin</artifactId>-->
+                <!--<version>${maven-compiler-plugin.version}</version>-->
+                <!--<configuration>-->
+                    <!--<source>1.8</source>-->
+                    <!--<target>1.8</target>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
 
 
 
