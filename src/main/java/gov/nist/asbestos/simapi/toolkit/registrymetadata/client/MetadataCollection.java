@@ -88,31 +88,31 @@ public class MetadataCollection implements IsSerializable, Serializable {
 		return ! (getDocumentEntry(idOrUid) == null);
 	}
 
-	public void init() {
-		docEntries = new ArrayList<DocumentEntry>();
-		submissionSets = new ArrayList<SubmissionSet>();
-		folders = new ArrayList<Folder>();
-		assocs = new ArrayList<Association>();
-		objectRefs = new ArrayList<ObjectRef>();
+	private void init() {
+		docEntries = new ArrayList<>();
+		submissionSets = new ArrayList<>();
+		folders = new ArrayList<>();
+		assocs = new ArrayList<>();
+		objectRefs = new ArrayList<>();
 	}
 
 	@SuppressWarnings("unchecked")
-	void addNoDup(List<Object> to, List<Object> from) {
+	void addNoDup(List to, List from) {
 		for (Object f : from) {
-			MetadataObject fmo = (MetadataObject) f;
+			MetadataObject fmo = (MetadataObject)f;
 
 			boolean exists = false;
 			boolean sameIdButDifferentData = false;
-			List<Object> oldO = new ArrayList<>();
-			List<Object> newO = new ArrayList<>();
+			List<MetadataObject> oldO = new ArrayList<>();
+			List<MetadataObject> newO = new ArrayList<>();
 			for (Object t : to) {
-				MetadataObject tmo = (MetadataObject) t;
+				MetadataObject tmo = (MetadataObject)t;
 				if (tmo.id != null && tmo.id.equals(fmo.id)) {
 					if (tmo instanceof DocumentEntry) {
-						if (! new DocumentEntryDiff().compare((DocumentEntry)t, (DocumentEntry)f).isEmpty()) {
+						if (! new DocumentEntryDiff().compare((MetadataObject)t, (MetadataObject)f).isEmpty()) {
 								sameIdButDifferentData = true;
-								oldO.add(t);
-								newO.add(f);
+								oldO.add((MetadataObject)t);
+								newO.add((MetadataObject)f);
 						}
 					}
 					exists = true;

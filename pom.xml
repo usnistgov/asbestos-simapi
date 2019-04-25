@@ -197,8 +197,12 @@
 
 
         <junit.version>4.12</junit.version>
-        <groovyVersion>2.4.9</groovyVersion>
-        <spock.version>1.0-groovy-2.4</spock.version>
+
+        <!--These two must be kept in sync.  See-->
+        <!-- http://versioninfo.spockframework.org-->
+        <!--Aligns with spock.version and groovy-eclipse-compiler version-->
+        <groovyVersion>2.3.3</groovyVersion>
+        <spock.version>1.0-groovy-2.3</spock.version>
 
         <gwtVersion>2.8.0</gwtVersion>    <!-- 2.7.0 -->
         <!-- <gwtVersion>2.6.1</gwtVersion> -->
