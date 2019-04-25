@@ -97,17 +97,25 @@ class SimStore {
 
     File getRequestHeaderFile() { new File(eventDir, 'request_header.txt') }
     File getRequestBodyFile() { new File(eventDir, 'request_body.bin') }
+    File getRequestBodyStringFile() { new File(eventDir, 'request_body.txt') }
     File getResponseHeaderFile() { new File(eventDir, 'response_header.txt') }
     File getResponseBodyFile() { new File(eventDir, 'response_body.bin') }
+    File getResponseBodyStringFile() { new File(eventDir, 'response_body.txt') }
 
     void putRequestHeader(String header) { requestHeaderFile.text = header }
-    void putRequestBody(byte[] body) { requestBodyFile.withOutputStream { it.write body }}
+    void putRequestBody(byte[] body) {
+        requestBodyFile.withOutputStream { it.write body }
+        requestBodyStringFile.text = new String(body)
+    }
     String getRequestHeader() { requestHeaderFile.text }
     byte[] getRequestBody() { requestBodyFile.readBytes() }
     String getRequestBodyAsString() { new String(requestBodyFile.readBytes()) }
 
     void putResponseHeader(String header) { responseHeaderFile.text = header }
-    void putResponseBody(byte[] body) { responseBodyFile.withOutputStream { it.write body }}
+    void putResponseBody(byte[] body) {
+        responseBodyFile.withOutputStream { it.write body }
+        responseBodyStringFile.text = new String(body)
+    }
     String getResponseHeader() { responseHeaderFile.text }
     byte[] getResponseBody() { responseBodyFile.readBytes() }
     String getResponseBodyAsString() { new String(responseBodyFile.readBytes()) }
