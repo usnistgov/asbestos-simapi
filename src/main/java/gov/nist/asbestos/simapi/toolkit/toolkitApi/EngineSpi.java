@@ -73,6 +73,11 @@ public class EngineSpi {
         return scr;
     }
 
+    public SimId getSimId(BasicSimParameters parms) {
+        SimId simId = ToolkitFactory.newSimId(parms.getId(), parms.getUser(), parms.getActorType().getName(), parms.getEnvironmentName(), parms.getActorType() == SimulatorActorType.FHIR_SERVER);
+        return simId;
+    }
+
     private void exceptionOnNot200(Response response) throws ToolkitServiceException {
         if (response.getStatus() != 200) {
             logger.error("status is " + response.getStatus());
@@ -116,6 +121,14 @@ public class EngineSpi {
     public void delete(String id, String user) throws ToolkitServiceException {
         SimId simId = ToolkitFactory.newSimId(id, user, null, null);
         delete(simId);
+    }
+
+    public void deleteIfExists(String id, String user) {
+        try {
+            delete(id, user);
+        } catch (ToolkitServiceException tse) {
+            // ignore
+        }
     }
 
     /**
@@ -168,6 +181,15 @@ public class EngineSpi {
         if (response.getStatus() != 200)
             throw new ToolkitServiceException(response);
         return response.readEntity(SimConfigResource.class);
+    }
+
+    public boolean exists(SimId simId) {
+       try {
+           SimConfig config = get(simId);
+       } catch (ToolkitServiceException tse) {
+           return false;
+       }
+       return true;
     }
 
     /**
