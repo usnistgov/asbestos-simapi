@@ -1,6 +1,8 @@
 package gov.nist.asbestos.simapi.tk.simCommon
 
-
+import gov.nist.asbestos.simapi.tk.actors.ActorType
+import gov.nist.asbestos.simapi.tk.actors.TransactionType
+import gov.nist.asbestos.simapi.tk.installation.Installation
 import groovy.transform.TypeChecked
 
 /**
@@ -25,16 +27,16 @@ class SimDbEvent {
     }
 
     String getSimLogUrl() {
-        SimLogEventLinkBuilder.buildUrl(gov.nist.asbestos.simapi.tk.installation.Installation.instance().getToolkitBaseUrl(), simId.toString(), actor, trans, eventId)
+        SimLogEventLinkBuilder.buildUrl(Installation.instance().getToolkitBaseUrl(), simId.toString(), actor, trans, eventId)
     }
 
     String getSimLogPlaceToken() {
         SimLogEventLinkBuilder.buildToken(simId.toString(), actor, trans, eventId)
     }
 
-    gov.nist.asbestos.simapi.tk.actors.ActorType getActorType() { return gov.nist.asbestos.simapi.tk.actors.ActorType.findActor(actor) }
+    ActorType getActorType() { return ActorType.findActor(actor) }
 
-    gov.nist.asbestos.simapi.tk.actors.TransactionType getTransactionType() { return gov.nist.asbestos.simapi.tk.actors.TransactionType.find(trans) }
+    TransactionType getTransactionType() { return TransactionType.find(trans) }
 
     File getRequestBodyFile() {
         return open().getRequestBodyFile()

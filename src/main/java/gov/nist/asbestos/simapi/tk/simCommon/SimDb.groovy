@@ -1,6 +1,8 @@
 package gov.nist.asbestos.simapi.tk.simCommon
 
-
+import gov.nist.asbestos.simapi.tk.actors.ActorType
+import gov.nist.asbestos.simapi.tk.actors.TransactionType
+import gov.nist.asbestos.simapi.tk.installation.Installation
 import groovy.transform.TypeChecked
 import org.apache.log4j.Logger
 
@@ -58,7 +60,7 @@ import org.apache.log4j.Logger
 		createSimSafetyFile()
 	}
 
-    SimDb(SimId simId, gov.nist.asbestos.simapi.tk.actors.ActorType actor, gov.nist.asbestos.simapi.tk.actors.TransactionType transaction, boolean openToLastTransaction) {
+    SimDb(SimId simId, ActorType actor, TransactionType transaction, boolean openToLastTransaction) {
 		this(simId, actor.shortName, transaction.shortName, openToLastTransaction)
 	}
 
@@ -284,7 +286,7 @@ import org.apache.log4j.Logger
 	}
 
 	private File mkEventDir(Date date) {
-		String eventBase = gov.nist.asbestos.simapi.tk.installation.Installation.asFilenameBase(date);
+		String eventBase = Installation.asFilenameBase(date);
 		return mkEventDir(eventBase)
 	}
 
@@ -548,12 +550,12 @@ import org.apache.log4j.Logger
 		return filename.substring(0, dot);
 	}
 
-	 gov.nist.asbestos.simapi.tk.actors.ActorType getSimulatorActorType() {
+	 ActorType getSimulatorActorType() {
 		SimulatorConfig config = AbstractActorFactory.getSimConfig(simId)
-		gov.nist.asbestos.simapi.tk.actors.ActorType.findActor(config.actorType)
+		ActorType.findActor(config.actorType)
 	}
 
-	 static List<SimId> getSimulatorIdsforActorType(gov.nist.asbestos.simapi.tk.actors.ActorType actorType, TestSession testSession)  {
+	 static List<SimId> getSimulatorIdsforActorType(ActorType actorType, TestSession testSession)  {
 		List<SimId> allSimIds = getAllSimIds(testSession);
 		List<SimId> simIdsOfType = new ArrayList<>();
 		for (SimId simId : allSimIds) {
@@ -564,7 +566,7 @@ import org.apache.log4j.Logger
 		return simIdsOfType;
 	}
 
-	static  gov.nist.asbestos.simapi.tk.actors.ActorType getSimulatorActorType(SimId simId)  {
+	static  ActorType getSimulatorActorType(SimId simId)  {
 		return new SimDb(simId).getSimulatorActorType();
 	}
 
