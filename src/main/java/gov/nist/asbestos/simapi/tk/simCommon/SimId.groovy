@@ -52,6 +52,14 @@ import groovy.transform.TypeChecked
         build(testSession, id);
     }
 
+    static SimId buildFromRawId(String rawid) {
+        assert rawid.contains('__') : "buildFromRawId: SimId is testsession__id : ${rawid} is not valid format\n"
+        String[] parts = rawid.split('__')
+        String testSession = parts[0]
+        String id = parts[1]
+        new SimId(new TestSession(testSession), id)
+    }
+
      SimId() {}
 
      SimId forFhir() {
