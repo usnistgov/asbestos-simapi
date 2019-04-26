@@ -13,8 +13,8 @@ class EventTest extends Specification {
 
     def 'request' () {
         setup:
-//       File ecHome = tmp.newFolder('echome')
-        File ecHome = new File('/home/bill/tmp')
+//        File ecHome = new File('/home/bill/tmp')
+        File ecHome = tmp.newFolder('echome')
         File ec = new File(ecHome, 'ec')
         ec.mkdirs()
 
