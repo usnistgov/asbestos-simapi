@@ -97,10 +97,10 @@ import groovy.transform.TypeChecked
      String validateState() {
         StringBuilder buf = new StringBuilder();
 
-        if (testSession == null || testSession.equals("")) buf.append("No testSession specified\n");
-        if (id == null || id.equals("")) buf.append("No id specified\n");
-        if (actorType == null || actorType.equals("")) buf.append("No actorType specified\n");
-        if (environmentName == null || environmentName.equals("")) buf.append("No environmentName specified");
+        if (testSession == null || testSession.value == "") buf.append("No testSession specified\n");
+        if (id == null || id == "") buf.append("No id specified\n");
+        if (actorType == null || actorType == "") buf.append("No actorType specified\n");
+        if (environmentName == null || environmentName == "") buf.append("No environmentName specified");
 
         if (buf.length() == 0) return null;   // no errors
         return buf.toString();

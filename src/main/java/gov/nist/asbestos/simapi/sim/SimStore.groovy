@@ -2,13 +2,14 @@ package gov.nist.asbestos.simapi.sim
 
 
 import gov.nist.asbestos.simapi.tk.simCommon.SimId
+import groovy.transform.TypeChecked
 
 /**
  * Store is organized as:
  * EC/testSession/fsimdb/simId/actor/transaction/event/event_files
- *                                                     actor/content_files_from_this_event
- * event_files are request_hdr.txt, request_body.txt etc.
+ * The content starting from the event/ is handed off to the class Event
  */
+@TypeChecked
 class SimStore {
     File externalCache
     private File _simStoreLocation = null
@@ -21,13 +22,13 @@ class SimStore {
 
     SimStore(File externalCache, SimId simId) {
         assert externalCache : "SimStore: initialized with externalCache == null"
-        String problems = simId.validateState()
-        assert !problems : "SimStore: initialized with SimId with problems:\n ${problems}"
+        assert !simId.validateState() : "SimStore: initialized with SimId with problems:\n${simId.validateState()}\n"
         this.externalCache = externalCache
         this.simId = simId
     }
 
     File getStore() {
+        assert externalCache.exists() : "SimStore: External Cache must exist (${externalCache})\n"
         if (!_simStoreLocation) {
             _simStoreLocation = new File(new File(externalCache, 'fsimdb'), simId.testSession.value)
             _simStoreLocation.mkdirs()
@@ -51,15 +52,20 @@ class SimStore {
     File getTransactionDir() {
         assert transaction : 'SimStore: transaction is null'
         if (!_transactionDir)
-            _transactionDir = new File(actorDir(), transaction)
+            _transactionDir = new File(actorDir, transaction)
         _transactionDir
     }
 
     File getEventDir() {
         assert eventId : "SimStore: eventId is null"
         if (!_eventDir)
-            _eventDir = new File(transactionDir(), eventId)
+            _eventDir = new File(transactionDir, eventId)
         _eventDir
+    }
+
+    Event newEvent() {
+        createEvent()
+        new Event(this, _eventDir)
     }
 
     File createEvent() {
@@ -67,11 +73,22 @@ class SimStore {
     }
 
     File createEvent(Date date) {
-        createEventDir(date.getDateTimeString())
+        File f = createEventDir(getEventIdFromDate(date))
+        f.mkdirs()
+        f
     }
 
     File useEvent(String eventId) {
         createEventDir(eventId)
+    }
+
+    SimStore withTransaction(String transaction) {
+        this.transaction = transaction
+        this
+    }
+
+    String getEventIdFromDate(Date date) {
+        asFilenameBase(date)
     }
 
     /**
@@ -82,7 +99,9 @@ class SimStore {
      */
     private File createEventDir(String eventBase) {
         int incr = 0;
+        _eventDir = null  // restart
         while (true) {
+            eventId = eventBase
             if (incr != 0)
                 eventId = eventBase + '_' + incr    // make unique
             if (eventDir.exists()) {
@@ -95,28 +114,50 @@ class SimStore {
         eventDir
     }
 
-    File getRequestHeaderFile() { new File(eventDir, 'request_header.txt') }
-    File getRequestBodyFile() { new File(eventDir, 'request_body.bin') }
-    File getRequestBodyStringFile() { new File(eventDir, 'request_body.txt') }
-    File getResponseHeaderFile() { new File(eventDir, 'response_header.txt') }
-    File getResponseBodyFile() { new File(eventDir, 'response_body.bin') }
-    File getResponseBodyStringFile() { new File(eventDir, 'response_body.txt') }
 
-    void putRequestHeader(String header) { requestHeaderFile.text = header }
-    void putRequestBody(byte[] body) {
-        requestBodyFile.withOutputStream { it.write body }
-        requestBodyStringFile.text = new String(body)
-    }
-    String getRequestHeader() { requestHeaderFile.text }
-    byte[] getRequestBody() { requestBodyFile.readBytes() }
-    String getRequestBodyAsString() { new String(requestBodyFile.readBytes()) }
+    static String asFilenameBase(Date date) {
+        Calendar c  = Calendar.getInstance();
+        c.setTime(date);
 
-    void putResponseHeader(String header) { responseHeaderFile.text = header }
-    void putResponseBody(byte[] body) {
-        responseBodyFile.withOutputStream { it.write body }
-        responseBodyStringFile.text = new String(body)
+        String year = Integer.toString(c.get(Calendar.YEAR));
+        String month = Integer.toString(c.get(Calendar.MONTH) + 1);
+        if (month.length() == 1)
+            month = "0" + month;
+        String day = Integer.toString(c.get(Calendar.DAY_OF_MONTH));
+        if (day.length() == 1 )
+            day = "0" + day;
+        String hour = Integer.toString(c.get(Calendar.HOUR_OF_DAY));
+        if (hour.length() == 1)
+            hour = "0" + hour;
+        String minute = Integer.toString(c.get(Calendar.MINUTE));
+        if (minute.length() == 1)
+            minute = "0" + minute;
+        String second = Integer.toString(c.get(Calendar.SECOND));
+        if (second.length() == 1)
+            second = "0" + second;
+        String mili = Integer.toString(c.get(Calendar.MILLISECOND));
+        if (mili.length() == 2)
+            mili = "0" + mili;
+        else if (mili.length() == 1)
+            mili = "00" + mili;
+
+        String dot = "_";
+
+        String val =
+                year +
+                        dot +
+                        month +
+                        dot +
+                        day +
+                        dot +
+                        hour +
+                        dot +
+                        minute +
+                        dot +
+                        second +
+                        dot +
+                        mili
+        ;
+        return val;
     }
-    String getResponseHeader() { responseHeaderFile.text }
-    byte[] getResponseBody() { responseBodyFile.readBytes() }
-    String getResponseBodyAsString() { new String(responseBodyFile.readBytes()) }
 }
