@@ -18,12 +18,14 @@ class SimStore {
     private File _simStoreLocation = null
     private File _simIdDir = null
     private File _transactionDir = null
+    private File _actorDir
     private File _eventDir = null
     SimId simId
     String transaction = null
     String eventId = null // within transaction
     boolean newlyCreated = false
     static String PSIMDB = 'psimdb'
+    Event event
 
     SimStore(File externalCache, SimId simId) {
         assert externalCache : "SimStore: initialized with externalCache == null"
@@ -60,6 +62,10 @@ class SimStore {
         getStore(false)
     }
 
+    boolean expectingEvent() {
+        simId && simId.actorType && transaction
+    }
+
     void deleteSim() {
         simDir.deleteDir()
     }
@@ -81,6 +87,10 @@ class SimStore {
         simId.actorType
     }
 
+    void setActor(String actor) {
+        simId.actorType = actor
+    }
+
     File getSimDir() {
         assert simId : "SimStore: simId is null"
         if (!_simIdDir)
@@ -89,10 +99,19 @@ class SimStore {
         _simIdDir
     }
 
+    File getActorDir() {
+        assert actor : 'SimStore: actor is null'
+        if (!_actorDir)
+            _actorDir = new File(simDir, actor)
+        _actorDir.mkdirs()
+        _actorDir
+    }
+
+
     File getTransactionDir() {
         assert transaction : 'SimStore: transaction is null'
         if (!_transactionDir)
-            _transactionDir = new File(simDir, transaction)
+            _transactionDir = new File(actorDir, transaction)
         _transactionDir.mkdirs()
         _transactionDir
     }
@@ -107,7 +126,8 @@ class SimStore {
 
     Event newEvent() {
         createEvent()
-        new Event(this, _eventDir)
+        event = new Event(this, _eventDir)
+        event
     }
 
     File createEvent() {
