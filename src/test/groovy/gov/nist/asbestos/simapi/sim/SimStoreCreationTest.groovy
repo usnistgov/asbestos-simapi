@@ -2,8 +2,10 @@ package gov.nist.asbestos.simapi.sim
 
 import gov.nist.asbestos.simapi.tk.simCommon.SimId
 import gov.nist.asbestos.simapi.tk.simCommon.TestSession
+import groovy.json.JsonSlurper
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
+import spock.lang.Shared
 import spock.lang.Specification
 
 class SimStoreCreationTest extends Specification {
@@ -51,11 +53,56 @@ class SimStoreCreationTest extends Specification {
         when: // manually create ec - now SimStore can initialize
         ec.mkdirs()
         simStore = new SimStore(ec, simId)
-        simStore.getStore()  // this uses ec
+        simStore.getStore(true)  // this uses ec
 
         then: // fsimdb initialized
-        new File(new File(ec, 'fsimdb'), 'default').exists()
+        new File(new File(ec, SimStore.PSIMDB), 'default').exists()
     }
+
+    def 'from json config' () {
+        def jsonString = '''
+{
+  "environment": "default",
+  "testSession": "default",
+  "simId": "1",
+  "actorType": "balloon"
+}
+'''
+
+        setup:
+        Map rawConfig = (Map) new JsonSlurper().parseText(jsonString)
+        File ecHome = tmp.newFolder('echome')
+//        File ecHome = new File('/home/bill/tmp')
+        File ec = new File(ecHome, 'ec')
+        ec.mkdirs()
+
+        TestSession testSession = new TestSession('default')
+
+        /////////////////////////////////////////////////////
+        when:
+        SimStore store = SimStoreBuilder.builder(ec, new SimConfig(rawConfig))
+
+        then:
+        store.simId == new SimId(testSession, '1', 'baloon', 'default')
+        ec.exists()
+        File db = new File(ec, 'psimdb')
+        db.exists()
+        File defu = new File(db, 'default')
+        defu.exists()
+        File one = new File(defu, '1')
+        one.exists()
+        File config = new File(one, 'config.json')
+        config.exists()
+
+        when:
+        SimStore store2 = SimStoreBuilder.loader(ec, new TestSession('default'), '1')
+
+        then:
+        store2.simId == store.simId
+
+    }
+
+    // TODO need test of sim delete
 
     def 'event initialization' () {
         setup:
@@ -70,6 +117,7 @@ class SimStoreCreationTest extends Specification {
         when:
         SimId simId = new SimId(testSession, 'foo', 'reg', 'cat')
         SimStore simStore = new SimStore(ec, simId).withTransaction('store')
+        simStore.getStore(true)  // create sim
         Event event1 = simStore.newEvent()
         Event event2 = simStore.newEvent()
 

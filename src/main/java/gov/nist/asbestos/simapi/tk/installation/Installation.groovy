@@ -12,10 +12,6 @@ class Installation {
     File defaultEnvironmentFile = new File("${externalCache}/environment/default")
     String toolkitBaseUrl = 'http://localhost:8080/xdstools'
 
-    File environmentFile(String name) {
-        new File("${externalCache}/environment/${name}")
-    }
-
     File  externalCache() {
         assert externalCache : "External Cache location not set"
         assert externalCache.exists() : "External Cache does not exist - ${externalCache}"
@@ -61,6 +57,18 @@ class Installation {
 
     File simDbFile() {
         return new File(externalCache(), "fsimdb");
+    }
+
+    File environmentDbFile() {
+        new File(externalCache(), 'environment')
+    }
+
+    File environmentFile(String environment) {
+        new File(environmentDbFile(), environment)
+    }
+
+    boolean environmentExists(String environment) {
+        environmentFile(environment).exists()
     }
 
     static String asFilenameBase(Date date) {
@@ -147,5 +155,6 @@ class Installation {
     boolean testSessionExists(TestSession testSession) {
         return getTestSessions().contains(testSession);
     }
+
 
 }

@@ -70,15 +70,16 @@ class Event {
 
     private File getRequestHeaderFile() { new File(current, 'request_header.txt') }
     private File getRequestBodyFile() { new File(current, 'request_body.bin') }
-    private File getRequestBodyStringFile() { new File(current, 'request_body.txt') }
-    private File getResponseHeaderFile() { new File(current, 'response_header.txt') }
-    private File getResponseBodyFile() { new File(current, 'response_body.bin') }
-    private File getResponseBodyStringFile() { new File(current, 'response_body.txt') }
+    private File getRequestBodyStringFile() {  new File(current, 'request_body.txt') }
+    private File getResponseHeaderFile() {  new File(current, 'response_header.txt') }
+    private File getResponseBodyFile() {  new File(current, 'response_body.bin') }
+    private File getResponseBodyStringFile() {  new File(current, 'response_body.txt') }
 
 
     // these getters and setters operate on current
-    void putRequestHeader(String header) { requestHeaderFile.text = header }
+    void putRequestHeader(String header) { current.mkdirs(); requestHeaderFile.text = header }
     void putRequestBody(byte[] body) {
+        current.mkdirs();
         requestBodyFile.withOutputStream { it.write body }
         requestBodyStringFile.text = new String(body)
     }
@@ -86,8 +87,9 @@ class Event {
     byte[] getRequestBody() { requestBodyFile.readBytes() }
     String getRequestBodyAsString() { new String(requestBodyFile.readBytes()) }
 
-    void putResponseHeader(String header) { responseHeaderFile.text = header }
+    void putResponseHeader(String header) { current.mkdirs(); responseHeaderFile.text = header }
     void putResponseBody(byte[] body) {
+        current.mkdirs();
         responseBodyFile.withOutputStream { it.write body }
         responseBodyStringFile.text = new String(body)
     }

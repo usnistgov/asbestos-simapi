@@ -2,57 +2,98 @@ package gov.nist.asbestos.simapi.sim
 
 
 import gov.nist.asbestos.simapi.tk.simCommon.SimId
+import gov.nist.asbestos.simapi.tk.simCommon.TestSession
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
 import groovy.transform.TypeChecked
 
 /**
  * Store is organized as:
- * EC/testSession/fsimdb/simId/actor/transaction/event/event_files
+ * EC/testSession/psimdb/simId/actor/transaction/event/event_files
  * The content starting from the event/ is handed off to the class Event
  */
 @TypeChecked
 class SimStore {
     File externalCache
     private File _simStoreLocation = null
-    private File _actorDir = null
+    private File _simIdDir = null
     private File _transactionDir = null
     private File _eventDir = null
     SimId simId
     String transaction = null
     String eventId = null // within transaction
+    boolean newlyCreated = false
+    static String PSIMDB = 'psimdb'
 
     SimStore(File externalCache, SimId simId) {
         assert externalCache : "SimStore: initialized with externalCache == null"
-        assert !simId.validateState() : "SimStore: initialized with SimId with problems:\n${simId.validateState()}\n"
+        assert !simId.validateState() : "SimStore: cannot open SimId ${simId}:\n${simId.validateState()}\n"
         this.externalCache = externalCache
         this.simId = simId
     }
 
-    File getStore() {
+    SimStore(File externalCache) {
+        assert externalCache : "SimStore: initialized with externalCache == null"
+        this.externalCache = externalCache
+    }
+
+
+    File getStore(boolean create) {
         assert externalCache.exists() : "SimStore: External Cache must exist (${externalCache})\n"
         if (!_simStoreLocation) {
-            _simStoreLocation = new File(new File(externalCache, 'fsimdb'), simId.testSession.value)
-            _simStoreLocation.mkdirs()
-            assert _simStoreLocation.exists() && _simStoreLocation.canWrite() && _simStoreLocation.isDirectory() :
-                    "SimStore: cannot create writable simdb directory at ${_simStoreLocation}"
+            _simStoreLocation = testSessionDir(externalCache, simId)
+            if (create) {
+                newlyCreated = !_simStoreLocation.exists()
+                // assert !_simStoreLocation.exists() : "SimStore:Create: sim ${simId} at ${_simStoreLocation} already exists\n"
+                _simStoreLocation.mkdirs()
+                assert _simStoreLocation.exists() && _simStoreLocation.canWrite() && _simStoreLocation.isDirectory():
+                        "SimStore: cannot create writable simdb directory at ${_simStoreLocation}\n"
+            } else {
+                assert _simStoreLocation.exists() && _simStoreLocation.canWrite() && _simStoreLocation.isDirectory():
+                        "SimStore: Sim ${simId.toString()} does not exist\n"
+            }
         }
         _simStoreLocation
+    }
+
+    File getStore() {
+        getStore(false)
+    }
+
+    void deleteSim() {
+        simDir.deleteDir()
+    }
+
+    void setSimId(SimId simId) {
+        assert !simId.validateState() : "SimStore: cannot open SimId ${simId}:\n${simId.validateState()}\n"
+        this.simId = simId
+    }
+
+    void setSimIdForLoader(SimId simId) {
+        this.simId = simId
+    }
+
+    File testSessionDir(File externalCache, SimId simId) {
+        new File(new File(externalCache, PSIMDB), simId.testSession.value)
     }
 
     String getActor() {
         simId.actorType
     }
 
-    File getActorDir() {
-        assert actor : "SimStore: actor is null"
-        if (!_actorDir)
-            _actorDir = new File(store, actor)
-        _actorDir
+    File getSimDir() {
+        assert simId : "SimStore: simId is null"
+        if (!_simIdDir)
+            _simIdDir = new File(store, simId.id)
+        _simIdDir.mkdirs()
+        _simIdDir
     }
 
     File getTransactionDir() {
         assert transaction : 'SimStore: transaction is null'
         if (!_transactionDir)
-            _transactionDir = new File(actorDir, transaction)
+            _transactionDir = new File(simDir, transaction)
+        _transactionDir.mkdirs()
         _transactionDir
     }
 
@@ -60,6 +101,7 @@ class SimStore {
         assert eventId : "SimStore: eventId is null"
         if (!_eventDir)
             _eventDir = new File(transactionDir, eventId)
+       // _eventDir.mkdirs()  // breaks createEvent(date)
         _eventDir
     }
 
@@ -84,6 +126,11 @@ class SimStore {
 
     SimStore withTransaction(String transaction) {
         this.transaction = transaction
+        this
+    }
+
+    SimStore withActorType(String actor) {
+        this.simId.actorType = actor
         this
     }
 

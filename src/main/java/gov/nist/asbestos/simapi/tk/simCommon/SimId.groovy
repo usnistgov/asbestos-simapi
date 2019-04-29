@@ -15,7 +15,7 @@ import groovy.transform.TypeChecked
     private static final String SLASH = "/";
 
     private TestSession testSession = null;
-    private String id = null;
+    private String _id = null;
     private String actorType = null;
     private String environmentName = null;
     private boolean fhir = false;
@@ -60,6 +60,16 @@ import groovy.transform.TypeChecked
         new SimId(new TestSession(testSession), id)
     }
 
+    SimId withActorType(String actor) {
+        this.actorType = actor
+        this
+    }
+
+    SimId withEnvironment(String environment) {
+        this.environmentName = environment
+        this
+    }
+
      SimId() {}
 
      SimId forFhir() {
@@ -78,29 +88,29 @@ import groovy.transform.TypeChecked
         assert !id.contains(SLASH) : SLASH + " is illegal in simulator id"
 
         this.testSession = testSession;
-        this.id = id;
+        this._id = id;
     }
 
     // equals and hashCode ignore FHIR status on purpose
     @Override
      boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
         SimId simId = (SimId) o;
 
-        if (testSession != null ? !testSession.equals(simId.testSession) : simId.testSession != null) return false;
-        return id != null ? id.equals(simId.id) : simId.id == null;
+        if( _id != simId._id) return false
+        if (testSession != simId.testSession) return false;
+        true
     }
 
     @Override
      int hashCode() {
         int result = testSession != null ? testSession.hashCode() : 0;
-        result = 31 * result + (id != null ? id.hashCode() : 0);
+        result = 31 * result + (_id != null ? _id.hashCode() : 0);
         return result;
     }
 
-     String toString() { return testSession.toString() + SEPARATOR + id; }
+     String toString() { return testSession.toString() + SEPARATOR + _id; }
 
      String validateState() {
         StringBuilder buf = new StringBuilder();
@@ -114,7 +124,7 @@ import groovy.transform.TypeChecked
         return buf.toString();
     }
 
-    String cleanId(String id) { return id.replaceAll("\\.", "_").toLowerCase(); }
+    static String cleanId(String id) { return id.replaceAll("\\.", "_").toLowerCase(); }
 
      String getActorType() {
         return actorType;
@@ -137,7 +147,7 @@ import groovy.transform.TypeChecked
     }
 
      String getId() {
-        return id;
+        return _id;
     }
 
      boolean isTestSession(TestSession testSession) {
