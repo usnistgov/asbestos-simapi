@@ -1,4 +1,4 @@
-package gov.nist.asbestos.simapi.sim
+package gov.nist.asbestos.simapi.sim.basic
 
 import groovy.transform.TypeChecked
 

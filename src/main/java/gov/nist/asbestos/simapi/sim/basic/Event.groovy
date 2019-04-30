@@ -1,5 +1,7 @@
-package gov.nist.asbestos.simapi.sim
+package gov.nist.asbestos.simapi.sim.basic
 
+import gov.nist.asbestos.simapi.sim.headers.Headers
+import gov.nist.asbestos.simapi.sim.headers.HeadersUtil
 import groovy.transform.TypeChecked
 
 /**
@@ -75,6 +77,12 @@ class Event {
     private File getResponseBodyFile() {  new File(current, 'response_body.bin') }
     private File getResponseBodyStringFile() {  new File(current, 'response_body.txt') }
 
+    Headers requestHeaders
+
+    void putRequestHeader(Headers headers) {
+        requestHeaders = headers
+        putRequestHeader(HeadersUtil.)
+    }
 
     // these getters and setters operate on current
     void putRequestHeader(String header) { current.mkdirs(); requestHeaderFile.text = header }

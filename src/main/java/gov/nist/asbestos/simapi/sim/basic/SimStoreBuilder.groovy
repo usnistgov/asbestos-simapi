@@ -1,4 +1,4 @@
-package gov.nist.asbestos.simapi.sim
+package gov.nist.asbestos.simapi.sim.basic
 
 import gov.nist.asbestos.simapi.tk.simCommon.SimId
 import gov.nist.asbestos.simapi.tk.simCommon.TestSession
@@ -15,7 +15,7 @@ class SimStoreBuilder {
         simStore.getStore(true) // create
         File configFile = new File(simStore.simDir, 'config.json')
         simStore.newlyCreated = !configFile.exists()
-        configFile.text = json
+        configFile.text = JsonOutput.prettyPrint(json)
         simStore
     }
 
@@ -23,7 +23,7 @@ class SimStoreBuilder {
         SimStore simStore = new SimStore(externalCache)
         simStore.setSimIdForLoader(new SimId(testSession, id))  // doesn't do Id validation
         Map rawConfig = (Map) new JsonSlurper().parse(new File(simStore.simDir, 'config.json'))
-        SimConfig simConfig = new SimConfig(rawConfig)
+        SimConfig simConfig = new SimConfigMapper(rawConfig).build()
         simStore.simId = getSimId(simConfig)
         simStore
     }
@@ -34,7 +34,7 @@ class SimStoreBuilder {
 
     static SimConfig buildSimConfig(String json) {
         Map rawConfig = (Map) new JsonSlurper().parseText(json)
-        new SimConfig(rawConfig)
+        new SimConfigMapper(rawConfig).build()
     }
 
 }

@@ -1,10 +1,7 @@
-package gov.nist.asbestos.simapi.sim
+package gov.nist.asbestos.simapi.sim.basic
 
 
 import gov.nist.asbestos.simapi.tk.simCommon.SimId
-import gov.nist.asbestos.simapi.tk.simCommon.TestSession
-import groovy.json.JsonOutput
-import groovy.json.JsonSlurper
 import groovy.transform.TypeChecked
 
 /**

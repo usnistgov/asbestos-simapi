@@ -1,11 +1,15 @@
 package gov.nist.asbestos.simapi.sim
 
+import gov.nist.asbestos.simapi.sim.basic.Event
+import gov.nist.asbestos.simapi.sim.basic.SimConfig
+import gov.nist.asbestos.simapi.sim.basic.SimConfigMapper
+import gov.nist.asbestos.simapi.sim.basic.SimStore
+import gov.nist.asbestos.simapi.sim.basic.SimStoreBuilder
 import gov.nist.asbestos.simapi.tk.simCommon.SimId
 import gov.nist.asbestos.simapi.tk.simCommon.TestSession
 import groovy.json.JsonSlurper
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
-import spock.lang.Shared
 import spock.lang.Specification
 
 class SimStoreCreationTest extends Specification {
@@ -102,8 +106,6 @@ class SimStoreCreationTest extends Specification {
 
     }
 
-    // TODO need test of sim delete
-
     def 'event initialization' () {
         setup:
 //        File ecHome = new File('/home/bill/tmp')
@@ -125,5 +127,75 @@ class SimStoreCreationTest extends Specification {
         event1.root.exists()
         event2.root.exists()
         event1 != event2
+    }
+
+    def 'loader extensions' () {
+        setup:
+//        File ecHome = new File('/home/bill/tmp')
+        File ecHome = tmp.newFolder('echome2')
+        File ec = new File(ecHome, 'ec')
+        ec.mkdirs()
+        def jsonString = '''
+{
+  "environment": "default",
+  "testSession": "default",
+  "simId": "1",
+  "actorType": "balloon",
+  "extra1": "value1",
+  "extra2": "value2"
+}
+'''
+
+        TestSession testSession = new TestSession('default')
+
+        /////////////////////////////////////////////////////
+        when:
+        Map jsonMap = (Map) new JsonSlurper().parseText(jsonString)
+        SimConfig config = new SimConfigMapper(jsonMap).build()
+
+        then:
+        config.environment == 'default'
+        config.testSession == 'default'
+        config.simId == '1'
+        config.actorType == 'balloon'
+        config.extensions.extra1 == 'value1'
+        config.extensions.extra2 == 'value2'
+
+    }
+
+    def 'array in extensions' () {
+        setup:
+//        File ecHome = new File('/home/bill/tmp')
+        File ecHome = tmp.newFolder('echome2')
+        File ec = new File(ecHome, 'ec')
+        ec.mkdirs()
+        def jsonString = '''
+{
+  "environment": "default",
+  "testSession": "default",
+  "simId": "1",
+  "actorType": "balloon",
+  "transactions": {
+    "WRITE": "base",
+    "READ": "base"
+  }
+}
+'''
+
+        TestSession testSession = new TestSession('default')
+
+        /////////////////////////////////////////////////////
+        when:
+        Map jsonMap = (Map) new JsonSlurper().parseText(jsonString)
+
+        then:
+        jsonMap
+        jsonMap.transactions.READ == 'base'
+
+        when:
+        SimConfig config = new SimConfigMapper(jsonMap).build()
+
+        then:
+        config.extensions.transactions.READ == 'base'
     }
 }

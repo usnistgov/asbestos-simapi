@@ -1,5 +1,7 @@
 package gov.nist.asbestos.simapi.sim
 
+import gov.nist.asbestos.simapi.sim.basic.Event
+import gov.nist.asbestos.simapi.sim.basic.SimStore
 import gov.nist.asbestos.simapi.tk.simCommon.SimId
 import gov.nist.asbestos.simapi.tk.simCommon.TestSession
 import org.junit.Rule

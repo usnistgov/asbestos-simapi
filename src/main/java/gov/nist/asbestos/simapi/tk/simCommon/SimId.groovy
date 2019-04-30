@@ -1,6 +1,7 @@
 package gov.nist.asbestos.simapi.tk.simCommon
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect
+import gov.nist.asbestos.simapi.tk.actors.ActorType
 import gov.nist.asbestos.simapi.tk.siteManagement.SiteSpec
 import groovy.transform.TypeChecked
 
@@ -161,7 +162,7 @@ import groovy.transform.TypeChecked
         SiteSpec siteSpec = new SiteSpec(testSession);
         siteSpec.setName(toString());
         if (actorType != null)
-            siteSpec.setActorType(gov.nist.asbestos.simapi.tk.actors.ActorType.findActor(actorType));
+            siteSpec.setActorType(ActorType.findActor(actorType));
         return siteSpec;
     }
 
