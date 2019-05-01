@@ -1,7 +1,8 @@
 package gov.nist.asbestos.simapi.sim.basic
 
 import gov.nist.asbestos.simapi.sim.headers.Headers
-import gov.nist.asbestos.simapi.sim.headers.HeadersUtil
+import gov.nist.asbestos.simapi.sim.headers.HeaderBuilder
+import gov.nist.asbestos.simapi.sim.headers.RawHeaders
 import groovy.transform.TypeChecked
 
 /**
@@ -19,6 +20,16 @@ class Event {
     Event(SimStore simStore, File eventDir) {
         this.simStore = simStore
         this.root = eventDir
+        int i = 0
+        while (true) {
+            File taskFile = getTaskFile(i)
+            if (taskFile.exists())
+                _tasks[i] = taskFile
+            else
+                break
+            i++
+        }
+        clearCache()
     }
 
     /**
@@ -31,7 +42,12 @@ class Event {
             _request.mkdir()
         }
         current = _request
+        clearCache()
         _request
+    }
+
+    File getTaskFile(int i) {
+        new File(root, "task${i}")
     }
 
     /**
@@ -40,10 +56,11 @@ class Event {
      */
     File getNewTask() {
         int i = _tasks.size()
-        File task = new File(root, "task${i}")
+        File task = getTaskFile(i)
         task.mkdir()
         current = task
         _tasks << task
+        clearCache()
         task
     }
 
@@ -58,6 +75,7 @@ class Event {
     void selectTask(int i) {
         assert i < taskCount : "Event: cannot return task #${i} - only ${taskCount} tasks\n"
         current = _tasks[i]
+        clearCache()
     }
 
     /**
@@ -68,6 +86,18 @@ class Event {
         if (!_request)
             getRequest()
         current = _request
+        clearCache()
+    }
+
+    void clearCache() {
+        requestRawHeaders = null
+        requestHeaders = null
+        requestRawBody = null
+        requestBody = null
+        responseRawHeaders = null
+        responseHeaders = null
+        responseRawBody  = null
+        responseBody = null
     }
 
     private File getRequestHeaderFile() { new File(current, 'request_header.txt') }
@@ -77,32 +107,89 @@ class Event {
     private File getResponseBodyFile() {  new File(current, 'response_body.bin') }
     private File getResponseBodyStringFile() {  new File(current, 'response_body.txt') }
 
-    Headers requestHeaders
+    RawHeaders requestRawHeaders = null
+    Headers requestHeaders = null
+    byte[] requestRawBody = null
+    String requestBody = null
 
-    void putRequestHeader(Headers headers) {
-        requestHeaders = headers
-        putRequestHeader(HeadersUtil.)
+    RawHeaders responseRawHeaders = null
+    Headers responseHeaders = null
+    byte[] responseRawBody  = null
+    String responseBody = null
+
+    void putRequestHeader(RawHeaders rawHeaders) {
+        requestRawHeaders = rawHeaders
+        requestHeaders = HeaderBuilder.parseHeaders(rawHeaders)
+        current.mkdirs()
+        String txt = "${rawHeaders.uriLine}\r\n${HeaderBuilder.headersAsString(rawHeaders)}"
+        requestHeaderFile.text = txt
     }
 
-    // these getters and setters operate on current
-    void putRequestHeader(String header) { current.mkdirs(); requestHeaderFile.text = header }
     void putRequestBody(byte[] body) {
+        requestRawBody = body
         current.mkdirs();
         requestBodyFile.withOutputStream { it.write body }
-        requestBodyStringFile.text = new String(body)
+        requestBody = new String(body)
+        requestBodyStringFile.text = requestBody
     }
-    String getRequestHeader() { requestHeaderFile.text }
-    byte[] getRequestBody() { requestBodyFile.readBytes() }
-    String getRequestBodyAsString() { new String(requestBodyFile.readBytes()) }
+    Headers getRequestHeader() {
+        if (!requestHeaders) {
+            String headerString = requestHeaderFile.text
+            requestRawHeaders = HeaderBuilder.rawHeadersFromString(headerString)
+            requestHeaders = HeaderBuilder.parseHeaders(requestRawHeaders)
+        }
+        requestHeaders
+    }
+    byte[] getRequestBody() {
+        if (!requestRawBody) {
+            requestRawBody = requestBodyFile.readBytes()
+            requestBody = new String(requestRawBody)
+        }
+        requestRawBody
+    }
 
-    void putResponseHeader(String header) { current.mkdirs(); responseHeaderFile.text = header }
+    String getRequestBodyAsString() {
+        getRequestBody()
+        requestBody
+    }
+
+    void putResponseHeader(Headers headers) {
+        responseHeaders = headers
+        putResponseHeaderInternal(headers.toString())
+    }
+
+    private void putResponseHeaderInternal(String header) {
+        current.mkdirs()
+        responseHeaderFile.text = header
+    }
+
     void putResponseBody(byte[] body) {
         current.mkdirs();
         responseBodyFile.withOutputStream { it.write body }
-        responseBodyStringFile.text = new String(body)
+        responseRawBody = body
+        responseBody = new String(body)
+        responseBodyStringFile.text = responseBody
     }
-    String getResponseHeader() { responseHeaderFile.text }
-    byte[] getResponseBody() { responseBodyFile.readBytes() }
-    String getResponseBodyAsString() { new String(responseBodyFile.readBytes()) }
+    String getResponseHeader() {
+        if (!responseHeaders) {
+            String headerString = responseHeaderFile.text
+            responseRawHeaders = HeaderBuilder.rawHeadersFromString(headerString)
+            responseHeaders = HeaderBuilder.parseHeaders(responseRawHeaders)
+        }
+        responseHeaders
+    }
+
+    byte[] getResponseBody() {
+        if (!responseRawBody) {
+            responseRawBody = responseBodyFile.readBytes()
+            responseBody = new String(responseRawBody)
+        }
+        responseRawBody
+    }
+
+    String getResponseBodyAsString() {
+        getResponseBody()
+        responseBody
+    }
 
 }
