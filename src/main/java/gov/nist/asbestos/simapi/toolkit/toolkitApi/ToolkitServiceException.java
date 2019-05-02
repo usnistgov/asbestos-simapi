@@ -28,8 +28,8 @@ public class ToolkitServiceException extends Exception {
     }
 
     /**
-     * Get HTTP status code
-     * @return HTTP status code
+     * Get HttpPost status code
+     * @return HttpPost status code
      */
     public int getCode() {
         return (result == null) ? code : result.getStatus().getStatusCode();

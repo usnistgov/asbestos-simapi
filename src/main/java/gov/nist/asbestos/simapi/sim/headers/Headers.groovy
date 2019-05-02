@@ -2,11 +2,24 @@ package gov.nist.asbestos.simapi.sim.headers
 
 import groovy.transform.TypeChecked
 
+// TODO status not tested
 @TypeChecked
 class Headers {
-    String verb
-    String pathInfo
+    String verb = null
+    String pathInfo = null
+    int status = 0
     List<NameValue> nameValueList = []
+
+    String getContentType() {
+        NameValue nv = nameValueList.find { NameValue nv -> nv.name.equalsIgnoreCase('content-type')}
+        if (!nv)
+            return ''
+        String[] parts1 = nv.value.split(':', 2)
+        assert parts1.size() == 2
+        String[] parts2 = parts1[0].split(',', 2)
+        assert parts2.size() > 0
+        parts2[0].trim()
+    }
 
     Headers withVerb(String verb) {
         this.verb = verb
@@ -23,6 +36,8 @@ class Headers {
 
         if (verb && pathInfo)
             buf.append(verb).append(' ').append(pathInfo).append('\r\n')
+        if (status != 0)
+            buf.append("1.1 ${status} unknown")
         Map<String, String> hdrs = [:]
         nameValueList.each { NameValue nv ->
             if (hdrs.containsKey(nv.name)) {

@@ -1,6 +1,7 @@
 package gov.nist.asbestos.simapi.sim
 
 import gov.nist.asbestos.simapi.sim.headers.HeaderBuilder
+import gov.nist.asbestos.simapi.sim.headers.Headers
 import gov.nist.asbestos.simapi.sim.headers.RawHeaders
 import spock.lang.Specification
 
@@ -37,4 +38,23 @@ content-length: 31'''
         input == str
     }
 
+    def 'from map' () {
+        setup:
+        Map<String, List<String>> input = [:]
+        input['content-type'] = ['application/json']
+        input['accept'] = ['text/html, image/gif, image/jpeg, *', 'q=.2, */*', 'q=.2']
+
+        when:
+        Headers headers = HeaderBuilder.parseHeaders(input)
+
+        then:
+        headers.nameValueList[0].name == 'content-type'
+        headers.nameValueList[0].value == 'application/json'
+        headers.nameValueList[1].name == 'accept'
+        headers.nameValueList[1].value == 'text/html, image/gif, image/jpeg, *'
+        headers.nameValueList[2].name == 'accept'
+        headers.nameValueList[2].value == 'q=.2, */*'
+        headers.nameValueList[3].name == 'accept'
+        headers.nameValueList[3].value == 'q=.2'
+    }
 }

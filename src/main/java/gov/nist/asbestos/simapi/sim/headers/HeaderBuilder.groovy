@@ -58,4 +58,18 @@ class HeaderBuilder {
 
         headers
     }
+
+    static Headers parseHeaders(Map<String, List<String>> theHeaders) {
+        Headers headers = new Headers()
+
+        List<String> names = theHeaders.keySet() as List
+        names.each {String name ->
+            List<String> values = theHeaders.get(name)
+            values.each {String value ->
+                headers.nameValueList << new NameValue([name: name, value: value])
+            }
+        }
+
+        headers
+    }
 }

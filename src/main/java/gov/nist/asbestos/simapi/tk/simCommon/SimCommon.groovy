@@ -112,7 +112,7 @@ import javax.servlet.http.HttpServletResponse;
 	   sendHttpFault(400, em);
 	}
 	 void sendHttpFault(int status, String em) {
-	   logger.info("HTTP Error response: " + status + " " + em);
+	   logger.info("HttpPost Error response: " + status + " " + em);
 	   try {
          response.sendError(status, em);
       } catch (IOException e) {

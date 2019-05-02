@@ -5,6 +5,8 @@ import gov.nist.asbestos.simapi.sim.headers.HeaderBuilder
 import gov.nist.asbestos.simapi.sim.headers.RawHeaders
 import groovy.transform.TypeChecked
 
+// TODO split off IO portion to EventStore
+
 /**
  * An Event is a request (the trigger) and any number of tasks undertaken
  * to satisfy that request.
@@ -54,14 +56,14 @@ class Event {
      * creates new task and sets it as current
      * @return the task dir
      */
-    File getNewTask() {
+    Event newTask() {
         int i = _tasks.size()
         File task = getTaskFile(i)
         task.mkdir()
         current = task
         _tasks << task
         clearCache()
-        task
+        this
     }
 
     int getTaskCount() {
@@ -82,11 +84,12 @@ class Event {
      * select request as current
      * @return
      */
-    void selectRequest() {
+    Event selectRequest() {
         if (!_request)
             getRequest()
         current = _request
         clearCache()
+        this
     }
 
     void clearCache() {
@@ -123,6 +126,12 @@ class Event {
         current.mkdirs()
         String txt = "${rawHeaders.uriLine}\r\n${HeaderBuilder.headersAsString(rawHeaders)}"
         requestHeaderFile.text = txt
+    }
+
+    void putRequestHeader(Headers headers) {
+        requestHeaders = headers
+        current.mkdirs()
+        requestHeaderFile.text = headers.toString()
     }
 
     void putRequestBody(byte[] body) {

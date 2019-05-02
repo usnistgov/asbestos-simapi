@@ -46,13 +46,13 @@ class EventTest extends Specification {
         event.putRequestHeader(HeaderBuilder.rawHeadersFromString(requestHdr))
         event.putRequestBody(requestBody.bytes)
 
-        event.newTask
+        event.newTask()
         event.putRequestHeader(HeaderBuilder.rawHeadersFromString(task1ReqHdr))
         event.putRequestBody(task1ReqBody.bytes)
         event.putResponseHeader(HeaderBuilder.parseHeaders(task1ResHdr))
         event.putResponseBody(task1ResBody.bytes)
 
-        event.newTask
+        event.newTask()
         event.putRequestHeader(HeaderBuilder.rawHeadersFromString(task2ReqHdr))
         event.putRequestBody(task2ReqBody.bytes)
         event.putResponseHeader(HeaderBuilder.parseHeaders(task2ResHdr))
