@@ -23,6 +23,7 @@ class SimStore {
     boolean newlyCreated = false
     static String PSIMDB = 'psimdb'
     Event event
+    SimConfig config
 
     SimStore(File externalCache, SimId simId) {
         assert externalCache : "SimStore: initialized with externalCache == null"
@@ -176,6 +177,13 @@ class SimStore {
                 break
         }
         eventDir
+    }
+
+    String getEndpoint() {
+        if (!config.fhirBase.endsWith('/'))
+            config.fhirBase = "${config.fhirBase}/"
+        Verb trans = Verb.valueOf(transaction)
+        (trans) ? config.fhirBase : "${config.fhirBase}${transaction}"
     }
 
 

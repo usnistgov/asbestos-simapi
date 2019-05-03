@@ -56,5 +56,19 @@ content-length: 31'''
         headers.nameValueList[2].value == 'q=.2, */*'
         headers.nameValueList[3].name == 'accept'
         headers.nameValueList[3].value == 'q=.2'
+
+    }
+
+    def 'content-type' () {
+        setup:
+        Map<String, List<String>> input = [:]
+        input['content-type'] = ['application/json', 'a=b']
+        input['accept'] = ['text/html, image/gif, image/jpeg, *', 'q=.2, */*', 'q=.2']
+
+        when:
+        Headers headers = HeaderBuilder.parseHeaders(input)
+
+        then:
+        headers.contentType == 'application/json'
     }
 }

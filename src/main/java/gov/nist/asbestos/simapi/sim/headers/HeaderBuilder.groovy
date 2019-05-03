@@ -65,8 +65,17 @@ class HeaderBuilder {
         List<String> names = theHeaders.keySet() as List
         names.each {String name ->
             List<String> values = theHeaders.get(name)
-            values.each {String value ->
-                headers.nameValueList << new NameValue([name: name, value: value])
+            if (values) {
+                values.each { String value ->
+                    if (value) {
+                        List<String> subValues = value.split(';')
+                        if (subValues) {
+                            subValues.each { String subValue ->
+                                headers.nameValueList << new NameValue([name: name?.trim(), value: subValue?.trim()])
+                            }
+                        }
+                    }
+                }
             }
         }
 

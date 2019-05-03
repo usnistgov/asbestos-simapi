@@ -5,5 +5,6 @@ class SimConfig {
     String testSession
     String simId
     String actorType
+    String fhirBase
     Map extensions
 }

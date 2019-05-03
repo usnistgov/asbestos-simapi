@@ -10,6 +10,7 @@ import groovy.json.JsonSlurper
 class SimStoreBuilder {
     static SimStore builder(File externalCache, SimConfig simConfig) {
         SimStore simStore = new SimStore(externalCache)
+        simStore.config = simConfig
         String json = JsonOutput.toJson(simConfig)
         simStore.simId = getSimId(simConfig)
         simStore.getStore(true) // create
@@ -25,6 +26,7 @@ class SimStoreBuilder {
         Map rawConfig = (Map) new JsonSlurper().parse(new File(simStore.simDir, 'config.json'))
         SimConfig simConfig = new SimConfigMapper(rawConfig).build()
         simStore.simId = getSimId(simConfig)
+        simStore.config = simConfig
         simStore
     }
 

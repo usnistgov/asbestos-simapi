@@ -109,6 +109,7 @@ class Event {
     private File getResponseHeaderFile() {  new File(current, 'response_header.txt') }
     private File getResponseBodyFile() {  new File(current, 'response_body.bin') }
     private File getResponseBodyStringFile() {  new File(current, 'response_body.txt') }
+    private File getResponseBodyHTMLFile() {  new File(current, 'response_body.html') }
 
     RawHeaders requestRawHeaders = null
     Headers requestHeaders = null
@@ -124,7 +125,8 @@ class Event {
         requestRawHeaders = rawHeaders
         requestHeaders = HeaderBuilder.parseHeaders(rawHeaders)
         current.mkdirs()
-        String txt = "${rawHeaders.uriLine}\r\n${HeaderBuilder.headersAsString(rawHeaders)}"
+//        String txt = "${rawHeaders.uriLine}\r\n${HeaderBuilder.headersAsString(rawHeaders)}"
+        String txt = "${HeaderBuilder.headersAsString(rawHeaders)}"
         requestHeaderFile.text = txt
     }
 
@@ -179,6 +181,16 @@ class Event {
         responseBody = new String(body)
         responseBodyStringFile.text = responseBody
     }
+
+    void putResponseHTMLBody(byte[] body) {
+        current.mkdirs();
+        responseBodyFile.withOutputStream { it.write body }
+        responseRawBody = body
+        responseBody = new String(body)
+        responseBodyStringFile.text = responseBody
+        responseBodyHTMLFile.text = responseBody
+    }
+
     String getResponseHeader() {
         if (!responseHeaders) {
             String headerString = responseHeaderFile.text

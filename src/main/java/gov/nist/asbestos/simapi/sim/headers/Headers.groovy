@@ -14,11 +14,7 @@ class Headers {
         NameValue nv = nameValueList.find { NameValue nv -> nv.name.equalsIgnoreCase('content-type')}
         if (!nv)
             return ''
-        String[] parts1 = nv.value.split(':', 2)
-        assert parts1.size() == 2
-        String[] parts2 = parts1[0].split(',', 2)
-        assert parts2.size() > 0
-        parts2[0].trim()
+        nv.value
     }
 
     Headers withVerb(String verb) {

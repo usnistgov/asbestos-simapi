@@ -6,4 +6,13 @@ import groovy.transform.TypeChecked
 class NameValue {
     String name
     String value
+
+    String toString() {
+        "${name}: ${value}"
+    }
+
+    String getName() {
+        if (!name) name = ''
+        name
+    }
 }
