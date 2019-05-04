@@ -17,6 +17,14 @@ class Headers {
         nv.value
     }
 
+    String getAll(String type) {
+        Collection<NameValue> nvs = nameValueList.findAll { NameValue nv -> nv.name.equalsIgnoreCase(type)}
+        if (!nvs)
+            return ''
+        List<String> values = nvs.collect { NameValue nv -> nv.value }
+        values.join(';')
+    }
+
     Headers withVerb(String verb) {
         this.verb = verb
         this

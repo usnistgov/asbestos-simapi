@@ -27,8 +27,10 @@ class RawHeaders {
     void addHeaders(String name, Enumeration headersEnum) {
         List<String> values = []
         while(headersEnum.hasMoreElements()) {
-            values << (String) headersEnum.nextElement()
+            String val = (String) headersEnum.nextElement()
+            values << val
         }
+        headers[name] = values
     }
 
     RawHeaders(Map<String, List<String>> headers) {

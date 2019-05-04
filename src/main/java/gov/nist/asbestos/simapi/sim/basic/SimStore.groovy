@@ -182,7 +182,10 @@ class SimStore {
     String getEndpoint() {
         if (!config.fhirBase.endsWith('/'))
             config.fhirBase = "${config.fhirBase}/"
-        Verb trans = Verb.valueOf(transaction)
+        Verb trans = null
+        try {
+            trans = Verb.valueOf(transaction)
+        } catch (Throwable t) {}
         (trans) ? config.fhirBase : "${config.fhirBase}${transaction}"
     }
 
