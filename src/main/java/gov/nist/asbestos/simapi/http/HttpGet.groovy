@@ -8,8 +8,8 @@ class HttpGet {
     Map<String, List<String>> requestHeaders
     Map<String, List<String>> responseHeaders = null
     int status
-    String responseText
-    byte[] response
+    String _responseText
+    byte[] _response
 
 
     String get(String url, Map<String, String> headers) {
@@ -23,17 +23,17 @@ class HttpGet {
             responseHeaders = connection.getHeaderFields()
         }
         try {
-            response = putResponse(connection.inputStream.bytes)
+            putResponse(connection.inputStream.bytes)
         } catch (Throwable t) {}
     }
 
     void putResponse(byte[] bytes) {
-        this.response = bytes
-        this.responseText = new String(response)
+        _response = bytes
+        _responseText = new String(response)
     }
 
     byte[] getResponse() {
-        response
+        _response
     }
 
     String get(String url) {

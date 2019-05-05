@@ -44,6 +44,17 @@ class Headers {
         values.join(';')
     }
 
+    Map<String, String> getAll() {
+        Map<String, String> result = [:]
+
+        nameValueList.each { NameValue nv ->
+            String name = nv.name
+            result.put(name, getAll(name))
+        }
+
+        return result
+    }
+
     // this is for collecting headers accept* for example
     Map<String, String> getMultiple(String namePrefix) {
         Map<String, String> result = [:]

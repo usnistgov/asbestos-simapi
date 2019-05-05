@@ -64,6 +64,7 @@ class HeaderBuilder {
 
         List<String> names = theHeaders.keySet() as List
         names.each {String name ->
+            if (!name) return
             List<String> values = theHeaders.get(name)
             if (values) {
                 values.each { String value ->

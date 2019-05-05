@@ -139,9 +139,11 @@ class Event {
     void putRequestBody(byte[] body) {
         requestRawBody = body
         current.mkdirs();
-        requestBodyFile.withOutputStream { it.write body }
-        requestBody = new String(body)
-        requestBodyStringFile.text = requestBody
+        if (body.size()) {
+            requestBodyFile.withOutputStream { it.write body }
+            requestBody = new String(body)
+            requestBodyStringFile.text = requestBody
+        }
     }
     Headers getRequestHeader() {
         if (!requestHeaders) {
@@ -178,8 +180,8 @@ class Event {
         current.mkdirs();
         responseBodyFile.withOutputStream { it.write body }
         responseRawBody = body
-        responseBody = new String(body)
-        responseBodyStringFile.text = responseBody
+//        responseBody = new String(body)
+//        responseBodyStringFile.text = responseBody
     }
 
     void putResponseBodyText(String body) {
