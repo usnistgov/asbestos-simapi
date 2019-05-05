@@ -23,7 +23,7 @@ class EventTest extends Specification {
 
         TestSession testSession = new TestSession('default')
         SimId simId = new SimId(testSession, 'foo', 'reg', 'cat')
-        SimStore simStore = new SimStore(ec, simId).withTransaction('store')
+        SimStore simStore = new SimStore(ec, simId).withResource('store')
         simStore.getStore(true) // create event
         Event event = simStore.newEvent()
 

@@ -118,7 +118,7 @@ class SimStoreCreationTest extends Specification {
         /////////////////////////////////////////////////////
         when:
         SimId simId = new SimId(testSession, 'foo', 'reg', 'cat')
-        SimStore simStore = new SimStore(ec, simId).withTransaction('store')
+        SimStore simStore = new SimStore(ec, simId).withResource('store')
         simStore.getStore(true)  // create sim
         Event event1 = simStore.newEvent()
         Event event2 = simStore.newEvent()

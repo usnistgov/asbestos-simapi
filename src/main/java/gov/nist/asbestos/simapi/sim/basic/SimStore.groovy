@@ -6,7 +6,7 @@ import groovy.transform.TypeChecked
 
 /**
  * Store is organized as:
- * EC/testSession/psimdb/simId/actor/transaction/event/event_files
+ * EC/testSession/psimdb/simId/actor/resource/event/event_files
  * The content starting from the event/ is handed off to the class Event
  */
 @TypeChecked
@@ -14,12 +14,12 @@ class SimStore {
     File externalCache
     private File _simStoreLocation = null
     private File _simIdDir = null
-    private File _transactionDir = null
+    private File _resourceDir = null
     private File _actorDir
     private File _eventDir = null
     SimId simId
-    String transaction = null
-    String eventId = null // within transaction
+    String resource = null
+    String eventId = null // within resource
     boolean newlyCreated = false
     static String PSIMDB = 'psimdb'
     Event event
@@ -53,6 +53,8 @@ class SimStore {
                         "SimStore: Sim ${simId.toString()} does not exist\n"
             }
         }
+        if (!simId.actorType && config)
+            simId.actorType = config.actorType
         _simStoreLocation
     }
 
@@ -61,7 +63,7 @@ class SimStore {
     }
 
     boolean expectingEvent() {
-        simId && simId.actorType && transaction
+        simId && simId.actorType && resource
     }
 
     void deleteSim() {
@@ -106,18 +108,18 @@ class SimStore {
     }
 
 
-    File getTransactionDir() {
-        assert transaction : 'SimStore: transaction is null'
-        if (!_transactionDir)
-            _transactionDir = new File(actorDir, transaction)
-        _transactionDir.mkdirs()
-        _transactionDir
+    File getResourceDir() {
+        assert resource : 'SimStore: resource is null'
+        if (!_resourceDir)
+            _resourceDir = new File(actorDir, resource)
+        _resourceDir.mkdirs()
+        _resourceDir
     }
 
     File getEventDir() {
         assert eventId : "SimStore: eventId is null"
         if (!_eventDir)
-            _eventDir = new File(transactionDir, eventId)
+            _eventDir = new File(resourceDir, eventId)
        // _eventDir.mkdirs()  // breaks createEvent(date)
         _eventDir
     }
@@ -142,8 +144,8 @@ class SimStore {
         createEventDir(eventId)
     }
 
-    SimStore withTransaction(String transaction) {
-        this.transaction = transaction
+    SimStore withResource(String resource) {
+        this.resource = resource
         this
     }
 
@@ -182,11 +184,7 @@ class SimStore {
     String getEndpoint() {
         if (!config.fhirBase.endsWith('/'))
             config.fhirBase = "${config.fhirBase}/"
-        Verb trans = null
-        try {
-            trans = Verb.valueOf(transaction)
-        } catch (Throwable t) {}
-        (trans) ? config.fhirBase : "${config.fhirBase}${transaction}"
+        "${config.fhirBase}${resource}"
     }
 
 

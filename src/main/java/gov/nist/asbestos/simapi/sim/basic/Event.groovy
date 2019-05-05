@@ -182,6 +182,10 @@ class Event {
         responseBodyStringFile.text = responseBody
     }
 
+    void putResponseBodyText(String body) {
+        responseBodyStringFile.text = body
+    }
+
     void putResponseHTMLBody(byte[] body) {
         current.mkdirs();
         responseBodyFile.withOutputStream { it.write body }

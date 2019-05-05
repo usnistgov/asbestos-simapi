@@ -8,43 +8,46 @@ class HttpGet {
     Map<String, List<String>> requestHeaders
     Map<String, List<String>> responseHeaders = null
     int status
-    String response
+    String responseText
+    byte[] response
 
 
-    String get(String url, String accept, String acceptEncoding, String content) {
+    String get(String url, Map<String, String> headers) {
         HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection()
         connection.setRequestMethod('GET')
-        if (content) {
-            connection.setDoOutput(content != null)
-            connection.setRequestProperty("accept", accept)
-        }
-        connection.setRequestProperty('accept', accept)
-        if (acceptEncoding)
-            connection.setRequestProperty('accept-encoding', acceptEncoding)
-        if (content)
-            connection.getOutputStream().write(content.getBytes("UTF-8"))
-
-        //connection.connect()
+        if (headers)
+            addHeaders(connection, headers)
         requestHeaders = connection.getRequestProperties()
         status = connection.getResponseCode()
         if (status == HttpURLConnection.HTTP_OK) {
             responseHeaders = connection.getHeaderFields()
         }
         try {
-            response = connection.inputStream.text
+            response = putResponse(connection.inputStream.bytes)
         } catch (Throwable t) {}
     }
 
-    String get(String url, String accept, String acceptEncoding) {
-        get(url, accept, acceptEncoding, null)
+    void putResponse(byte[] bytes) {
+        this.response = bytes
+        this.responseText = new String(response)
+    }
+
+    byte[] getResponse() {
+        response
     }
 
     String get(String url) {
-        get(url, '*/*', null)
+        get(url, null)
     }
 
     String getResponseContentType() {
         Headers headers = HeaderBuilder.parseHeaders(responseHeaders)
         headers.contentType
+    }
+
+    static addHeaders(HttpURLConnection connection, Map<String, String> headers) {
+        headers.each { String name, String value ->
+            connection.setRequestProperty(name, value)
+        }
     }
 }

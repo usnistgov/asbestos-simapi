@@ -3,7 +3,7 @@ package gov.nist.asbestos.simapi.http
 import java.util.zip.GZIPInputStream
 import java.util.zip.GZIPOutputStream
 
-class gzip {
+class Gzip {
 
     static String zip(String s){
         def targetStream = new ByteArrayOutputStream()
@@ -15,8 +15,14 @@ class gzip {
         return zippedBytes.encodeBase64()
     }
 
-    static String unzip(String compressed){
+    static String unzipWithBase64(String compressed){
         def inflaterStream = new GZIPInputStream(new ByteArrayInputStream(compressed.decodeBase64()))
+        def uncompressedStr = inflaterStream.getText('UTF-8')
+        return uncompressedStr
+    }
+
+    static String unzipWithoutBase64(byte[] compressed){
+        def inflaterStream = new GZIPInputStream(new ByteArrayInputStream(compressed))
         def uncompressedStr = inflaterStream.getText('UTF-8')
         return uncompressedStr
     }

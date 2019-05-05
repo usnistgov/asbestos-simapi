@@ -2,7 +2,6 @@ package gov.nist.asbestos.simapi.sim.headers
 
 import groovy.transform.TypeChecked
 
-// TODO status not tested
 @TypeChecked
 class Headers {
     String verb = null
@@ -17,12 +16,46 @@ class Headers {
         nv.value
     }
 
+    String getAccept() {
+        NameValue nv = nameValueList.find { NameValue nv -> nv.name.equalsIgnoreCase('accept')}
+        if (!nv)
+            return ''
+        String value = nv.value
+        if (value.contains(';'))
+            value = value.split(';', 2)[0].trim()
+        value
+    }
+
+    String getContentEncoding() {
+        NameValue nv = nameValueList.find { NameValue nv -> nv.name.equalsIgnoreCase('content-encoding')}
+        if (!nv)
+            return ''
+        String value = nv.value
+        if (value.contains(';'))
+            value = value.split(';', 2)[0].trim()
+        value
+    }
+
     String getAll(String type) {
         Collection<NameValue> nvs = nameValueList.findAll { NameValue nv -> nv.name.equalsIgnoreCase(type)}
         if (!nvs)
             return ''
         List<String> values = nvs.collect { NameValue nv -> nv.value }
         values.join(';')
+    }
+
+    // this is for collecting headers accept* for example
+    Map<String, String> getMultiple(String namePrefix) {
+        Map<String, String> result = [:]
+
+        nameValueList.each { NameValue nv ->
+            String name = nv.name
+            if (name.startsWith(namePrefix) && !result.keySet().contains(name)) {
+                result.put(name, getAll(name))
+            }
+        }
+
+        return result
     }
 
     Headers withVerb(String verb) {
