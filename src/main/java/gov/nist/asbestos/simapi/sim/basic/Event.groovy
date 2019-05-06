@@ -110,6 +110,7 @@ class Event {
     private File getResponseBodyFile() {  new File(current, 'response_body.bin') }
     private File getResponseBodyStringFile() {  new File(current, 'response_body.txt') }
     private File getResponseBodyHTMLFile() {  new File(current, 'response_body.html') }
+    private File getRequestBodyHTMLFile() {  new File(current, 'request_body.html') }
 
     RawHeaders requestRawHeaders = null
     Headers requestHeaders = null
@@ -188,6 +189,10 @@ class Event {
         responseBodyStringFile.text = body
     }
 
+    void putRequestBodyText(String body) {
+        requestBodyStringFile.text = body
+    }
+
     void putResponseHTMLBody(byte[] body) {
         current.mkdirs();
         responseBodyFile.withOutputStream { it.write body }
@@ -195,6 +200,15 @@ class Event {
         responseBody = new String(body)
         responseBodyStringFile.text = responseBody
         responseBodyHTMLFile.text = responseBody
+    }
+
+    void putRequestHTMLBody(byte[] body) {
+        current.mkdirs();
+        requestBodyFile.withOutputStream { it.write body }
+        requestRawBody = body
+        requestBody = new String(body)
+        requestBodyStringFile.text = requestBody
+        requestBodyHTMLFile.text = requestBody
     }
 
     String getResponseHeader() {

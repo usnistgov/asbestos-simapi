@@ -18,7 +18,7 @@ connection: Keep-Alive'''
 
         when:
         Headers hdrs = HeaderBuilder.parseHeaders(headerString)
-        Map<String, String> accepts = hdrs.getMultiple('accept')
+        Map<String, String> accepts = hdrs.getMultiple(['accept'])
 
         then:
         accepts.size() == 3

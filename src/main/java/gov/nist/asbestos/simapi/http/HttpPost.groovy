@@ -3,21 +3,38 @@ package gov.nist.asbestos.simapi.http
 import groovy.transform.TypeChecked
 
 @TypeChecked
-class HttpPost {
+class HttpPost  extends HttpGeneralRequest {
 
-    static int post(String url, String contentType, String content) {
-        HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection()
-        connection.setRequestMethod('POST')
-        connection.setDoOutput(true)
-        connection.setRequestProperty("Content-Type", contentType)
-        connection.setRequestProperty('accept', contentType)
-        if (content)
-            connection.getOutputStream().write(content.getBytes("UTF-8"))
-        connection.getResponseCode()
+    void post(String url, Map<String, String> headers, byte[] content) {
+        HttpURLConnection connection
+        try {
+            connection = (HttpURLConnection) new URL(url).openConnection()
+            connection.setRequestMethod('POST')
+            connection.setDoOutput(true)
+            if (headers)
+                addHeaders(connection, headers)
+            // TODO use proper charset (from input)
+            if (content)
+                connection.getOutputStream().write(content)
+           // requestHeaders = connection.getRequestProperties()
+            status = connection.getResponseCode()
+            if (status == HttpURLConnection.HTTP_OK) {
+                responseHeaders = connection.getHeaderFields()
+            }
+            try {
+                putResponse(connection.inputStream.bytes)
+            } catch (Throwable t) {
+            }
+        } finally {
+            if (connection)
+                connection.disconnect()
+            requestHeaders = connection.getRequestProperties()
+        }
     }
 
-    static int postJson(String url, String json) {
-        post(url, 'application/json', json)
+    void postJson(String url, String json) {
+        Map<String, String> headers = ['content-type':'application/json']
+        post(url, headers, json.bytes)
     }
 
 

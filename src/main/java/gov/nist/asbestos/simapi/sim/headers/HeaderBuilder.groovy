@@ -62,6 +62,8 @@ class HeaderBuilder {
     static Headers parseHeaders(Map<String, List<String>> theHeaders) {
         Headers headers = new Headers()
 
+        if (!theHeaders)
+            return headers
         List<String> names = theHeaders.keySet() as List
         names.each {String name ->
             if (!name) return

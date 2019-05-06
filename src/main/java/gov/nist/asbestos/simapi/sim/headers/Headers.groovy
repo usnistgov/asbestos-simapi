@@ -56,13 +56,15 @@ class Headers {
     }
 
     // this is for collecting headers accept* for example
-    Map<String, String> getMultiple(String namePrefix) {
+    Map<String, String> getMultiple(List<String> namePrefixs) {
         Map<String, String> result = [:]
 
-        nameValueList.each { NameValue nv ->
-            String name = nv.name
-            if (name.startsWith(namePrefix) && !result.keySet().contains(name)) {
-                result.put(name, getAll(name))
+        namePrefixs.each { String namePrefix ->
+            nameValueList.each { NameValue nv ->
+                String name = nv.name
+                if (name.startsWith(namePrefix) && !result.keySet().contains(name)) {
+                    result.put(name, getAll(name))
+                }
             }
         }
 
