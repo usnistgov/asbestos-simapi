@@ -130,6 +130,11 @@ class SimStore {
         event
     }
 
+    // on some machines this is important to prevent hangs
+    static pause() {
+        sleep(5)
+    }
+
     File createEvent() {
         createEvent(new Date())
     }
@@ -137,6 +142,7 @@ class SimStore {
     File createEvent(Date date) {
         File f = createEventDir(getEventIdFromDate(date))
         f.mkdirs()
+        pause()
         f
     }
 

@@ -7,7 +7,7 @@ import groovy.transform.TypeChecked
 @TypeChecked
 abstract class HttpGeneralRequest {
     Map<String, List<String>> requestHeadersList = null
-    Map<String, List<String>> responseHeadersList = null
+    //Map<String, List<String>> responseHeadersList = null
     Headers _requestHeaders = null
     Headers _responseHeaders = null
     int status
@@ -18,6 +18,10 @@ abstract class HttpGeneralRequest {
     String url
 
     abstract void run()
+
+    void setResponseHeadersList(Map<String, List<String>> responseHeadersList) {
+        _responseHeaders = HeaderBuilder.parseHeaders(responseHeadersList)
+    }
 
     void setResponse(byte[] bytes) {
         _response = bytes
@@ -55,13 +59,11 @@ abstract class HttpGeneralRequest {
 
     Headers getRequestHeaders() {
         if (!_requestHeaders)
-            _requestHeaders = HeaderBuilder.parseHeaders(responseHeadersList)
+            _requestHeaders = HeaderBuilder.parseHeaders(requestHeadersList)
         _requestHeaders
     }
 
     Headers getResponseHeaders() {
-        if (!_responseHeaders)
-            _responseHeaders = HeaderBuilder.parseHeaders(responseHeadersList)
         _responseHeaders
     }
 

@@ -19,6 +19,7 @@ class SimStoreCreationTest extends Specification {
 
     def 'SimStore initialization' () {
         setup:
+        println 'SimStore initialization'
         File ecHome = tmp.newFolder('echome')
 //        File ecHome = new File('/home/bill/tmp')
         File ec = new File(ecHome, 'ec')
@@ -74,6 +75,7 @@ class SimStoreCreationTest extends Specification {
 '''
 
         setup:
+        println 'from json config'
         Map rawConfig = (Map) new JsonSlurper().parseText(jsonString)
         File ecHome = tmp.newFolder('echome')
 //        File ecHome = new File('/home/bill/tmp')
@@ -108,6 +110,7 @@ class SimStoreCreationTest extends Specification {
 
     def 'event initialization' () {
         setup:
+        println 'event initialization'
 //        File ecHome = new File('/home/bill/tmp')
         File ecHome = tmp.newFolder('echome2')
         File ec = new File(ecHome, 'ec')
@@ -117,13 +120,18 @@ class SimStoreCreationTest extends Specification {
 
         /////////////////////////////////////////////////////
         when:
+        println '  starting when'
         SimId simId = new SimId(testSession, 'foo', 'reg', 'cat')
         SimStore simStore = new SimStore(ec, simId).withResource('store')
         simStore.getStore(true)  // create sim
+        println '    got simStore'
         Event event1 = simStore.newEvent()
+        println '    new event'
         Event event2 = simStore.newEvent()
+        println '    new event'
 
         then:
+        println '  starting then'
         event1.root.exists()
         event2.root.exists()
         event1 != event2
@@ -131,6 +139,7 @@ class SimStoreCreationTest extends Specification {
 
     def 'loader extensions' () {
         setup:
+        println 'load extensions'
 //        File ecHome = new File('/home/bill/tmp')
         File ecHome = tmp.newFolder('echome2')
         File ec = new File(ecHome, 'ec')
@@ -165,6 +174,7 @@ class SimStoreCreationTest extends Specification {
 
     def 'array in extensions' () {
         setup:
+        println 'array in extensions'
 //        File ecHome = new File('/home/bill/tmp')
         File ecHome = tmp.newFolder('echome2')
         File ec = new File(ecHome, 'ec')

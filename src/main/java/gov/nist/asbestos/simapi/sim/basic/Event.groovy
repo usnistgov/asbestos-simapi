@@ -84,6 +84,10 @@ class Event {
         new Task(this, i)
     }
 
+    Task selectClientTask() {
+        selectTask(-1)
+    }
+
     /**
      * select request as current
      * @return
@@ -178,12 +182,15 @@ class Event {
 
     private void putResponseHeaderInternal(String header) {
         current.mkdirs()
-        responseHeaderFile.text = header
+        File f = responseHeaderFile
+        f.text = header
     }
 
     void putResponseBody(byte[] body) {
         current.mkdirs();
-        responseBodyFile.withOutputStream { it.write body }
+//        println "Response body file is ${responseBodyFile}"
+//        responseBodyFile.withOutputStream { it.write body }
+        responseBodyFile.bytes = body
         responseRawBody = body
 //        responseBody = new String(body)
 //        responseBodyStringFile.text = responseBody
