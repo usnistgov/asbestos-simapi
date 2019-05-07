@@ -56,14 +56,14 @@ class Event {
      * creates new task and sets it as current
      * @return the task dir
      */
-    Event newTask() {
+    Task newTask() {
         int i = _tasks.size()
         File task = getTaskFile(i)
         task.mkdir()
         current = task
         _tasks << task
         clearCache()
-        this
+        new Task(this, i)
     }
 
     int getTaskCount() {
@@ -72,12 +72,16 @@ class Event {
 
     /**
      * Select a task as current
-     * @param i
+     * @param i selectTask(-1) is the same as selectRequest() except for the return type
      */
-    void selectTask(int i) {
+    Task selectTask(int i) {
         assert i < taskCount : "Event: cannot return task #${i} - only ${taskCount} tasks\n"
-        current = _tasks[i]
+        if (i < 0)
+            current = _request
+        else
+            current = _tasks[i]
         clearCache()
+        new Task(this, i)
     }
 
     /**

@@ -9,13 +9,13 @@ class HttpGet extends HttpGeneralRequest {
             connection.setRequestMethod('GET')
             if (headers)
                 addHeaders(connection, headers)
-            requestHeaders = connection.getRequestProperties()
+            requestHeadersList = connection.getRequestProperties()
             status = connection.getResponseCode()
             if (status == HttpURLConnection.HTTP_OK) {
-                responseHeaders = connection.getHeaderFields()
+                responseHeadersList = connection.getHeaderFields()
             }
             try {
-                putResponse(connection.inputStream.bytes)
+                setResponse(connection.inputStream.bytes)
             } catch (Throwable t) {
             }
         } finally {
@@ -26,6 +26,11 @@ class HttpGet extends HttpGeneralRequest {
 
     void get(String url) {
         get(url, null)
+    }
+
+    void run() {
+        assert url
+        get(url, requestHeaders.all)
     }
 
 }

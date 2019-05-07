@@ -6,44 +6,81 @@ import groovy.transform.TypeChecked
 
 @TypeChecked
 abstract class HttpGeneralRequest {
-    Map<String, List<String>> requestHeaders
-    Map<String, List<String>> responseHeaders = null
+    Map<String, List<String>> requestHeadersList = null
+    Map<String, List<String>> responseHeadersList = null
+    Headers _requestHeaders = null
+    Headers _responseHeaders = null
     int status
-    String _responseText
+    String _responseText = null
     byte[] _response
-    String _requestText
+    String _requestText = null
     byte[] _request
+    String url
 
-    void putResponse(byte[] bytes) {
+    abstract void run()
+
+    void setResponse(byte[] bytes) {
         _response = bytes
-        _responseText = new String(response)
+    }
+
+    void setResponseText(String txt) {
+        _responseText = txt
     }
 
     byte[] getResponse() {
         _response
     }
 
-    void putRequest(byte[] bytes) {
+    void setRequest(byte[] bytes) {
         _request = bytes
-        _requestText = new String(response)
+    }
+
+    void setRequestText(String txt) {
+        _requestText = txt
     }
 
     byte[] getRequest() {
         _request
     }
 
+    Headers setRequestHeaders(Headers hdrs) {
+        _requestHeaders = hdrs
+        hdrs
+    }
+
+    Headers setResponseHeaders(Headers hdrs) {
+        _responseHeaders = hdrs
+        hdrs
+    }
+
+    Headers getRequestHeaders() {
+        if (!_requestHeaders)
+            _requestHeaders = HeaderBuilder.parseHeaders(responseHeadersList)
+        _requestHeaders
+    }
+
+    Headers getResponseHeaders() {
+        if (!_responseHeaders)
+            _responseHeaders = HeaderBuilder.parseHeaders(responseHeadersList)
+        _responseHeaders
+    }
+
     String getResponseContentType() {
-        Headers headers = HeaderBuilder.parseHeaders(responseHeaders)
-        headers.contentType
+        responseHeaders.contentType
     }
 
     String getRequestContentType() {
-        Headers headers = HeaderBuilder.parseHeaders(requestHeaders)
-        headers.contentType
+        requestHeaders.contentType
     }
 
     static addHeaders(HttpURLConnection connection, Map<String, String> headers) {
         headers.each { String name, String value ->
+            connection.setRequestProperty(name, value)
+        }
+    }
+
+    static addHeaders(HttpURLConnection connection, Headers headers) {
+        headers.all.each { String name, String value ->
             connection.setRequestProperty(name, value)
         }
     }

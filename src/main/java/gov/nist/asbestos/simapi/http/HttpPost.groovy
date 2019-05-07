@@ -16,19 +16,19 @@ class HttpPost  extends HttpGeneralRequest {
             // TODO use proper charset (from input)
             if (content)
                 connection.getOutputStream().write(content)
-           // requestHeaders = connection.getRequestProperties()
+           // requestHeadersList = connection.getRequestProperties()
             status = connection.getResponseCode()
             if (status == HttpURLConnection.HTTP_OK) {
-                responseHeaders = connection.getHeaderFields()
+                responseHeadersList = connection.getHeaderFields()
             }
             try {
-                putResponse(connection.inputStream.bytes)
+                setResponse(connection.inputStream.bytes)
             } catch (Throwable t) {
             }
         } finally {
             if (connection)
                 connection.disconnect()
-            requestHeaders = connection.getRequestProperties()
+            requestHeadersList = connection.getRequestProperties()
         }
     }
 
@@ -37,5 +37,9 @@ class HttpPost  extends HttpGeneralRequest {
         post(url, headers, json.bytes)
     }
 
+    void run() {
+        assert url
+        post(url, requestHeaders.all,  request)
+    }
 
 }

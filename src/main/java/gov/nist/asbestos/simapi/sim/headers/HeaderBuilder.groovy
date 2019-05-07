@@ -59,22 +59,66 @@ class HeaderBuilder {
         headers
     }
 
-    static Headers parseHeaders(Map<String, List<String>> theHeaders) {
+//    static Headers parseHeaders(Map<String, List<String>> theHeaders) {
+//        Headers headers = new Headers()
+//
+//        if (!theHeaders)
+//            return headers
+//
+//        List<String> names = theHeaders.keySet() as List
+//        names.each {String name ->
+//            if (!name) return
+//            List<String> values = theHeaders.get(name)
+//            if (values) {
+//                values.each { String value ->
+//                    if (value) {
+//                        List<String> subValues = value.split(';')
+//                        if (subValues) {
+//                            subValues.each { String subValue ->
+//                                headers.nameValueList << new NameValue([name: name?.trim(), value: subValue?.trim()])
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//        headers
+//    }
+
+    // TODO  needs test
+    static Headers parseHeaders(Map<String, ?> theHeaders) {
         Headers headers = new Headers()
 
         if (!theHeaders)
             return headers
-        List<String> names = theHeaders.keySet() as List
-        names.each {String name ->
-            if (!name) return
-            List<String> values = theHeaders.get(name)
-            if (values) {
-                values.each { String value ->
-                    if (value) {
-                        List<String> subValues = value.split(';')
-                        if (subValues) {
-                            subValues.each { String subValue ->
-                                headers.nameValueList << new NameValue([name: name?.trim(), value: subValue?.trim()])
+
+        String firstName = theHeaders.keySet().first()
+        Object firstValue = theHeaders.get(firstName)
+        if (firstValue instanceof String) {
+            theHeaders.each { String name, String value ->
+                if (value) {
+                    List<String> subValues = value.split(';')
+                    if (subValues) {
+                        subValues.each { String subValue ->
+                            headers.nameValueList << new NameValue([name: name?.trim(), value: subValue?.trim()])
+                        }
+                    }
+                }
+            }
+        } else  {
+            List<String> names = theHeaders.keySet() as List
+            names.each {String name ->
+                if (!name) return
+                List<String> values = theHeaders.get(name)
+                if (values) {
+                    values.each { String value ->
+                        if (value) {
+                            List<String> subValues = value.split(';')
+                            if (subValues) {
+                                subValues.each { String subValue ->
+                                    headers.nameValueList << new NameValue([name: name?.trim(), value: subValue?.trim()])
+                                }
                             }
                         }
                     }
@@ -82,6 +126,17 @@ class HeaderBuilder {
             }
         }
 
+
+//        theHeaders.each { String name, String value ->
+//            if (value) {
+//                List<String> subValues = value.split(';')
+//                if (subValues) {
+//                    subValues.each { String subValue ->
+//                        headers.nameValueList << new NameValue([name: name?.trim(), value: subValue?.trim()])
+//                    }
+//                }
+//            }
+//        }
         headers
     }
 }
