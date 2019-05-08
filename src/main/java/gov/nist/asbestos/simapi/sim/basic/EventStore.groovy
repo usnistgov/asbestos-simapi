@@ -5,7 +5,6 @@ import gov.nist.asbestos.simapi.sim.headers.HeaderBuilder
 import gov.nist.asbestos.simapi.sim.headers.RawHeaders
 import groovy.transform.TypeChecked
 
-// TODO split off IO portion to EventStore
 
 /**
  * An EventStore is a request (the trigger) and any number of tasks undertaken
@@ -26,7 +25,7 @@ class EventStore {
     }
 
     Event newEvent() {
-        e = new Event(this, simStore.simId, simStore.resource, simStore.eventId)
+        e = new Event(this, simStore.channelId, simStore.resource, simStore.eventId)
         assert e.complete : "Trying to create new event without details."
         e
     }

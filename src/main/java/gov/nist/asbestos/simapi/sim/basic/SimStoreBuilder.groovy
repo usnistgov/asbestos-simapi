@@ -12,7 +12,7 @@ class SimStoreBuilder {
         SimStore simStore = new SimStore(externalCache)
         simStore.config = simConfig
         String json = JsonOutput.toJson(simConfig)
-        simStore.simId = getSimId(simConfig)
+        simStore.channelId = getSimId(simConfig)
         simStore.getStore(true) // create
         File configFile = new File(simStore.simDir, 'config.json')
         simStore.newlyCreated = !configFile.exists()
@@ -25,7 +25,7 @@ class SimStoreBuilder {
         simStore.setSimIdForLoader(new SimId(testSession, id))  // doesn't do Id validation
         Map rawConfig = (Map) new JsonSlurper().parse(new File(simStore.simDir, 'config.json'))
         ChannelConfig simConfig = new SimConfigMapper(rawConfig).build()
-        simStore.simId = getSimId(simConfig)
+        simStore.channelId = getSimId(simConfig)
         simStore.config = simConfig
         simStore
     }

@@ -38,7 +38,7 @@ import org.apache.log4j.Logger
 	 * @param simId
 	 */
 	SimDb(SimId simId) {
-		assert simId : "SimDb - cannot open SimDb with null simId"
+		assert simId : "SimDb - cannot open SimDb with null channelId"
 		assert simId?.testSession?.value : "SimId not assigned to a TestSession - ${simId}"
 		File dbRoot = getSimDbFile(simId);
 		this.simId = simId;
@@ -108,7 +108,7 @@ import org.apache.log4j.Logger
 	}
 
 	/**
-	 * Given partial information (testSession and id) build the full simId
+	 * Given partial information (testSession and id) build the full channelId
 	 * @param simId1
 	 * @return
 	 */
@@ -210,13 +210,13 @@ import org.apache.log4j.Logger
 		 assert simId.testSession : "Simulator ID TestSession is null"
 	}
 
-	private File simSafetyFile() { return new File(simDir, "simId.txt"); }
+	private File simSafetyFile() { return new File(simDir, "channelId.txt"); }
 
 	boolean isSim() {
 		if (simDir == null) return false;
-		return new File(simDir, "simId.txt").exists();
+		return new File(simDir, "channelId.txt").exists();
 	}
-	private static boolean isSimDir(File dir) { return new File(dir, "simId.txt").exists(); }
+	private static boolean isSimDir(File dir) { return new File(dir, "channelId.txt").exists(); }
 
 
 	String getEventDate() {
@@ -420,7 +420,7 @@ import org.apache.log4j.Logger
 	static boolean isValid(SimId simId) {
 		File d = getSimDbFile(simId)
 		File f = new File(d, simId.toString())
-		if (! new File(f, 'simId.txt').exists())
+		if (! new File(f, 'channelId.txt').exists())
 			return false
 //		if (! new File(f, simTypeFilename).exists())
 //			return false

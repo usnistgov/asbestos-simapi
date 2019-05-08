@@ -6,7 +6,7 @@ import groovy.transform.TypeChecked
 
 /**
  * Store is organized as:
- * EC/testSession/psimdb/simId/actor/resource/event/event_files
+ * EC/testSession/psimdb/channelId/actor/resource/event/event_files
  * The content starting from the event/ is handed off to the class EventStore
  */
 @TypeChecked
@@ -18,7 +18,7 @@ class SimStore {
     private File _actorDir
     private File _eventDir = null
 
-    SimId simId
+    SimId channelId
     String resource = null
     String eventId = null // within resource
 
@@ -27,12 +27,13 @@ class SimStore {
     Event event
     //EventStore eventStore
     ChannelConfig config
+    boolean channel = false  // is this a channel to the backend system?
 
-    SimStore(File externalCache, SimId simId) {
+    SimStore(File externalCache, SimId channelId) {
         assert externalCache : "SimStore: initialized with externalCache == null"
-        assert !simId.validateState() : "SimStore: cannot open SimId ${simId}:\n${simId.validateState()}\n"
+        assert !channelId.validateState() : "SimStore: cannot open SimId ${channelId}:\n${channelId.validateState()}\n"
         this.externalCache = externalCache
-        this.simId = simId
+        this.channelId = channelId
     }
 
     SimStore(File externalCache) {
@@ -40,24 +41,31 @@ class SimStore {
         this.externalCache = externalCache
     }
 
+    File getBaseStore(SimId channelId) {
+        assert externalCache.exists() : "SimStore: External Cache must exist (${externalCache})\n"
 
+    }
+
+    // the following must initialized
+    // externalCache
+    // channelId
     File getStore(boolean create) {
         assert externalCache.exists() : "SimStore: External Cache must exist (${externalCache})\n"
         if (!_simStoreLocation) {
-            _simStoreLocation = testSessionDir(externalCache, simId)
+            _simStoreLocation = testSessionDir(externalCache, channelId)
             if (create) {
                 newlyCreated = !_simStoreLocation.exists()
-                // assert !_simStoreLocation.exists() : "SimStore:Create: sim ${simId} at ${_simStoreLocation} already exists\n"
+                // assert !_simStoreLocation.exists() : "SimStore:Create: sim ${channelId} at ${_simStoreLocation} already exists\n"
                 _simStoreLocation.mkdirs()
                 assert _simStoreLocation.exists() && _simStoreLocation.canWrite() && _simStoreLocation.isDirectory():
                         "SimStore: cannot create writable simdb directory at ${_simStoreLocation}\n"
             } else {
                 assert _simStoreLocation.exists() && _simStoreLocation.canWrite() && _simStoreLocation.isDirectory():
-                        "SimStore: Sim ${simId.toString()} does not exist\n"
+                        "SimStore: Sim ${channelId.toString()} does not exist\n"
             }
         }
-        if (!simId.actorType && config)
-            simId.actorType = config.actorType
+        if (!channelId.actorType && config)
+            channelId.actorType = config.actorType
         _simStoreLocation
     }
 
@@ -66,20 +74,20 @@ class SimStore {
     }
 
     boolean expectingEvent() {
-        simId && simId.actorType && resource
+        channelId && channelId.actorType && resource
     }
 
     void deleteSim() {
         simDir.deleteDir()
     }
 
-    void setSimId(SimId simId) {
+    void setChannelId(SimId simId) {
         assert !simId.validateState() : "SimStore: cannot open SimId ${simId}:\n${simId.validateState()}\n"
-        this.simId = simId
+        this.channelId = simId
     }
 
     void setSimIdForLoader(SimId simId) {
-        this.simId = simId
+        this.channelId = simId
     }
 
     File testSessionDir(File externalCache, SimId simId) {
@@ -87,17 +95,17 @@ class SimStore {
     }
 
     String getActor() {
-        simId.actorType
+        channelId.actorType
     }
 
     void setActor(String actor) {
-        simId.actorType = actor
+        channelId.actorType = actor
     }
 
     File getSimDir() {
-        assert simId : "SimStore: simId is null"
+        assert channelId : "SimStore: channelId is null"
         if (!_simIdDir)
-            _simIdDir = new File(store, simId.id)
+            _simIdDir = new File(store, channelId.id)
         _simIdDir.mkdirs()
         _simIdDir
     }
@@ -160,7 +168,7 @@ class SimStore {
     }
 
     SimStore withActorType(String actor) {
-        this.simId.actorType = actor
+        this.channelId.actorType = actor
         this
     }
 

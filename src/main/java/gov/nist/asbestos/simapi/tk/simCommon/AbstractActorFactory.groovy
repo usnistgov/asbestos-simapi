@@ -349,7 +349,7 @@ import org.apache.log4j.Logger;
 		return simdb.getTransInstances(actor.toString(), trans);
 	}
 
-	// update internal to sim to align with current simId
+	// update internal to sim to align with current channelId
 	static  void updateSimConfiguration(SimId simId) throws Exception {
 		SimulatorConfig config = loadSimulator(simId, false);
 
@@ -448,7 +448,7 @@ import org.apache.log4j.Logger;
 	}
 
 	static  SimulatorConfig getSimConfig(SimId simulatorId)  {
-		assert SimDb.exists(simulatorId) : "No simulator for simId: " + simulatorId.toString()
+		assert SimDb.exists(simulatorId) : "No simulator for channelId: " + simulatorId.toString()
 			SimDb simdb = new SimDb(simulatorId);
 			File simCntlFile = simdb.getSimulatorControlFile();
 			return restoreSimulator(simCntlFile.toString());

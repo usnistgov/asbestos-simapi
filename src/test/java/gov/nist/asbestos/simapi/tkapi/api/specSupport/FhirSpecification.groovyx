@@ -11,7 +11,7 @@ class FhirSpecification extends ToolkitConnectionSpecification {
 
     String baseURL() { "http://localhost:${remoteToolkitPort}/xdstools2/fsim"}
 
-    String baseURL(SimId simId) { "${baseURL()}/${simId.toString()}"}
+    String baseURL(SimId channelId) { "${baseURL()}/${channelId.toString()}"}
 
     /**
      * Send an HTTP POST
@@ -30,10 +30,10 @@ class FhirSpecification extends ToolkitConnectionSpecification {
 
     /**
      * create SPI variety of SimId
-     * @param simId
+     * @param channelId
      */
-    gov.nist.tkapi.api.toolkitServicesCommon.SimId spiSimId(SimId simId) {
-        ToolkitFactory.newSimId(simId.id, simId.testSession.value, simId.actorType, simId.environmentName, simId.fhir)
+    gov.nist.tkapi.api.toolkitServicesCommon.SimId spiSimId(SimId channelId) {
+        ToolkitFactory.newSimId(channelId.id, channelId.testSession.value, channelId.actorType, channelId.environmentName, channelId.fhir)
     }
 
 

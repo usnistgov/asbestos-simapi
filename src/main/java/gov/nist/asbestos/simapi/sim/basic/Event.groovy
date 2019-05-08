@@ -18,7 +18,7 @@ class Event {
     String _responseBody = null
 
     EventStore store = null
-    SimId simId = null
+    SimId channelId = null
     String resource = null
     String eventId = null // within resource
 
@@ -26,15 +26,15 @@ class Event {
 
     }
 
-    Event(EventStore store, SimId simId, String resource, String eventId) {
+    Event(EventStore store, SimId channelId, String resource, String eventId) {
         this.store = store
-        this.simId = simId
+        this.channelId = channelId
         this.resource = resource
         this.eventId = eventId
     }
 
     boolean isComplete() {
-        store && simId && resource && eventId
+        store && channelId && resource && eventId
     }
 
 

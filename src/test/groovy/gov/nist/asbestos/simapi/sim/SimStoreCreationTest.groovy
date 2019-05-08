@@ -70,7 +70,7 @@ class SimStoreCreationTest extends Specification {
 {
   "environment": "default",
   "testSession": "default",
-  "simId": "1",
+  "channelId": "1",
   "actorType": "balloon"
 }
 '''
@@ -90,7 +90,7 @@ class SimStoreCreationTest extends Specification {
         SimStore store = SimStoreBuilder.builder(ec, new ChannelConfig(rawConfig))
 
         then:
-        store.simId == new SimId(testSession, '1', 'baloon', 'default')
+        store.channelId == new SimId(testSession, '1', 'baloon', 'default')
         ec.exists()
         File db = new File(ec, 'psimdb')
         db.exists()
@@ -105,7 +105,7 @@ class SimStoreCreationTest extends Specification {
         SimStore store2 = SimStoreBuilder.loader(ec, new TestSession('default'), '1')
 
         then:
-        store2.simId == store.simId
+        store2.channelId == store.channelId
 
     }
 
@@ -149,7 +149,7 @@ class SimStoreCreationTest extends Specification {
 {
   "environment": "default",
   "testSession": "default",
-  "simId": "1",
+  "channelId": "1",
   "actorType": "balloon",
   "extra1": "value1",
   "extra2": "value2"
@@ -184,7 +184,7 @@ class SimStoreCreationTest extends Specification {
 {
   "environment": "default",
   "testSession": "default",
-  "simId": "1",
+  "channelId": "1",
   "actorType": "balloon",
   "transactions": {
     "WRITE": "base",
