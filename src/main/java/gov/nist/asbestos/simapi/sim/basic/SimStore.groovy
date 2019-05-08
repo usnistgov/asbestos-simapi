@@ -22,7 +22,8 @@ class SimStore {
     String eventId = null // within resource
     boolean newlyCreated = false
     static String PSIMDB = 'psimdb'
-    EventStore event
+    Event event
+    //EventStore eventStore
     SimConfig config
 
     SimStore(File externalCache, SimId simId) {
@@ -124,9 +125,10 @@ class SimStore {
         _eventDir
     }
 
-    EventStore newEvent() {
+    Event newEvent() {
         createEvent()
-        event = new EventStore(this, _eventDir)
+        EventStore eventStore = new EventStore(this, _eventDir)
+        event = eventStore.newEvent()
         event
     }
 

@@ -2,7 +2,9 @@ package gov.nist.asbestos.simapi.sim.basic
 
 import gov.nist.asbestos.simapi.sim.headers.Headers
 import gov.nist.asbestos.simapi.sim.headers.RawHeaders
+import groovy.transform.TypeChecked
 
+@TypeChecked
 class Event {
     RawHeaders _requestRawHeaders = null
     Headers _requestHeaders = null
@@ -14,6 +16,12 @@ class Event {
     byte[] _responseRawBody = null
     String _responseBody = null
 
+    EventStore store
+
+    // This is for creating a new event
+    Event(EventStore store) {
+        this.store = store
+    }
 
 //    void clearCache() {
 //        _requestRawHeaders = null

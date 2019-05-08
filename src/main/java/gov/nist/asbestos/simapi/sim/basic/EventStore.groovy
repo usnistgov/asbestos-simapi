@@ -22,7 +22,12 @@ class EventStore {
     Event e = null;
 
     def clearCache() {
-        e = new Event()
+        e = new Event(this)
+    }
+
+    Event newEvent() {
+        e = new Event(this)
+        e
     }
 
     EventStore(SimStore simStore, File eventDir) {

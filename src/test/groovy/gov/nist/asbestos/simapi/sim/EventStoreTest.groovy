@@ -1,7 +1,6 @@
 package gov.nist.asbestos.simapi.sim
 
-
-import gov.nist.asbestos.simapi.sim.basic.EventStore
+import gov.nist.asbestos.simapi.sim.basic.Event
 import gov.nist.asbestos.simapi.sim.basic.SimStore
 import gov.nist.asbestos.simapi.sim.headers.HeaderBuilder
 import gov.nist.asbestos.simapi.tk.simCommon.SimId
@@ -26,7 +25,7 @@ class EventStoreTest extends Specification {
         SimId simId = new SimId(testSession, 'foo', 'reg', 'cat')
         SimStore simStore = new SimStore(ec, simId).withResource('store')
         simStore.getStore(true) // create event
-        EventStore event = simStore.newEvent()
+        Event event = simStore.newEvent()
 
         String requestHdr = 'Request Header' + body()
         String requestBody = 'Request Body' + body()
@@ -43,46 +42,46 @@ class EventStoreTest extends Specification {
 
         /////////////////////////////////////////////////////
         when:  // build request with 2 tasks
-        event.selectRequest()
-        event.putRequestHeader(HeaderBuilder.rawHeadersFromString(requestHdr))
-        event.putRequestBody(requestBody.bytes)
+        event.store.selectRequest()
+        event.store.putRequestHeader(HeaderBuilder.rawHeadersFromString(requestHdr))
+        event.store.putRequestBody(requestBody.bytes)
 
-        event.newTask()
-        event.putRequestHeader(HeaderBuilder.rawHeadersFromString(task1ReqHdr))
-        event.putRequestBody(task1ReqBody.bytes)
-        event.putResponseHeader(HeaderBuilder.parseHeaders(task1ResHdr))
-        event.putResponseBody(task1ResBody.bytes)
+        event.store.newTask()
+        event.store.putRequestHeader(HeaderBuilder.rawHeadersFromString(task1ReqHdr))
+        event.store.putRequestBody(task1ReqBody.bytes)
+        event.store.putResponseHeader(HeaderBuilder.parseHeaders(task1ResHdr))
+        event.store.putResponseBody(task1ResBody.bytes)
 
-        event.newTask()
-        event.putRequestHeader(HeaderBuilder.rawHeadersFromString(task2ReqHdr))
-        event.putRequestBody(task2ReqBody.bytes)
-        event.putResponseHeader(HeaderBuilder.parseHeaders(task2ResHdr))
-        event.putResponseBody(task2ResBody.bytes)
+        event.store.newTask()
+        event.store.putRequestHeader(HeaderBuilder.rawHeadersFromString(task2ReqHdr))
+        event.store.putRequestBody(task2ReqBody.bytes)
+        event.store.putResponseHeader(HeaderBuilder.parseHeaders(task2ResHdr))
+        event.store.putResponseBody(task2ResBody.bytes)
 
-        event.selectRequest()
-        event.putResponseHeader(HeaderBuilder.parseHeaders(responseHdr))
-        event.putResponseBody(responseBody.bytes)
+        event.store.selectRequest()
+        event.store.putResponseHeader(HeaderBuilder.parseHeaders(responseHdr))
+        event.store.putResponseBody(responseBody.bytes)
 
         then:
-        event.selectTask(0)
-        task1ReqHdr == event.getRequestHeader().toString()
-        task1ReqBody == event.getRequestBodyAsString()
-        task1ResHdr == event.getResponseHeader()
-        task1ResBody == event.getResponseBodyAsString()
+        event.store.selectTask(0)
+        task1ReqHdr == event.store.getRequestHeader().toString()
+        task1ReqBody == event.store.getRequestBodyAsString()
+        task1ResHdr == event.store.getResponseHeader()
+        task1ResBody == event.store.getResponseBodyAsString()
 
-        event.selectRequest()
-        requestHdr == event.getRequestHeader().toString()
-        requestBody == event.getRequestBodyAsString()
+        event.store.selectRequest()
+        requestHdr == event.store.getRequestHeader().toString()
+        requestBody == event.store.getRequestBodyAsString()
 
-        event.selectTask(1)
-        task2ReqHdr == event.getRequestHeader().toString()
-        task2ReqBody == event.getRequestBodyAsString()
-        task2ResHdr == event.getResponseHeader()
-        task2ResBody == event.getResponseBodyAsString()
+        event.store.selectTask(1)
+        task2ReqHdr == event.store.getRequestHeader().toString()
+        task2ReqBody == event.store.getRequestBodyAsString()
+        task2ResHdr == event.store.getResponseHeader()
+        task2ResBody == event.store.getResponseBodyAsString()
 
-        event.selectRequest()
-        responseHdr == event.getResponseHeader()
-        responseBody == event.getResponseBodyAsString()
+        event.store.selectRequest()
+        responseHdr == event.store.getResponseHeader()
+        responseBody == event.store.getResponseBodyAsString()
     }
 
     def body() {
