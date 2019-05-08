@@ -19,6 +19,16 @@ class Event {
     List<File> _tasks = [] // downstream/backend interactions
     File current = null // either request or a task
 
+    RawHeaders _requestRawHeaders = null
+    Headers _requestHeaders = null
+    byte[] _requestRawBody = null
+    String _requestBody = null
+
+    RawHeaders _responseRawHeaders = null
+    Headers _responseHeaders = null
+    byte[] _responseRawBody = null
+    String _responseBody = null
+
     Event(SimStore simStore, File eventDir) {
         this.simStore = simStore
         this.root = eventDir
@@ -101,14 +111,14 @@ class Event {
     }
 
     void clearCache() {
-        requestRawHeaders = null
-        requestHeaders = null
-        requestRawBody = null
-        requestBody = null
-        responseRawHeaders = null
-        responseHeaders = null
-        responseRawBody  = null
-        responseBody = null
+        _requestRawHeaders = null
+        _requestHeaders = null
+        _requestRawBody = null
+        _requestBody = null
+        _responseRawHeaders = null
+        _responseHeaders = null
+        _responseRawBody  = null
+        _responseBody = null
     }
 
     private File getRequestHeaderFile() { new File(current, 'request_header.txt') }
@@ -120,63 +130,52 @@ class Event {
     private File getResponseBodyHTMLFile() {  new File(current, 'response_body.html') }
     private File getRequestBodyHTMLFile() {  new File(current, 'request_body.html') }
 
-    RawHeaders requestRawHeaders = null
-    Headers requestHeaders = null
-    byte[] requestRawBody = null
-    String requestBody = null
-
-    RawHeaders responseRawHeaders = null
-    Headers responseHeaders = null
-    byte[] responseRawBody  = null
-    String responseBody = null
-
     void putRequestHeader(RawHeaders rawHeaders) {
-        requestRawHeaders = rawHeaders
-        requestHeaders = HeaderBuilder.parseHeaders(rawHeaders)
+        _requestRawHeaders = rawHeaders
+        _requestHeaders = HeaderBuilder.parseHeaders(rawHeaders)
         current.mkdirs()
-//        String txt = "${rawHeaders.uriLine}\r\n${HeaderBuilder.headersAsString(rawHeaders)}"
         String txt = "${HeaderBuilder.headersAsString(rawHeaders)}"
         requestHeaderFile.text = txt
     }
 
     void putRequestHeader(Headers headers) {
-        requestHeaders = headers
+        _requestHeaders = headers
         current.mkdirs()
         requestHeaderFile.text = headers.toString()
     }
 
     void putRequestBody(byte[] body) {
-        requestRawBody = body
+        _requestRawBody = body
         current.mkdirs();
         if (body.size()) {
             requestBodyFile.withOutputStream { it.write body }
-            requestBody = new String(body)
+            _requestBody = new String(body)
             requestBodyStringFile.text = requestBody
         }
     }
     Headers getRequestHeader() {
-        if (!requestHeaders) {
+        if (!_requestHeaders) {
             String headerString = requestHeaderFile.text
-            requestRawHeaders = HeaderBuilder.rawHeadersFromString(headerString)
-            requestHeaders = HeaderBuilder.parseHeaders(requestRawHeaders)
+            _requestRawHeaders = HeaderBuilder.rawHeadersFromString(headerString)
+            _requestHeaders = HeaderBuilder.parseHeaders(_requestRawHeaders)
         }
-        requestHeaders
+        _requestHeaders
     }
     byte[] getRequestBody() {
-        if (!requestRawBody) {
-            requestRawBody = requestBodyFile.readBytes()
-            requestBody = new String(requestRawBody)
+        if (!_requestRawBody) {
+            _requestRawBody = requestBodyFile.readBytes()
+            _requestBody = new String(_requestRawBody)
         }
-        requestRawBody
+        _requestRawBody
     }
 
     String getRequestBodyAsString() {
         getRequestBody()
-        requestBody
+        _requestBody
     }
 
     void putResponseHeader(Headers headers) {
-        responseHeaders = headers
+        _responseHeaders = headers
         putResponseHeaderInternal(headers.toString())
     }
 
@@ -188,12 +187,8 @@ class Event {
 
     void putResponseBody(byte[] body) {
         current.mkdirs();
-//        println "Response body file is ${responseBodyFile}"
-//        responseBodyFile.withOutputStream { it.write body }
         responseBodyFile.bytes = body
-        responseRawBody = body
-//        responseBody = new String(body)
-//        responseBodyStringFile.text = responseBody
+        _responseRawBody = body
     }
 
     void putResponseBodyText(String body) {
@@ -207,8 +202,8 @@ class Event {
     void putResponseHTMLBody(byte[] body) {
         current.mkdirs();
         responseBodyFile.withOutputStream { it.write body }
-        responseRawBody = body
-        responseBody = new String(body)
+        _responseRawBody = body
+        _responseBody = new String(body)
         responseBodyStringFile.text = responseBody
         responseBodyHTMLFile.text = responseBody
     }
@@ -216,32 +211,32 @@ class Event {
     void putRequestHTMLBody(byte[] body) {
         current.mkdirs();
         requestBodyFile.withOutputStream { it.write body }
-        requestRawBody = body
-        requestBody = new String(body)
+        _requestRawBody = body
+        _requestBody = new String(body)
         requestBodyStringFile.text = requestBody
         requestBodyHTMLFile.text = requestBody
     }
 
     String getResponseHeader() {
-        if (!responseHeaders) {
+        if (!_responseHeaders) {
             String headerString = responseHeaderFile.text
-            responseRawHeaders = HeaderBuilder.rawHeadersFromString(headerString)
-            responseHeaders = HeaderBuilder.parseHeaders(responseRawHeaders)
+            _responseRawHeaders = HeaderBuilder.rawHeadersFromString(headerString)
+            _responseHeaders = HeaderBuilder.parseHeaders(_responseRawHeaders)
         }
-        responseHeaders
+        _responseHeaders
     }
 
     byte[] getResponseBody() {
-        if (!responseRawBody) {
-            responseRawBody = responseBodyFile.readBytes()
-            responseBody = new String(responseRawBody)
+        if (!_responseRawBody) {
+            _responseRawBody = responseBodyFile.readBytes()
+            _responseBody = new String(_responseRawBody)
         }
-        responseRawBody
+        _responseRawBody
     }
 
     String getResponseBodyAsString() {
         getResponseBody()
-        responseBody
+        _responseBody
     }
 
 }
