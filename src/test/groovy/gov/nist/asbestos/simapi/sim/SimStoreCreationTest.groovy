@@ -1,6 +1,7 @@
 package gov.nist.asbestos.simapi.sim
 
-import gov.nist.asbestos.simapi.sim.basic.Event
+
+import gov.nist.asbestos.simapi.sim.basic.EventStore
 import gov.nist.asbestos.simapi.sim.basic.SimConfig
 import gov.nist.asbestos.simapi.sim.basic.SimConfigMapper
 import gov.nist.asbestos.simapi.sim.basic.SimStore
@@ -125,9 +126,9 @@ class SimStoreCreationTest extends Specification {
         SimStore simStore = new SimStore(ec, simId).withResource('store')
         simStore.getStore(true)  // create sim
         println '    got simStore'
-        Event event1 = simStore.newEvent()
+        EventStore event1 = simStore.newEvent()
         println '    new event'
-        Event event2 = simStore.newEvent()
+        EventStore event2 = simStore.newEvent()
         println '    new event'
 
         then:

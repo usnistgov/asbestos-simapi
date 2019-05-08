@@ -1,6 +1,7 @@
 package gov.nist.asbestos.simapi.sim
 
-import gov.nist.asbestos.simapi.sim.basic.Event
+
+import gov.nist.asbestos.simapi.sim.basic.EventStore
 import gov.nist.asbestos.simapi.sim.basic.SimStore
 import gov.nist.asbestos.simapi.sim.headers.HeaderBuilder
 import gov.nist.asbestos.simapi.tk.simCommon.SimId
@@ -9,7 +10,7 @@ import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
 
-class EventTest extends Specification {
+class EventStoreTest extends Specification {
 
     @Rule
     TemporaryFolder tmp = new TemporaryFolder()
@@ -25,7 +26,7 @@ class EventTest extends Specification {
         SimId simId = new SimId(testSession, 'foo', 'reg', 'cat')
         SimStore simStore = new SimStore(ec, simId).withResource('store')
         simStore.getStore(true) // create event
-        Event event = simStore.newEvent()
+        EventStore event = simStore.newEvent()
 
         String requestHdr = 'Request Header' + body()
         String requestBody = 'Request Body' + body()

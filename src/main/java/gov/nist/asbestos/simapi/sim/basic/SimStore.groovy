@@ -7,7 +7,7 @@ import groovy.transform.TypeChecked
 /**
  * Store is organized as:
  * EC/testSession/psimdb/simId/actor/resource/event/event_files
- * The content starting from the event/ is handed off to the class Event
+ * The content starting from the event/ is handed off to the class EventStore
  */
 @TypeChecked
 class SimStore {
@@ -22,7 +22,7 @@ class SimStore {
     String eventId = null // within resource
     boolean newlyCreated = false
     static String PSIMDB = 'psimdb'
-    Event event
+    EventStore event
     SimConfig config
 
     SimStore(File externalCache, SimId simId) {
@@ -124,9 +124,9 @@ class SimStore {
         _eventDir
     }
 
-    Event newEvent() {
+    EventStore newEvent() {
         createEvent()
-        event = new Event(this, _eventDir)
+        event = new EventStore(this, _eventDir)
         event
     }
 
