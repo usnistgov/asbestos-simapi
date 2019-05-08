@@ -10,14 +10,14 @@ class SimConfigMapper {
         this.parms = parms
     }
 
-    SimConfig build() {
-        SimConfig simConfig
+    ChannelConfig build() {
+        ChannelConfig simConfig
         Map extra = [:]
 
         int maxExtra = 50
         while (maxExtra > 0) {
             try {
-                simConfig = new SimConfig(parms)
+                simConfig = new ChannelConfig(parms)
                 simConfig.extensions = extra
                 return simConfig
             } catch (Throwable t) {

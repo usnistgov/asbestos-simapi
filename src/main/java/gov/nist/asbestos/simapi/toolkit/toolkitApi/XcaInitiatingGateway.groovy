@@ -25,7 +25,7 @@ import javax.ws.rs.core.Response
     }
 
    /* (non-Javadoc)
-    * @see SimConfig#setPatientErrorMap(PatientErrorMap)
+    * @see ChannelConfig#setPatientErrorMap(PatientErrorMap)
     */
    @Override
     void setPatientErrorMap(gov.nist.asbestos.simapi.toolkit.configDatatypes.client.PatientErrorMap errorMap) throws IOException {
@@ -34,7 +34,7 @@ import javax.ws.rs.core.Response
    }
 
    /* (non-Javadoc)
-    * @see SimConfig#getPatientErrorMap()
+    * @see ChannelConfig#getPatientErrorMap()
     */
    @Override
     gov.nist.asbestos.simapi.toolkit.configDatatypes.client.PatientErrorMap getPatientErrorMap() throws IOException {

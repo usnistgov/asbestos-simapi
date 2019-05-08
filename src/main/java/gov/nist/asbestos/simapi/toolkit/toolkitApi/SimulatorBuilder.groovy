@@ -206,14 +206,14 @@ import groovy.transform.TypeChecked
     }
 
     /**
-     * Update the configuration of a Simulator. Any properties that are passed in SimConfig that are
+     * Update the configuration of a Simulator. Any properties that are passed in ChannelConfig that are
      * not recognized will be silently ignored. Parameters passed with wrong type (String vs. boolean) will cause
      * ToolkitServiceException.
      *
      * Expected usage is to retrieve the configuration using the get() method,
      * update the parameters, and then submit the update using this call.
      * @param config new configuration
-     * @return updated SimConfig if updates made or null if no changes accepted.
+     * @return updated ChannelConfig if updates made or null if no changes accepted.
      * @throws ToolkitServiceException if anything goes wrong
      */
      SimConfig update(SimConfig config) throws ToolkitServiceException {

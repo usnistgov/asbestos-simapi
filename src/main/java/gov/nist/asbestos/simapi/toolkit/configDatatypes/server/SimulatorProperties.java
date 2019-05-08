@@ -1,11 +1,11 @@
 package gov.nist.asbestos.simapi.toolkit.configDatatypes.server;
 
-//import gov.nist.asbestos.simapi.toolkit.toolkitServicesCommon.SimConfig;
+//import gov.nist.asbestos.simapi.toolkit.toolkitServicesCommon.ChannelConfig;
 
 /**
- * These are properties to be used with SimConfig
+ * These are properties to be used with ChannelConfig
  * to control the operation of Simulators through the API.
- * see SimConfig#setProperty()
+ * see ChannelConfig#setProperty()
  */
 public class SimulatorProperties {
 

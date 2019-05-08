@@ -26,7 +26,7 @@ class SimStore {
     static String PSIMDB = 'psimdb'
     Event event
     //EventStore eventStore
-    SimConfig config
+    ChannelConfig config
 
     SimStore(File externalCache, SimId simId) {
         assert externalCache : "SimStore: initialized with externalCache == null"

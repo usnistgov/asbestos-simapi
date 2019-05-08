@@ -5,10 +5,10 @@ import gov.nist.asbestos.simapi.tk.simCommon.TestSession
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 
-// This is separate because @TypeChecked must be off for new SimConfig(rawConfig)
+// This is separate because @TypeChecked must be off for new ChannelConfig(rawConfig)
 // Won't compile
 class SimStoreBuilder {
-    static SimStore builder(File externalCache, SimConfig simConfig) {
+    static SimStore builder(File externalCache, ChannelConfig simConfig) {
         SimStore simStore = new SimStore(externalCache)
         simStore.config = simConfig
         String json = JsonOutput.toJson(simConfig)
@@ -24,17 +24,17 @@ class SimStoreBuilder {
         SimStore simStore = new SimStore(externalCache)
         simStore.setSimIdForLoader(new SimId(testSession, id))  // doesn't do Id validation
         Map rawConfig = (Map) new JsonSlurper().parse(new File(simStore.simDir, 'config.json'))
-        SimConfig simConfig = new SimConfigMapper(rawConfig).build()
+        ChannelConfig simConfig = new SimConfigMapper(rawConfig).build()
         simStore.simId = getSimId(simConfig)
         simStore.config = simConfig
         simStore
     }
 
-    static SimId getSimId(SimConfig simConfig) {
+    static SimId getSimId(ChannelConfig simConfig) {
         new SimId(new TestSession(simConfig.testSession), simConfig.simId, simConfig.actorType, simConfig.environment)
     }
 
-    static SimConfig buildSimConfig(String json) {
+    static ChannelConfig buildSimConfig(String json) {
         Map rawConfig = (Map) new JsonSlurper().parseText(json)
         new SimConfigMapper(rawConfig).build()
     }

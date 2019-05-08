@@ -1,8 +1,8 @@
 package gov.nist.asbestos.simapi.sim
 
 
-import gov.nist.asbestos.simapi.sim.basic.EventStore
-import gov.nist.asbestos.simapi.sim.basic.SimConfig
+import gov.nist.asbestos.simapi.sim.basic.Event
+import gov.nist.asbestos.simapi.sim.basic.ChannelConfig
 import gov.nist.asbestos.simapi.sim.basic.SimConfigMapper
 import gov.nist.asbestos.simapi.sim.basic.SimStore
 import gov.nist.asbestos.simapi.sim.basic.SimStoreBuilder
@@ -87,7 +87,7 @@ class SimStoreCreationTest extends Specification {
 
         /////////////////////////////////////////////////////
         when:
-        SimStore store = SimStoreBuilder.builder(ec, new SimConfig(rawConfig))
+        SimStore store = SimStoreBuilder.builder(ec, new ChannelConfig(rawConfig))
 
         then:
         store.simId == new SimId(testSession, '1', 'baloon', 'default')
@@ -126,15 +126,15 @@ class SimStoreCreationTest extends Specification {
         SimStore simStore = new SimStore(ec, simId).withResource('store')
         simStore.getStore(true)  // create sim
         println '    got simStore'
-        EventStore event1 = simStore.newEvent()
+        Event event1 = simStore.newEvent()
         println '    new event'
-        EventStore event2 = simStore.newEvent()
+        Event event2 = simStore.newEvent()
         println '    new event'
 
         then:
         println '  starting then'
-        event1.root.exists()
-        event2.root.exists()
+        event1.store.root.exists()
+        event2.store.root.exists()
         event1 != event2
     }
 
@@ -161,7 +161,7 @@ class SimStoreCreationTest extends Specification {
         /////////////////////////////////////////////////////
         when:
         Map jsonMap = (Map) new JsonSlurper().parseText(jsonString)
-        SimConfig config = new SimConfigMapper(jsonMap).build()
+        ChannelConfig config = new SimConfigMapper(jsonMap).build()
 
         then:
         config.environment == 'default'
@@ -204,7 +204,7 @@ class SimStoreCreationTest extends Specification {
         jsonMap.transactions.READ == 'base'
 
         when:
-        SimConfig config = new SimConfigMapper(jsonMap).build()
+        ChannelConfig config = new SimConfigMapper(jsonMap).build()
 
         then:
         config.extensions.transactions.READ == 'base'

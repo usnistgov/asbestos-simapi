@@ -91,7 +91,7 @@ public class EngineSpi {
     /**
      * Not for Public Use.
      * @param parms BasicSimParameters
-     * @return new SimConfig instance
+     * @return new ChannelConfig instance
      * @throws ToolkitServiceException on error
      */
     public SimConfig create(BasicSimParameters parms) throws ToolkitServiceException {
@@ -170,9 +170,9 @@ public class EngineSpi {
     }
 
     /**
-     * Returns the SimConfig for an existing simulator.
+     * Returns the ChannelConfig for an existing simulator.
     * @param simId simulator id for sim to fetch.
-    * @return SimConfig instance
+    * @return ChannelConfig instance
     * @throws ToolkitServiceException on error, for example if the simulator
     * does not exist.
     */
