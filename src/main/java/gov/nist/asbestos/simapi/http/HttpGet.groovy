@@ -1,6 +1,6 @@
 package gov.nist.asbestos.simapi.http
 
-class HttpGet extends HttpGeneralRequest {
+class HttpGet extends HttpGeneralDetails {
 
     void get(String url, Map<String, String> headers) {
         HttpURLConnection connection

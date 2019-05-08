@@ -5,7 +5,7 @@ import gov.nist.asbestos.simapi.sim.headers.Headers
 import groovy.transform.TypeChecked
 
 @TypeChecked
-abstract class HttpGeneralRequest {
+abstract class HttpGeneralDetails {
     Map<String, List<String>> requestHeadersList = null
     //Map<String, List<String>> responseHeadersList = null
     Headers _requestHeaders = null

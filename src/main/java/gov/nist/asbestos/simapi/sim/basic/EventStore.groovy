@@ -22,11 +22,12 @@ class EventStore {
     Event e = null;
 
     def clearCache() {
-        e = new Event(this)
+        e = new Event()
     }
 
     Event newEvent() {
-        e = new Event(this)
+        e = new Event(this, simStore.simId, simStore.resource, simStore.eventId)
+        assert e.complete : "Trying to create new event without details."
         e
     }
 
@@ -122,7 +123,7 @@ class EventStore {
     private File getRequestBodyHTMLFile() {  new File(current, 'request_body.html') }
 
     void putRequestHeader(RawHeaders rawHeaders) {
-        e._requestRawHeaders = rawHeaders
+        //e._requestRawHeaders = rawHeaders
         e._requestHeaders = HeaderBuilder.parseHeaders(rawHeaders)
         current.mkdirs()
         String txt = "${HeaderBuilder.headersAsString(rawHeaders)}"
@@ -147,8 +148,8 @@ class EventStore {
     Headers getRequestHeader() {
         if (!e._requestHeaders) {
             String headerString = requestHeaderFile.text
-            e._requestRawHeaders = HeaderBuilder.rawHeadersFromString(headerString)
-            e._requestHeaders = HeaderBuilder.parseHeaders(e._requestRawHeaders)
+            RawHeaders requestRawHeaders = HeaderBuilder.rawHeadersFromString(headerString)
+            e._requestHeaders = HeaderBuilder.parseHeaders(requestRawHeaders)
         }
         e._requestHeaders
     }

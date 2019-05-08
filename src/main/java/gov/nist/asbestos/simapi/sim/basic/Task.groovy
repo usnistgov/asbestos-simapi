@@ -4,7 +4,7 @@ class Task {
     EventStore event
     int taskIndex
 
-    static final int REQUEST_TASK = -1
+    static final int CLIENT_TASK = -1
 
     Task(EventStore event, int index) {
         this.event = event

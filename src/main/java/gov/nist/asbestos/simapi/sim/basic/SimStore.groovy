@@ -17,9 +17,11 @@ class SimStore {
     private File _resourceDir = null
     private File _actorDir
     private File _eventDir = null
+
     SimId simId
     String resource = null
     String eventId = null // within resource
+
     boolean newlyCreated = false
     static String PSIMDB = 'psimdb'
     Event event

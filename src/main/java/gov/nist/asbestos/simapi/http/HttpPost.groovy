@@ -5,7 +5,7 @@ import groovy.transform.TypeChecked
 import org.apache.log4j.Logger
 
 @TypeChecked
-class HttpPost  extends HttpGeneralRequest {
+class HttpPost  extends HttpGeneralDetails {
     static Logger log = Logger.getLogger(HttpPost);
 
     void post(String url, Map<String, String> headers, byte[] content) {
