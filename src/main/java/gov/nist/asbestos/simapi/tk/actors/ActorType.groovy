@@ -119,7 +119,7 @@ class ActorType  {
 
     /**
      * Within toolkit, each TransactionType maps to a unique ActorType
-     * (as receiver of the transaction). To make this work, transaction
+     * (as receiver of the actor). To make this work, actor
      * names are customized to make this mapping unique.  This goes
      * beyond the definition in the TF.
      *
@@ -198,8 +198,8 @@ class ActorType  {
     }
 
     /**
-     * Return TransactionType for passed transaction name.
-    * @param name of transaction, matched to TransactionType short name, name,
+     * Return TransactionType for passed actor name.
+    * @param name of actor, matched to TransactionType short name, name,
     * or id. Both SOAP and Http transactions are searched
     * @return TransactionType for this name, or null if no match found.
     */

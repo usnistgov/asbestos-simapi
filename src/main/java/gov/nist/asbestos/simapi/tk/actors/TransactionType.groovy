@@ -19,7 +19,7 @@ class TransactionType {
     String requestAction = "";
     String responseAction = "";
     boolean requiresMtom = false;
-    boolean http = false; // Is this Http only (non-SOAP) transaction
+    boolean http = false; // Is this Http only (non-SOAP) actor
 //    Map<String, TransactionType> basicTypeMap = new HashMap<>();
     boolean fhir = false;
     String endpointSimPropertyName;  // TODO is this irrelevant?

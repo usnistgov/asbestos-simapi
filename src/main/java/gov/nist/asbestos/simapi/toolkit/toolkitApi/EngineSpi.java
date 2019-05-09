@@ -28,7 +28,7 @@ import javax.ws.rs.core.Response;
  * create and delete sims; and getting and updating the configurations.
  *
  * There are a second set of operations that initiate specific transactions from Client sims.  An example is sendXdr()
- * which initiates an XDR Provide and Register transaction from a Document Source sim.
+ * which initiates an XDR Provide and Register actor from a Document Source sim.
  */
 public class EngineSpi {
     static Logger logger = Logger.getLogger("SYSTEM");
@@ -193,7 +193,7 @@ public class EngineSpi {
     }
 
     /**
-     * Send an XDR Provide and Register transaction.  The engine is identified by parameters to the class
+     * Send an XDR Provide and Register actor.  The engine is identified by parameters to the class
      * constructor.  The simulator id is contained in the SendRequest model.
      * @param request SendRequest model
      * @return Response Object

@@ -22,8 +22,8 @@ public interface RawSendRequest extends SimId {
     String getTransactionName();
 
     /**
-     * Id of the transaction to send.
-     * @param transactionName transaction id
+     * Id of the actor to send.
+     * @param transactionName actor id
      */
     void setTransactionName(String transactionName);
 
@@ -39,7 +39,7 @@ public interface RawSendRequest extends SimId {
 
     /**
      * Metadata as a String.  It must be well formed XML (pass an XML parse). This will be the XML child element of
-     * the SOAPBody element.  For a Provide and Register transaction the top element will be
+     * the SOAPBody element.  For a Provide and Register actor the top element will be
      * the ProvideAndRegisterDocumentSetRequest element.
      * @param metadata XML
      */

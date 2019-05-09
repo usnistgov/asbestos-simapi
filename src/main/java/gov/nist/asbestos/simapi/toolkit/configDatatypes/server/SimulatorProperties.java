@@ -52,50 +52,50 @@ public class SimulatorProperties {
 
     /**
      * Boolean property controlling whether Registry Simulator validates Register transactions against
-     * Patient IDs received in a prior Patient Identity Feed transaction.
+     * Patient IDs received in a prior Patient Identity Feed actor.
      */
     public static final String VALIDATE_AGAINST_PATIENT_IDENTITY_FEED = "Validate_Against_Patient_Identity_Feed";
 
     /**
-     * String property controlling the location of the test engine notification extension where transaction
+     * String property controlling the location of the test engine notification extension where actor
      * notifications are sent. If empty/not set then notifications are not sent. Used in conjunction with
      * TRANSACTION_NOTIFICATION_CLASS.
      */
     public static final String           TRANSACTION_NOTIFICATION_URI = "Transaction_Notification_URI";
 
     /**
-     * String property controlling the Java class to be created/called as part of the processing of a transaction
+     * String property controlling the Java class to be created/called as part of the processing of a actor
      * notification.  If empty/not set then notifications are not sent. Used in conjunction with
      * TRANSACTION_NOTIFICATION_URI.
      */
     public static final String         TRANSACTION_NOTIFICATION_CLASS = "Transaction_Notification_Class";
 
     /**
-     * Endpoint to use to send the indicated transaction to this Simulator.
+     * Endpoint to use to send the indicated actor to this Simulator.
      * Updates to this property are ignored.
      */
     public static final String                            pnrEndpoint = "PnR_endpoint";
 
     /**
-     * Endpoint to use to send the indicated transaction to this Simulator.
+     * Endpoint to use to send the indicated actor to this Simulator.
      * Updates to this property are ignored.
      */
     public static final String                         pnrTlsEndpoint = "PnR_TLS_endpoint";
 
     /**
-     * Endpoint to use to send the indicated transaction to this Simulator.
+     * Endpoint to use to send the indicated actor to this Simulator.
      * Updates to this property are ignored.
      */
     public static final String                       retrieveEndpoint = "Retrieve_endpoint";
 
     /**
-     * Endpoint to use to send the indicated transaction to this Simulator.
+     * Endpoint to use to send the indicated actor to this Simulator.
      * Updates to this property are ignored.
      */
     public static final String                    retrieveTlsEndpoint = "Retrieve_TLS_endpoint";
 
     /**
-     * Endpoint to use to send the indicated transaction to this Simulator.
+     * Endpoint to use to send the indicated actor to this Simulator.
      * Updates to this property are ignored.
      */
     public static final String                       registerEndpoint = "Register_endpoint";
@@ -104,7 +104,7 @@ public class SimulatorProperties {
 
 
     /**
-     * Endpoint to use to send the indicated transaction to this Simulator.
+     * Endpoint to use to send the indicated actor to this Simulator.
      * Updates to this property are ignored.
      */
     public static final String                    registerTlsEndpoint = "Register_TLS_endpoint";
@@ -112,19 +112,19 @@ public class SimulatorProperties {
     public static final String                    registerOddeTlsEndpoint = "RegisterOdde_TLS_endpoint";
 
     /**
-     * Endpoint to use to send the indicated transaction to this Simulator.
+     * Endpoint to use to send the indicated actor to this Simulator.
      * Updates to this property are ignored.
      */
     public static final String                    storedQueryEndpoint = "StoredQuery_endpoint";
 
     /**
-     * Endpoint to use to send the indicated transaction to this Simulator.
+     * Endpoint to use to send the indicated actor to this Simulator.
      * Updates to this property are ignored.
      */
     public static final String                 storedQueryTlsEndpoint = "StoredQuery_TLS_endpoint";
 
     /**
-     * Endpoint to use to send the indicated transaction to this Simulator.
+     * Endpoint to use to send the indicated actor to this Simulator.
      * Updates to this property are ignored.
      */
     public static final String                         updateEndpoint = "Update_endpoint";
@@ -135,7 +135,7 @@ public class SimulatorProperties {
     public static final String                          multiPatientQueryTlsEndpoint = "Multipatient_query_TLS_endpoint";
 
     /**
-     * Endpoint to use to send the indicated transaction to this Simulator.
+     * Endpoint to use to send the indicated actor to this Simulator.
      * Updates to this property are ignored.
      */
     public static final String                      updateTlsEndpoint = "Update_TLS_endpoint";
@@ -143,7 +143,7 @@ public class SimulatorProperties {
 
     /**
      * Profile RMD: ITI-62
-     * Endpoint to use to send the indicated transaction to this Simulator.
+     * Endpoint to use to send the indicated actor to this Simulator.
      * Updates to this property are ignored.
      */
     public static final String                         removeMetadataEndpoint = "Remove_metadata_endpoint";
@@ -152,7 +152,7 @@ public class SimulatorProperties {
 
     /**
      * Profile RMD: ITI-62
-     * Endpoint to use to send the indicated transaction to this Simulator.
+     * Endpoint to use to send the indicated actor to this Simulator.
      * Updates to this property are ignored.
      */
     public static final String                      removeMetadataTlsEndpoint = "Remove_metadata_TLS_endpoint";
@@ -160,73 +160,73 @@ public class SimulatorProperties {
     public static final String                         removeDocumentsTlsEndpoint = "Remove_documents_TLS_endpoint";
 
     /**
-     * Endpoint to use to send the indicated transaction to this Simulator.
+     * Endpoint to use to send the indicated actor to this Simulator.
      * Updates to this property are ignored.
      */
     public static final String                           xcqrEndpoint = "XCQR_endpoint";
 
     /**
-     * Endpoint to use to send the indicated transaction to this Simulator.
+     * Endpoint to use to send the indicated actor to this Simulator.
      * Updates to this property are ignored.
      */
     public static final String                        xcqrTlsEndpoint = "XCQR_TLS_endpoint";
 
     /**
-     * Endpoint to use to send the indicated transaction to this Simulator.
+     * Endpoint to use to send the indicated actor to this Simulator.
      * Updates to this property are ignored.
      */
     public static final String                            xcqEndpoint = "XCQ_endpoint";
 
     /**
-     * Endpoint to use to send the indicated transaction to this Simulator.
+     * Endpoint to use to send the indicated actor to this Simulator.
      * Updates to this property are ignored.
      */
     public static final String                         xcqTlsEndpoint = "XCQ_TLS_endpoint";
 
     /**
-     * Endpoint to use to send the indicated transaction to this Simulator.
+     * Endpoint to use to send the indicated actor to this Simulator.
      * Updates to this property are ignored.
      */
     public static final String                            igqEndpoint = "IGQ_endpoint";
 
     /**
-     * Endpoint to use to send the indicated transaction to this Simulator.
+     * Endpoint to use to send the indicated actor to this Simulator.
      * Updates to this property are ignored.
      */
     public static final String                         igqTlsEndpoint = "IGQ_TLS_endpoint";
 
     /**
-     * Endpoint to use to send the indicated transaction to this Simulator.
+     * Endpoint to use to send the indicated actor to this Simulator.
      * Updates to this property are ignored.
      */
     public static final String                            xcrEndpoint = "XCR_endpoint";
 
     /**
-     * Endpoint to use to send the indicated transaction to this Simulator.
+     * Endpoint to use to send the indicated actor to this Simulator.
      * Updates to this property are ignored.
      */
     public static final String                         xcrTlsEndpoint = "XCR_TLS_endpoint";
 
     /**
-     * Endpoint to use to send the indicated transaction to this Simulator.
+     * Endpoint to use to send the indicated actor to this Simulator.
      * Updates to this property are ignored.
      */
     public static final String                            xcirEndpoint = "XCIR_endpoint";
 
     /**
-     * Endpoint to use to send the indicated transaction to this Simulator.
+     * Endpoint to use to send the indicated actor to this Simulator.
      * Updates to this property are ignored.
      */
     public static final String                         xcirTlsEndpoint = "XCIR_TLS_endpoint";
 
     /**
-     * Endpoint to use to send the indicated transaction to this Simulator.
+     * Endpoint to use to send the indicated actor to this Simulator.
      * Updates to this property are ignored.
      */
     public static final String                            igrEndpoint = "IGR_endpoint";
 
     /**
-     * Endpoint to use to send the indicated transaction to this Simulator.
+     * Endpoint to use to send the indicated actor to this Simulator.
      * Updates to this property are ignored.
      */
     public static final String                         igrTlsEndpoint = "IGR_TLS_endpoint";
@@ -243,7 +243,7 @@ public class SimulatorProperties {
     public static final String                       codesEnvironment = "Codes_Environment";
 
     /**
-     * Class name of custom plugin to validate metadata on Register transaction
+     * Class name of custom plugin to validate metadata on Register actor
      */
 
     public static final String                      metadataValidatorClass = "Register_Metadata_Validator_Class_Name";
@@ -318,12 +318,12 @@ public class SimulatorProperties {
     public static final String imagingDocumentSources = "Imaging Document Sources";
 
     /**
-     * Each transaction request throws this error.
+     * Each actor request throws this error.
      */
     public static final String                          errors = "Throw Error";
 
     /**
-     * Each transaction request for a particular patient throws this error.
+     * Each actor request for a particular patient throws this error.
      */
     public static final String                          errorForPatient = "Throw Error for Patient ID";
 

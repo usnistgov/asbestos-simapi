@@ -1,9 +1,12 @@
 package gov.nist.asbestos.simapi.sim.basic
 
+import groovy.transform.TypeChecked
+
+@TypeChecked
 class ChannelConfig {
     String environment
     String testSession
-    String simId
+    String channelId
     String actorType
     String channelType
     String fhirBase

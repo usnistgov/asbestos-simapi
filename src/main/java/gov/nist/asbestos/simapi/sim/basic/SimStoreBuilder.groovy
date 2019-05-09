@@ -30,8 +30,8 @@ class SimStoreBuilder {
         simStore
     }
 
-    static SimId getSimId(ChannelConfig simConfig) {
-        new SimId(new TestSession(simConfig.testSession), simConfig.simId, simConfig.actorType, simConfig.environment)
+    static SimId getSimId(ChannelConfig channelConfig) {
+        new SimId(new TestSession(channelConfig.testSession), channelConfig.channelId, channelConfig.actorType, channelConfig.environment)
     }
 
     static ChannelConfig buildSimConfig(String json) {

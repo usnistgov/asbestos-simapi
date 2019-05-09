@@ -57,6 +57,10 @@ abstract class HttpGeneralDetails {
         hdrs
     }
 
+    String getResponseText() {
+        _responseText
+    }
+
     Headers getRequestHeaders() {
         if (!_requestHeaders)
             _requestHeaders = HeaderBuilder.parseHeaders(requestHeadersList)

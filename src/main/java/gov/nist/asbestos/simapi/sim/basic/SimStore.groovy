@@ -27,7 +27,7 @@ class SimStore {
     Event event
     //EventStore eventStore
     ChannelConfig config
-    boolean channel = false  // is this a channel to the backend system?
+    boolean channel = true  // is this a channel to the backend system?
 
     SimStore(File externalCache, SimId channelId) {
         assert externalCache : "SimStore: initialized with externalCache == null"

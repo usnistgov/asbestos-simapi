@@ -11,7 +11,7 @@ class TransactionInstance implements Serializable {
     String simId = null;
     String messageId = null;   // message id
     String labelInterpretedAsDate = null;
-    String trans = null;    // transaction type code
+    String trans = null;    // actor type code
     gov.nist.asbestos.simapi.tk.actors.TransactionType nameInterpretedAsTransactionType = null;
     gov.nist.asbestos.simapi.tk.actors.ActorType actorType = null;
     String ipAddress;

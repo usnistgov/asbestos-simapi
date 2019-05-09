@@ -1,5 +1,8 @@
 package gov.nist.asbestos.simapi.sim.basic
 
+import groovy.transform.TypeChecked
+
+@TypeChecked
 class Task {
     EventStore event
     int taskIndex

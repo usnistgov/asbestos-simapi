@@ -26,7 +26,7 @@ public class RetImgDocSetReqResource extends SimIdResource
    String endpoint = null;
    /**
     * Message directory. If present, indicates the message directory for the
-    * transaction. The SOAP request and response headers and the SOAP Request
+    * actor. The SOAP request and response headers and the SOAP Request
     * Body are put in this directory.
     */
    String messageDir = null;

@@ -4,9 +4,9 @@ package gov.nist.asbestos.simapi.tk.siteManagement
 import groovy.transform.TypeChecked;
 
 /**
- * Configuration of a single instance of a transaction. Transactions are
+ * Configuration of a single instance of a actor. Transactions are
  * split into two major types: Retrieve and All Others. The isRetrieve()
- * determines which kind this is.  In theory a transaction must belong to an
+ * determines which kind this is.  In theory a actor must belong to an
  * Actor definition.  Toolkit is a bit looser and transactions belong
  * to TransactionOfferings which can be thought of as a lightweight
  * definition of an Actor.
@@ -20,8 +20,8 @@ import groovy.transform.TypeChecked;
 	 boolean isAsync = false;
 	 String endpoint = "";   // make private
 
-	String name = "";   // can be transaction name or repository uid
-						// when a transaction name, it is related to transType
+	String name = "";   // can be actor name or repository uid
+						// when a actor name, it is related to transType
 	gov.nist.asbestos.simapi.tk.actors.TransactionType transType = null;
 	gov.nist.asbestos.simapi.tk.actors.ActorType actorType = null;
 

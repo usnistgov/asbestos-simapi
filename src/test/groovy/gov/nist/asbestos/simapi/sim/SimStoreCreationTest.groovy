@@ -166,7 +166,7 @@ class SimStoreCreationTest extends Specification {
         then:
         config.environment == 'default'
         config.testSession == 'default'
-        config.simId == '1'
+        config.channelId == '1'
         config.actorType == 'balloon'
         config.extensions.extra1 == 'value1'
         config.extensions.extra2 == 'value2'

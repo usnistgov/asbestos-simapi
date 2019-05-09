@@ -1,7 +1,9 @@
 package gov.nist.asbestos.simapi.sim.basic
 
 import gov.nist.asbestos.simapi.tk.simCommon.SimId
+import groovy.transform.TypeChecked
 
+@TypeChecked
 class EventStoreSearch {
     File externalCache
     SimStore simStore
@@ -15,36 +17,46 @@ class EventStoreSearch {
         simDir = simStore.simDir
     }
 
-
-
-    void loadAllEventsItems() {
+    Map<String, EventStoreItem> loadAllEventsItems() {
         eventItems = [:]
 
-        List<File> actorFiles = simDir.listFiles() as List<File>
+        Collection<File> actorFiles = simDir.listFiles() as List<File>
         actorFiles = actorFiles.findAll { File file ->
             file.isDirectory() && !file.name.startsWith('.') && !file.name.startsWith('_')
         }
         actorFiles.each { File actorFile ->
-            List<File> resourceFiles = actorFile.listFiles() as List<File>
+            Collection<File> resourceFiles = actorFile.listFiles() as List<File>
             resourceFiles = resourceFiles.findAll { File resourceFile ->
                 resourceFile.isDirectory() && !resourceFile.name.startsWith('.') && !resourceFile.name.startsWith('_')
             }
             resourceFiles.each { File resourceFile ->
-                List<File> eventFiles = resourceFile.listFiles() as List<File>
-                eventFiles = resourceFile.findAll { File eventFile ->
+                Collection<File> eventFiles = resourceFile.listFiles() as List<File>
+                eventFiles = eventFiles.findAll { File eventFile ->
                     eventFile.isDirectory() && !eventFile.name.startsWith('.') && !eventFile.name.startsWith('_')
                 }
                 eventFiles.each { File eventFile ->
+                    File requestHeaderFile = new File(new File(eventFile, 'request'), 'request_header.txt')
+                    String firstLine
+                    requestHeaderFile.withReader { firstLine = it.readLine() }
+                    String verb = ''
+                    if (firstLine) {
+                        String[] parts = firstLine.split(' ', 2)
+                        if (parts.size() > 1)
+                            verb = parts[0]
+                    }
+
                     EventStoreItem item = new EventStoreItem()
                     item.file = eventFile
                     item.eventId = eventFile.name
-                    item.transaction = actorFile.name
-                    item.resource = resourceFile
+                    item.actor = actorFile.name
+                    item.resource = resourceFile.name
+                    item.verb = verb
 
                     eventItems[eventFile.name] = item
                 }
 
             }
         }
+        eventItems
     }
 }

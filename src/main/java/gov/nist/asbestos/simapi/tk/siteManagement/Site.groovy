@@ -349,7 +349,7 @@ class Site implements Serializable {
 	String getEndpoint(gov.nist.asbestos.simapi.tk.actors.TransactionType transaction, boolean isSecure, boolean isAsync) throws Exception {
 		String endpoint = getRawEndpoint(transaction, isSecure, isAsync);
 		if (endpoint == null)
-			throw new Exception("Site#getEndpoint: no endpoint defined for site=" + name + " transaction=" + transaction + " secure=" + isSecure + " async=" + isAsync);
+			throw new Exception("Site#getEndpoint: no endpoint defined for site=" + name + " actor=" + transaction + " secure=" + isSecure + " async=" + isAsync);
 		return endpoint;
 	}
 

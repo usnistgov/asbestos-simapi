@@ -1,5 +1,6 @@
 package gov.nist.asbestos.simapi.http
 
+
 class HttpGet extends HttpGeneralDetails {
 
     void get(String url, Map<String, String> headers) {
@@ -26,6 +27,12 @@ class HttpGet extends HttpGeneralDetails {
 
     void get(String url) {
         get(url, null)
+    }
+
+    void getJson(String url) {
+        Map<String, String> headers = [ accept: 'application/json', 'accept-charset': 'utf-8']
+        get(url, headers)
+        setResponseText(new String(response))
     }
 
     void run() {

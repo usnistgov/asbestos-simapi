@@ -7,7 +7,7 @@ import javax.ws.rs.DefaultValue;
 import javax.ws.rs.MatrixParam;
 
 /**
- * BeanParam POJO for transaction RS.
+ * BeanParam POJO for actor RS.
  *
  * @author Ralph Moulton / MIR WUSTL IHE Development Project
  * <a href="mailto:moultonr@mir.wustl.edu">moultonr@mir.wustl.edu</a>

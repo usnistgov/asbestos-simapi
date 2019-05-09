@@ -1,8 +1,26 @@
 package gov.nist.asbestos.simapi.sim.basic
 
+import groovy.transform.TypeChecked
+
+
+@TypeChecked
 class EventStoreItem {
     String eventId
-    String transaction
+    String actor
     String resource
+    String verb
     File file
+
+    String asJson() {
+        '''
+{
+  "eventId": "EVENTID",
+  "actor": "ACTOR",
+  "resource": "RESOURCE",
+  "verb": "VERB"
+}'''.replace('EVENTID', eventId)
+                .replace('ACTOR', actor)
+                .replace('RESOURCE', resource)
+                .replace('VERB', verb)
+    }
 }

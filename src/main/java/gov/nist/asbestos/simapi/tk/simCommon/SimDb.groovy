@@ -231,7 +231,7 @@ import org.apache.log4j.Logger
 	/**
 	 * Events returned most recent first
 	 * If no marker then return all events.
-	 * (I think this method assumes there is only one actor type and transaction type within the scope of a simulator because getAllEvents returns all events for all actors and all transactions.)
+	 * (I think this method assumes there is only one actor type and actor type within the scope of a simulator because getAllEvents returns all events for all actors and all transactions.)
 	 * @return
 	 */
 	List<SimDbEvent> getEventsSinceMarker() {
@@ -341,7 +341,7 @@ import org.apache.log4j.Logger
 		assert transactionDir.isDirectory() : "Cannot create content in Simulator database, creation of " + transactionDir + " failed"
 	}
 
-	// actor, transaction, and event must be filled in
+	// actor, actor, and event must be filled in
 	private String retrieveEventDate() {
 		if (transactionDir == null || event == null) return null;
 		File eventDir = new File(transactionDir, event);
@@ -676,7 +676,7 @@ import org.apache.log4j.Logger
 		t.messageId = inst.getName();
 		t.trans = name;
 		transactionDir = new File(actor, name);
-		//logger.debug("transaction dir is " + transactionDir);
+		//logger.debug("actor dir is " + transactionDir);
 		event = t.messageId;
 		String date = null;
 		try {
