@@ -44,9 +44,10 @@ class HeaderBuilder {
         Headers headers = new Headers()
 
         String[] lineParts = rawHeaders.uriLine.split()
-        assert lineParts.size() == 2 : "HeaderBuilder : URI line should have two elements, has ${lineParts.size()}"
+        assert [2, 3].contains(lineParts.size()) : "HeaderBuilder : URI line should have two or three elements, has ${lineParts.size()}"
         headers.verb = lineParts[0]
-        headers.pathInfo = lineParts[1]
+        String x = (lineParts.size() == 2) ? lineParts[1] : lineParts[1] + '?' + lineParts[2]
+        headers.pathInfo = new URI(x)
 
         List<String> names = rawHeaders.names
         names.each { String name ->
@@ -58,33 +59,6 @@ class HeaderBuilder {
 
         headers
     }
-
-//    static Headers parseHeaders(Map<String, List<String>> theHeaders) {
-//        Headers headers = new Headers()
-//
-//        if (!theHeaders)
-//            return headers
-//
-//        List<String> names = theHeaders.keySet() as List
-//        names.each {String name ->
-//            if (!name) return
-//            List<String> values = theHeaders.get(name)
-//            if (values) {
-//                values.each { String value ->
-//                    if (value) {
-//                        List<String> subValues = value.split(';')
-//                        if (subValues) {
-//                            subValues.each { String subValue ->
-//                                headers.nameValueList << new NameValue([name: name?.trim(), value: subValue?.trim()])
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//
-//        headers
-//    }
 
     // TODO  needs test
     static Headers parseHeaders(Map<String, ?> theHeaders) {
@@ -126,17 +100,6 @@ class HeaderBuilder {
             }
         }
 
-
-//        theHeaders.each { String name, String value ->
-//            if (value) {
-//                List<String> subValues = value.split(';')
-//                if (subValues) {
-//                    subValues.each { String subValue ->
-//                        headers.nameValueList << new NameValue([name: name?.trim(), value: subValue?.trim()])
-//                    }
-//                }
-//            }
-//        }
         headers
     }
 }

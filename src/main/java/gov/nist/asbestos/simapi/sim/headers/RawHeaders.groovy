@@ -1,7 +1,7 @@
 package gov.nist.asbestos.simapi.sim.headers
 
 class RawHeaders {
-    String uriLine
+    String uriLine  // GET|POST path [queryString]
     Map<String, List<String>> headers = [:]
     List<String> names = []
 

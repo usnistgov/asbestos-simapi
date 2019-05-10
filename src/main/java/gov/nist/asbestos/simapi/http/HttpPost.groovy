@@ -8,11 +8,11 @@ import org.apache.log4j.Logger
 class HttpPost  extends HttpGeneralDetails {
     static Logger log = Logger.getLogger(HttpPost);
 
-    void post(String url, Map<String, String> headers, byte[] content) {
+    void post(URI uri, Map<String, String> headers, byte[] content) {
         HttpURLConnection connection
 
         try {
-            connection = (HttpURLConnection) new URL(url).openConnection()
+            connection = (HttpURLConnection) uri.toURL().openConnection()
             if (headers)
                 addHeaders(connection, headers)
             requestHeadersList = connection.getRequestProperties()
@@ -41,14 +41,14 @@ class HttpPost  extends HttpGeneralDetails {
         }
     }
 
-    void postJson(String url, String json) {
+    void postJson(URI uri, String json) {
         Map<String, String> headers = ['content-type':'application/json']
-        post(url, headers, json.bytes)
+        post(uri, headers, json.bytes)
     }
 
     void run() {
-        assert url
-        post(url, requestHeaders.all,  request)
+        assert uri
+        post(uri, requestHeaders.all,  request)
     }
 
 }

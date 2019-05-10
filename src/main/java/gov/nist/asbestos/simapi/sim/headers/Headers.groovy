@@ -5,7 +5,7 @@ import groovy.transform.TypeChecked
 @TypeChecked
 class Headers {
     String verb = null
-    String pathInfo = null
+    URI pathInfo = null
     int status = 0
     List<NameValue> nameValueList = []
 
@@ -82,16 +82,6 @@ class Headers {
         }
 
         return result
-    }
-
-    Headers withVerb(String verb) {
-        this.verb = verb
-        this
-    }
-
-    Headers withPathInfo(String pathInfo) {
-        this.pathInfo = pathInfo
-        this
     }
 
     String toString() {

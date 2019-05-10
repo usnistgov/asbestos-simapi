@@ -13,12 +13,13 @@ class ChannelConfig {
     Map extensions
 
     // TODO test needed
-    String translateEndpointToFhirBase(String endpoint) {
-        int channelI = endpoint.indexOf('/Channel')
+    URI translateEndpointToFhirBase(URI req) {
+        String path  = req.path
+        int channelI = path.indexOf('/Channel')
         if (channelI != -1) {
             int beyondChannelI = channelI + '/Channel'.size()
-            endpoint = "${fhirBase}${endpoint.substring(beyondChannelI)}"
+            path = "${fhirBase}${path.substring(beyondChannelI)}"
         }
-        endpoint
+        new URI(req.scheme, req.userInfo, req.host, req.port, path, req.query, req.fragment)
     }
 }

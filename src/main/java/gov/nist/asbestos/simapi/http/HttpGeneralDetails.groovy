@@ -14,24 +14,23 @@ abstract class HttpGeneralDetails {
     byte[] _response
     String _requestText = null
     byte[] _request
-    String url
-    Map<String, List<String>> parameterMap = null
+    URI uri
 
     abstract void run()
 
-    // TODO needs test
-    String parameterMapAsString() {
+    static String parameterMapToString(Map<String, List<String>> parameterMap) {
         if (!parameterMap || parameterMap.isEmpty())
             return ''
         StringBuilder buf = new StringBuilder()
 
         boolean isFirst = true
-        buf.append('?')
+//        buf.append('?')
         parameterMap.each { String name, Object ovalues ->
             List<String> values = ovalues as List<String>
             values.each { String value ->
-                if (!isFirst) {
+                if (isFirst) {
                     isFirst = false
+                } else {
                     buf.append('&')
                 }
                 buf.append(name).append('=').append(value)

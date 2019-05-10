@@ -3,11 +3,10 @@ package gov.nist.asbestos.simapi.http
 
 class HttpGet extends HttpGeneralDetails {
     // TODO GET parameters in the body
-    void get(String url, Map<String, String> headers) {
-        url = url + parameterMapAsString()
+    void get(URI uri, Map<String, String> headers) {
         HttpURLConnection connection
         try {
-            connection = (HttpURLConnection) new URL(url).openConnection()
+            connection = (HttpURLConnection) uri.toURL().openConnection()
             connection.setRequestMethod('GET')
             if (headers)
                 addHeaders(connection, headers)
@@ -27,18 +26,18 @@ class HttpGet extends HttpGeneralDetails {
     }
 
     void get(String url) {
-        get(url, null)
+        get(new URI(url), null)
     }
 
     void getJson(String url) {
         Map<String, String> headers = [ accept: 'application/json', 'accept-charset': 'utf-8']
-        get(url, headers)
+        get(new URI(url), headers)
         setResponseText(new String(response))
     }
 
     void run() {
-        assert url
-        get(url, requestHeaders.all)
+        assert uri
+        get(uri, requestHeaders.all)
     }
 
 }
