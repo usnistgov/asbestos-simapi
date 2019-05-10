@@ -200,9 +200,9 @@ class SimStore {
     }
 
     String getEndpoint() {
-        if (!config.fhirBase.endsWith('/'))
-            config.fhirBase = "${config.fhirBase}/"
-        "${config.fhirBase}${resource}"
+//        if (!config.fhirBase.endsWith('/'))
+//            config.fhirBase = "${config.fhirBase}/"
+        "${config.fhirBase}/${resource}"
     }
 
 

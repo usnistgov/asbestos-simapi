@@ -2,8 +2,9 @@ package gov.nist.asbestos.simapi.http
 
 
 class HttpGet extends HttpGeneralDetails {
-
+    // TODO GET parameters in the body
     void get(String url, Map<String, String> headers) {
+        url = url + parameterMapAsString()
         HttpURLConnection connection
         try {
             connection = (HttpURLConnection) new URL(url).openConnection()

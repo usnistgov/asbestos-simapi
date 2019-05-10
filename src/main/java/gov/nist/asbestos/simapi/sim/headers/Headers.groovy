@@ -55,6 +55,19 @@ class Headers {
         return result
     }
 
+    void removeHeader(String name) {
+        int toRemove = -1
+        int i = 0
+        nameValueList.each { NameValue nv ->
+            if (nv.name.equalsIgnoreCase(name)) {
+                toRemove = i
+            }
+            i++
+        }
+        if (toRemove != -1)
+            nameValueList.remove(toRemove)
+    }
+
     // this is for collecting headers accept* for example
     Map<String, String> getMultiple(List<String> namePrefixs) {
         Map<String, String> result = [:]
