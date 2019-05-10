@@ -1,7 +1,7 @@
 package gov.nist.asbestos.simapi.http
 
 
-class HttpGet extends HttpGeneralDetails {
+class HttpGet extends HttpBase {
     // TODO GET parameters in the body
     void get(URI uri, Map<String, String> headers) {
         HttpURLConnection connection
@@ -29,9 +29,17 @@ class HttpGet extends HttpGeneralDetails {
         get(new URI(url), null)
     }
 
-    void getJson(String url) {
+    HttpGet getJson(String url) {
         Map<String, String> headers = [ accept: 'application/json', 'accept-charset': 'utf-8']
         get(new URI(url), headers)
+        if (response)
+            setResponseText(new String(response))
+        this
+    }
+
+    void getJson(URI uri) {
+        Map<String, String> headers = [ accept: 'application/json', 'accept-charset': 'utf-8']
+        get(uri, headers)
         setResponseText(new String(response))
     }
 

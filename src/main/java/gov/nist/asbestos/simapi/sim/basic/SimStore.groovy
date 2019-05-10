@@ -41,11 +41,6 @@ class SimStore {
         this.externalCache = externalCache
     }
 
-    File getBaseStore(SimId channelId) {
-        assert externalCache.exists() : "SimStore: External Cache must exist (${externalCache})\n"
-
-    }
-
     // the following must initialized
     // externalCache
     // channelId
@@ -67,6 +62,11 @@ class SimStore {
         if (!channelId.actorType && config)
             channelId.actorType = config.actorType
         _simStoreLocation
+    }
+
+    boolean exists() {
+        assert externalCache.exists() : "SimStore: External Cache must exist (${externalCache})\n"
+        testSessionDir(externalCache, channelId).exists()
     }
 
     File getStore() {

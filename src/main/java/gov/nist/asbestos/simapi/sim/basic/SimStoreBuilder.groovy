@@ -30,6 +30,12 @@ class SimStoreBuilder {
         simStore
     }
 
+    static boolean exists(File externalCache, SimId channelId) {
+        SimStore simStore = new SimStore(externalCache)
+        simStore.setSimIdForLoader(channelId)  // doesn't do Id validation
+
+    }
+
     static SimId getSimId(ChannelConfig channelConfig) {
         new SimId(new TestSession(channelConfig.testSession), channelConfig.channelId, channelConfig.actorType, channelConfig.environment)
     }

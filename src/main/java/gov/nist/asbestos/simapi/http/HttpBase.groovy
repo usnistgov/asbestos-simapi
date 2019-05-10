@@ -5,7 +5,7 @@ import gov.nist.asbestos.simapi.sim.headers.Headers
 import groovy.transform.TypeChecked
 
 @TypeChecked
-abstract class HttpGeneralDetails {
+abstract class HttpBase {
     Map<String, List<String>> requestHeadersList = null
     Headers _requestHeaders = null
     Headers _responseHeaders = null
@@ -110,6 +110,42 @@ abstract class HttpGeneralDetails {
         headers.all.each { String name, String value ->
             connection.setRequestProperty(name, value)
         }
+    }
+
+    static URI buildURI(String url, ParameterBuilder parameterBuilder) {
+        buildURI(url, parameterBuilder.parameterMap)
+    }
+
+    static URI buildURI(String url, Map<String, List<String>> parameterMap) {
+        String params = parameterMapToString(parameterMap)
+        if (params)
+            new URI(url + '?' + params)
+        else
+            new URI(url)
+    }
+
+    static Map<String, List<String>> mapFromQuery(String query) {
+        ParameterBuilder pb = new ParameterBuilder()
+
+        String[] parts = query.split('&')
+        parts.each { String part ->
+            String[] nameValue = part.split('=')
+            String name = nameValue[0]
+            String value = nameValue[1]
+            pb.add(name, value)
+        }
+
+        pb.parameterMap
+    }
+
+    static flattenQueryMap(Map<String, List<String>> queryMap) {
+        Map<String, String> map = [:]
+
+        queryMap.each { String name, List<String> values ->
+            assert values.size() == 1
+            map[name] = values[0]
+        }
+        map
     }
 
 }
