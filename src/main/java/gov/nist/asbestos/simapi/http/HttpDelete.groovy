@@ -1,19 +1,31 @@
 package gov.nist.asbestos.simapi.http
 
-class HttpDelete  {
-    void run(String url) {
-        assert url
+class HttpDelete  extends HttpBase {
+    HttpDelete run(URI uri) {
+        assert uri
         HttpURLConnection connection
         try {
-            connection = (HttpURLConnection) new URL(url).openConnection()
+            connection = (HttpURLConnection) uri.toURL().openConnection()
             connection.setDoOutput(true)
             connection.setRequestProperty(
                     "Content-Type", "application/x-www-form-urlencoded" )
             connection.setRequestMethod('DELETE')
-            connection.getResponseCode()
+            status = connection.getResponseCode()
         } finally {
             if (connection)
                 connection.disconnect()
         }
+        this
+    }
+
+    HttpDelete run(String url) {
+        run(new URI(url))
+        this
+    }
+
+    HttpDelete run() {
+        assert uri
+        run(uri)
+        this
     }
 }

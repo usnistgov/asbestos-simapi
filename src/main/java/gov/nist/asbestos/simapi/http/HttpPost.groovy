@@ -46,9 +46,10 @@ class HttpPost  extends HttpBase {
         post(uri, headers, json.bytes)
     }
 
-    void run() {
+    HttpPost run() {
         assert uri
         post(uri, requestHeaders.all,  request)
+        this
     }
 
 }

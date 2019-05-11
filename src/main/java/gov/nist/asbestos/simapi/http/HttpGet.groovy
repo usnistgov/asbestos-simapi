@@ -43,9 +43,10 @@ class HttpGet extends HttpBase {
         setResponseText(new String(response))
     }
 
-    void run() {
+    HttpGet run() {
         assert uri
         get(uri, requestHeaders.all)
+        this
     }
 
 }

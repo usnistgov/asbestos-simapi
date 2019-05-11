@@ -30,6 +30,15 @@ class SimStoreBuilder {
         simStore
     }
 
+    // return (exists) or exception (doesn't)
+    static SimStore sense(File externalCache, TestSession testSession, String id) {
+        SimStore simStore = new SimStore(externalCache)
+        simStore.setSimIdForLoader(new SimId(testSession, id))  // doesn't do Id validation
+        assert simStore.exists()
+        simStore
+ //       Map rawConfig = (Map) new JsonSlurper().parse(new File(simStore.simDir, 'config.json'))
+    }
+
     static boolean exists(File externalCache, SimId channelId) {
         SimStore simStore = new SimStore(externalCache)
         simStore.setSimIdForLoader(channelId)  // doesn't do Id validation

@@ -16,7 +16,7 @@ abstract class HttpBase {
     byte[] _request
     URI uri
 
-    abstract void run()
+    abstract HttpBase run()
 
     static String parameterMapToString(Map<String, List<String>> parameterMap) {
         if (!parameterMap || parameterMap.isEmpty())

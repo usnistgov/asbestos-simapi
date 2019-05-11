@@ -66,7 +66,7 @@ class SimStore {
 
     boolean exists() {
         assert externalCache.exists() : "SimStore: External Cache must exist (${externalCache})\n"
-        testSessionDir(externalCache, channelId).exists()
+        new File(store, channelId.id).exists()
     }
 
     File getStore() {
@@ -77,7 +77,7 @@ class SimStore {
         channelId && channelId.actorType && resource
     }
 
-    void deleteSim() {
+    boolean deleteSim() {
         simDir.deleteDir()
     }
 
@@ -100,6 +100,13 @@ class SimStore {
 
     void setActor(String actor) {
         channelId.actorType = actor
+    }
+
+    boolean existsSimDir() {
+        assert channelId : "SimStore: channelId is null"
+        if (!_simIdDir)
+            _simIdDir = new File(store, channelId.id)
+        _simIdDir.exists()
     }
 
     File getSimDir() {
