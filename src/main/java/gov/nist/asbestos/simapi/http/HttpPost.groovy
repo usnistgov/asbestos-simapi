@@ -27,6 +27,8 @@ class HttpPost  extends HttpBase {
                 //connection.getHeaderFields()
                 responseHeadersList = connection.getHeaderFields()
             }
+            if (status >= 400)
+                return
             try {
                 byte[] bb = connection.inputStream.bytes
                 setResponse(bb)
@@ -41,9 +43,10 @@ class HttpPost  extends HttpBase {
         }
     }
 
-    void postJson(URI uri, String json) {
+    HttpPost postJson(URI uri, String json) {
         Map<String, String> headers = ['content-type':'application/json']
         post(uri, headers, json.bytes)
+        this
     }
 
     HttpPost run() {
