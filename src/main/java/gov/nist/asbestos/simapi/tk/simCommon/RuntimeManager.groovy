@@ -21,7 +21,7 @@ public class RuntimeManager {
         gov.nist.asbestos.simapi.tk.actors.ActorType actorType = gov.nist.asbestos.simapi.tk.actors.ActorType.findActor(actorTypeName);
         String actorSimClassName = actorType.getSimulatorClassName();
         if (StringUtils.isBlank(actorSimClassName)) return null;
-        logger.info("Loading runtime for sim " + simId + " of type " + actorTypeName + " of class " + actorSimClassName);
+        logger.info("Loading runtime for proxy " + simId + " of type " + actorTypeName + " of class " + actorSimClassName);
         Class<?> clas = Class.forName(actorSimClassName);
 
         // find correct constructor - no parameters
@@ -53,7 +53,7 @@ public class RuntimeManager {
        gov.nist.asbestos.simapi.tk.actors.ActorType actorType = gov.nist.asbestos.simapi.tk.actors.ActorType.findActor(actorTypeName);
        String actorSimClassName = actorType.getHttpSimulatorClassName();
        if (StringUtils.isBlank(actorSimClassName)) return null;
-       logger.info("Loading runtime for sim " + simId + " of type " + actorTypeName + " of class " + actorSimClassName);
+       logger.info("Loading runtime for proxy " + simId + " of type " + actorTypeName + " of class " + actorSimClassName);
        Class<?> clas = Class.forName(actorSimClassName);
 
        // find correct constructor - no parameters

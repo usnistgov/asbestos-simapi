@@ -1,4 +1,4 @@
-package gov.nist.asbestos.simapi.sim.headers
+package gov.nist.asbestos.simapi.http.headers
 
 class RawHeaders {
     String uriLine  // GET|POST path [queryString]

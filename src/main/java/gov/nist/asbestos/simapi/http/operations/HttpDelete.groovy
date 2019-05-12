@@ -1,4 +1,4 @@
-package gov.nist.asbestos.simapi.http
+package gov.nist.asbestos.simapi.http.operations
 
 class HttpDelete  extends HttpBase {
     HttpDelete run(URI uri) {

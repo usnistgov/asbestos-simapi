@@ -83,7 +83,7 @@ import javax.xml.parsers.FactoryConfigurationError;
 
 	 List<String> getSiteNames(String sessionId, boolean reload, boolean returnSimAlso, TestSession testSession, boolean qualified)   {
 
-			if (returnSimAlso) {  // implemented as return sim ONLY???
+			if (returnSimAlso) {  // implemented as return proxy ONLY???
 				List<String> names = new ArrayList<>();
 				for (Site s : getAllSites(sessionId, testSession))
 					names.add((qualified)? getQualifiedName(s) : s.getName());

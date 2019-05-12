@@ -28,7 +28,7 @@ import javax.ws.rs.core.Response;
  * create and delete sims; and getting and updating the configurations.
  *
  * There are a second set of operations that initiate specific transactions from Client sims.  An example is sendXdr()
- * which initiates an XDR Provide and Register actor from a Document Source sim.
+ * which initiates an XDR Provide and Register actor from a Document Source proxy.
  */
 public class EngineSpi {
     static Logger logger = Logger.getLogger("SYSTEM");
@@ -113,7 +113,7 @@ public class EngineSpi {
     }
 
     /**
-     * This cannot be used to delete a FHIR sim
+     * This cannot be used to delete a FHIR proxy
      * @param id
      * @param user
      * @throws ToolkitServiceException
@@ -132,7 +132,7 @@ public class EngineSpi {
     }
 
     /**
-     * You must use this call to delete a FHIR sim
+     * You must use this call to delete a FHIR proxy
      * @param simId
      * @throws ToolkitServiceException
      */
@@ -171,7 +171,7 @@ public class EngineSpi {
 
     /**
      * Returns the ChannelConfig for an existing simulator.
-    * @param simId simulator id for sim to fetch.
+    * @param simId simulator id for proxy to fetch.
     * @return ChannelConfig instance
     * @throws ToolkitServiceException on error, for example if the simulator
     * does not exist.

@@ -1,4 +1,4 @@
-package gov.nist.asbestos.simapi.http
+package gov.nist.asbestos.simapi.http.operations
 
 
 class HttpGet extends HttpBase {

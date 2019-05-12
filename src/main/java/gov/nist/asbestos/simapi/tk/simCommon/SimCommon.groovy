@@ -95,7 +95,7 @@ import javax.servlet.http.HttpServletResponse;
 
 	static  void deleteSim(SimId simulatorId) {
 		try {
-			logger.info("Delete sim " + simulatorId);
+			logger.info("Delete proxy " + simulatorId);
 			SimDb simdb = new SimDb(simulatorId);
 			File simdir = simdb.getIpDir();
 			simdir.delete()

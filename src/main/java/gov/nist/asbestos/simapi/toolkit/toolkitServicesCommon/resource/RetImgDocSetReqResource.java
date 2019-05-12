@@ -20,7 +20,7 @@ import java.util.List;
 public class RetImgDocSetReqResource extends SimIdResource
    implements RetImgDocSetReq {
    /**
-    * IDS endpoint URL. If present, this overrides the sim ID, and is
+    * IDS endpoint URL. If present, this overrides the proxy ID, and is
     * referred to as a "direct" query.
     */
    String endpoint = null;

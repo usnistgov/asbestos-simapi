@@ -61,7 +61,7 @@ import org.apache.log4j.Logger;
 	}
 
 	/**
-	 * Get common sites and sim sites defined for this session.
+	 * Get common sites and proxy sites defined for this session.
 	 * @return
 	 * @throws Exception
 	 */

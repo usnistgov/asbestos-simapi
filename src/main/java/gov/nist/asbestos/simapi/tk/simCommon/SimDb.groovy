@@ -34,7 +34,7 @@ import org.apache.log4j.Logger
 	 */
 	SimDb() {}
 	/**
-	 * open existing sim
+	 * open existing proxy
 	 * @param simId
 	 */
 	SimDb(SimId simId) {
@@ -116,13 +116,13 @@ import org.apache.log4j.Logger
 		assert simId?.testSession?.value
 		SimId ssimId = new SimId(simId.getTestSession(), simId.getId())
 		if (exists(ssimId)) {
-			// soap based sim
+			// soap based proxy
 			SimDb simDb = new SimDb(ssimId)
 			return internalSimIdBuilder(simDb.getSimDir(), simId.testSession)
 		} else {
 			ssimId = ssimId.forFhir()
 			if (exists(ssimId)) {
-				// FHIR based sim
+				// FHIR based proxy
 				SimDb simDb = new SimDb(ssimId)
 				return internalSimIdBuilder(simDb.getSimDir(), simId.testSession)
 			}
@@ -163,7 +163,7 @@ import org.apache.log4j.Logger
 	void createSimSafetyFile() {
 		// add this for safety when deleting simulators -
 		simSafetyFile().text = simId.toString()
-		assert simSafetyFile().exists() : "Cannot create sim safety file ${simSafetyFile()}"
+		assert simSafetyFile().exists() : "Cannot create proxy safety file ${simSafetyFile()}"
 	}
 
 	void openMostRecentEvent(gov.nist.asbestos.simapi.tk.actors.ActorType actor, gov.nist.asbestos.simapi.tk.actors.TransactionType transaction) {
@@ -253,7 +253,7 @@ import org.apache.log4j.Logger
 	}
 
 	/**
-	 * Used by simproxy to get outbound sim half of proxy to have same event id (time stamp)
+	 * Used by simproxy to get outbound proxy half of proxy to have same event id (time stamp)
 	 * @param otherSimDb
 	 */
 	void mirrorEvent(SimDb otherSimDb, String actor, String transaction) {
@@ -416,7 +416,7 @@ import org.apache.log4j.Logger
 		SimIdFactory.simIdBuilder(rawId)
 	}
 
-	// is this sim valid - does it have the necessary parts
+	// is this proxy valid - does it have the necessary parts
 	static boolean isValid(SimId simId) {
 		File d = getSimDbFile(simId)
 		File f = new File(d, simId.toString())
@@ -839,7 +839,7 @@ import org.apache.log4j.Logger
 		assert stat : "Rename failed"
 	}
 
-	// name of sim directory is the name we want
+	// name of proxy directory is the name we want
 	// make sure internals are up to date with it
 	void updateSimConfiguration() {
 		createSimSafetyFile()  // actually update
@@ -997,7 +997,7 @@ import org.apache.log4j.Logger
 	final static String ANY_TRANSACTION = 'any'
 
 	/**
-	 * Store a Resource in a sim
+	 * Store a Resource in a proxy
 	 * @param resourceType  - index type (Patient...)
 	 * @param resourceContents - JSON for index
 	 * @return file where resource stored is ResDb
@@ -1037,7 +1037,7 @@ import org.apache.log4j.Logger
 
 
 	/**
-	 * delete FHIR sim
+	 * delete FHIR proxy
 	 * @param simId
 	 * @return
 	 */

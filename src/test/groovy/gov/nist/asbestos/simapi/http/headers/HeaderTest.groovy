@@ -1,7 +1,7 @@
-package gov.nist.asbestos.simapi.sim
+package gov.nist.asbestos.simapi.http.headers
 
-import gov.nist.asbestos.simapi.sim.headers.HeaderBuilder
-import gov.nist.asbestos.simapi.sim.headers.Headers
+import gov.nist.asbestos.simapi.http.headers.HeaderBuilder
+import gov.nist.asbestos.simapi.http.headers.Headers
 import spock.lang.Specification
 
 class HeaderTest extends Specification {

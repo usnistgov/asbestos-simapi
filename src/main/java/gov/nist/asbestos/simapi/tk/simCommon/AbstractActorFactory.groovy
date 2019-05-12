@@ -277,7 +277,7 @@ import org.apache.log4j.Logger;
 				":" +
 				getEndpointPort(isTLS, isProxy) +
 				contextName +
-				(ele.transType.isHttpOnly() ? "/httpsim/" : "/sim/" ) +
+				(ele.transType.isHttpOnly() ? "/httpsim/" : "/proxy/" ) +
 				asc.getId() +
 				"/" +
 				actor +
@@ -301,7 +301,7 @@ import org.apache.log4j.Logger;
 				":" +
 				getEndpointPort(isTLS, isProxy) +
 				contextName +
-				((isSimProxy) ? "/sim/" : "/fsim/") +
+				((isSimProxy) ? "/proxy/" : "/fsim/") +
 				asc.getId() +
 				"/" + actor +
 				((transactionType != null && transactionType.getFhirVerb() == gov.nist.asbestos.simapi.toolkit.configDatatypes.client.FhirVerb.TRANSACTION ? "/" + transactionType.getShortName() : ""))
@@ -349,7 +349,7 @@ import org.apache.log4j.Logger;
 		return simdb.getTransInstances(actor.toString(), trans);
 	}
 
-	// update internal to sim to align with current channelId
+	// update internal to proxy to align with current channelId
 	static  void updateSimConfiguration(SimId simId) throws Exception {
 		SimulatorConfig config = loadSimulator(simId, false);
 
@@ -386,7 +386,7 @@ import org.apache.log4j.Logger;
 
 
 	/**
-	 * Load simulators - IOException if sim not found
+	 * Load simulators - IOException if proxy not found
 	 * @param ids
 	 * @return
 	 */

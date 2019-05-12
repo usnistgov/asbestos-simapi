@@ -259,7 +259,7 @@ import groovy.transform.TypeChecked
     }
 
    /**
-    * Creates SimId instance for passed user (session) and sim id. Note: Does
+    * Creates SimId instance for passed user (session) and proxy id. Note: Does
     * not check to see if such a simulator exists.
     *
     * @param user (session)

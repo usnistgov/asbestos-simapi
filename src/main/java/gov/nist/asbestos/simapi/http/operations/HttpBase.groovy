@@ -1,7 +1,7 @@
-package gov.nist.asbestos.simapi.http
+package gov.nist.asbestos.simapi.http.operations
 
-import gov.nist.asbestos.simapi.sim.headers.HeaderBuilder
-import gov.nist.asbestos.simapi.sim.headers.Headers
+import gov.nist.asbestos.simapi.http.headers.HeaderBuilder
+import gov.nist.asbestos.simapi.http.headers.Headers
 import groovy.transform.TypeChecked
 
 @TypeChecked

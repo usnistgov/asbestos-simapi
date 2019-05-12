@@ -1,4 +1,4 @@
-package gov.nist.asbestos.simapi.http
+package gov.nist.asbestos.simapi.http.operations
 
 import gov.nist.asbestos.adapter.StackTrace
 import groovy.transform.TypeChecked
