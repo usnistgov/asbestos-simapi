@@ -26,7 +26,15 @@ class HttpGet extends HttpBase {
     }
 
     void get(String url) {
-        get(new URI(url), null)
+        get(new URI(url), (Map<String, String>) null)
+    }
+
+    HttpGet get(URI uri, String contentType) {
+        Map<String, String> headers = [ accept: "${contentType}", 'accept-charset': 'utf-8']
+        get(uri, headers)
+        if (response)
+            setResponseText(new String(response))
+        this
     }
 
     HttpGet getJson(String url) {
