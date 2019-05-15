@@ -2,11 +2,13 @@ package gov.nist.asbestos.simapi.validation
 
 import groovy.transform.TypeChecked
 
+// TODO order elements are added must be preserved
 @TypeChecked
 class Val {
     List<String> msgs = []
     List<String> refs = []
-    List<String> errs = []
+    List<Val> errs = []
+    List<Val> warns = []
     List<String> frameworkDocs = []
     List<Val> children = []
 
@@ -20,8 +22,14 @@ class Val {
         this
     }
 
-    Val err(String err) {
+    Val err(Val err) {
         errs << err
+        this
+    }
+
+    // TODO need test
+    Val warn(Val err) {
+        warns << err
         this
     }
 
@@ -61,6 +69,7 @@ class Val {
         return buf.toString()
     }
 
+    // TODO update to match new type for err
     private static render(Val val, StringBuilder buf, int level) {
         val.msgs.each { String msg ->
             indent(level, buf)

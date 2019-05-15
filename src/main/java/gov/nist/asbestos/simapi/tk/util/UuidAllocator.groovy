@@ -8,7 +8,7 @@ import groovy.transform.TypeChecked
 class UuidAllocator {
     static UUIDFactory fact = null;
 
-    static public String allocate() {
+    static String allocate() {
         if (fact == null)
             fact = UUIDFactory.getInstance();
         UUID uu = fact.newUUID();
