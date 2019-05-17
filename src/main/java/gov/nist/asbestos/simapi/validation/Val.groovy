@@ -77,7 +77,7 @@ class Val {
         }
         if (val.errs) {
             buf.append('Errors:\n')
-            val.errs.each { String err ->
+            val.errs.each { Val err ->
                 indent(level, buf)
                 buf.append(err).append('\n')
             }
