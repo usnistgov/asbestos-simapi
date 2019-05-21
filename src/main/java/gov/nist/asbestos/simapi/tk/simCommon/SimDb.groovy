@@ -6,6 +6,8 @@ import gov.nist.asbestos.simapi.tk.installation.Installation
 import groovy.transform.TypeChecked
 import org.apache.log4j.Logger
 
+import java.text.SimpleDateFormat
+
 
 /**
  * Each simulator has an on-disk presence that keeps track of its long
@@ -78,7 +80,9 @@ import org.apache.log4j.Logger
 		if (openToLastTransaction) {
 			openMostRecentEvent(actor, transaction)
 		} else {
-			eventDate = new Date().getDateTimeString()
+			Date date = new Date()
+			SimpleDateFormat sdf = new SimpleDateFormat('yy_MM_dd_HH_mm_ss_SSS')
+			eventDate = sdf.format(date)
 			File eventDir = mkEventDir(eventDate);
 			eventDir.mkdirs();
 			new File(eventDir, 'date.txt').text = eventDate
