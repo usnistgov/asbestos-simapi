@@ -1,7 +1,7 @@
 package gov.nist.asbestos.simapi.tk.simCommon
 
-
 import groovy.transform.TypeChecked
+
 
 /**
  *

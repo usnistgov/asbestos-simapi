@@ -1,33 +1,33 @@
-package gov.nist.asbestos.simapi.toolkit.configDatatypes.server
+package gov.nist.asbestos.simapi.toolkit.configDatatypes.server;
 
-import gov.nist.asbestos.simapi.toolkit.configDatatypes.server.datatypes.MessageTechnology
-import gov.nist.asbestos.simapi.toolkit.configDatatypes.server.datatypes.MessageType
-import gov.nist.asbestos.simapi.toolkit.configDatatypes.server.datatypes.Multipart
-import gov.nist.asbestos.simapi.toolkit.configDatatypes.server.datatypes.Part
+
+import gov.nist.asbestos.simapi.toolkit.configDatatypes.server.datatypes.MessageTechnology;
+
+import java.util.Objects;
 
 /**
  * Scan message and determine whether it is a SOAP message (and what its SOAP Action is
  * or a FHIR message
  */
 class MessageTypeScanner {
-    String httpHeader
-    String httpBody
+    String httpHeader;
+    String httpBody;
 
     MessageTypeScanner(String httpHeader, String httpBody) {
-        assert httpHeader
-        assert httpBody
-        this.httpHeader = httpHeader
-        this.httpBody = httpBody.trim()
+        Objects.requireNonNull(httpHeader);
+        Objects.requireNonNull(httpBody);
+        this.httpHeader = httpHeader;
+        this.httpBody = httpBody.trim();
     }
 
     MessageType scan() {
         if (httpBody.startsWith('{'))
-            return new MessageType(MessageTechnology.FHIR, null)
-        if (httpBody.startsWith('<'))
-            return scanEnvelope(httpBody)
-        if (httpBody.startsWith('--'))
-            return scanMultipart()
-        return null
+            return new MessageType(MessageTechnology.FHIR, null);
+        if (httpBody.startsWith('<'));
+            return scanEnvelope(httpBody);
+        if (httpBody.startsWith('--'))''
+            return scanMultipart();
+        return null;
     }
 
     private static MessageType scanEnvelope(String xml) {

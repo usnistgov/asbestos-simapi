@@ -1,8 +1,8 @@
 package gov.nist.asbestos.simapi.http.headers
 
-import gov.nist.asbestos.simapi.http.headers.HeaderBuilder
-import gov.nist.asbestos.simapi.http.headers.Headers
-import gov.nist.asbestos.simapi.http.headers.RawHeaders
+import HeaderBuilder
+import Headers
+import RawHeaders
 import spock.lang.Specification
 
 class HeaderBuilderTest extends Specification {
