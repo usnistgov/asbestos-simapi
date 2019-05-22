@@ -1,6 +1,6 @@
 package gov.nist.asbestos.simapi.toolkit.configDatatypes.server;
 
-//import gov.nist.asbestos.simapi.toolkit.toolkitServicesCommon.ChannelConfig;
+//import gov.nist.http.simapi.toolkit.toolkitServicesCommon.ChannelConfig;
 
 /**
  * These are properties to be used with ChannelConfig

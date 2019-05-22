@@ -1,9 +1,5 @@
 package gov.nist.asbestos.simapi.http.headers
 
-import HeaderBuilder
-import Headers
-import RawHeaders
-import spock.lang.Specification
 
 class HeaderBuilderTest extends Specification {
     def input = '''POST /default__1/balloon/pop\r

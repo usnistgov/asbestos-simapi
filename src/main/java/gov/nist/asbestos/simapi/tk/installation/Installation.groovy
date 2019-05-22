@@ -7,7 +7,7 @@ import groovy.transform.TypeChecked
 class Installation {
     private static Installation me = null;
     private File externalCache
-    String servletContextName = 'asbestos'
+    String servletContextName = 'http'
     PropertyServiceManager propertyServiceManager = new PropertyServiceManager()
     File defaultEnvironmentFile = new File("${externalCache}/environment/default")
     String toolkitBaseUrl = 'http://localhost:8080/xdstools'
