@@ -2,7 +2,7 @@ package gov.nist.asbestos.simapi.tk.simCommon;
 
 
 import gov.nist.asbestos.simapi.tk.actors.TransactionType;
-import gov.nist.asbestos.simapi.toolkit.configDatatypes.client.PatientErrorMap;
+import gov.nist.asbestos.toolkitApi.configDatatypes.client.PatientErrorMap;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ public class SimulatorConfigElement  {
 	private boolean booleanValue = false;
 	private String  stringValue = "";
 	private List<String> listValue = new ArrayList<>();
-	private gov.nist.asbestos.simapi.toolkit.configDatatypes.client.PatientErrorMap patientErrorMap = new gov.nist.asbestos.simapi.toolkit.configDatatypes.client.PatientErrorMap();
+	private gov.nist.asbestos.toolkitApi.configDatatypes.client.PatientErrorMap patientErrorMap = new gov.nist.asbestos.toolkitApi.configDatatypes.client.PatientErrorMap();
 	private String extraValue = "";
 	private boolean tls = false;
 
@@ -59,7 +59,7 @@ public class SimulatorConfigElement  {
 		setListValueWithType(values, ((isMultiSelect) ? ValueType.MULTI_SELECT_LIST : ValueType.SINGLE_SELECT_LIST));
 	}
 
-	public SimulatorConfigElement(String name, ParamType type, gov.nist.asbestos.simapi.toolkit.configDatatypes.client.PatientErrorMap value) {
+	public SimulatorConfigElement(String name, ParamType type, gov.nist.asbestos.toolkitApi.configDatatypes.client.PatientErrorMap value) {
 		this.name = name;
 		this.type = type;
 		setPatientErrorMapValue(value);
@@ -67,6 +67,26 @@ public class SimulatorConfigElement  {
 
 	public String getExtraValue() {
 		return extraValue;
+	}
+
+	public ParamType getType() {
+		return type;
+	}
+
+	public void setType(ParamType type) {
+		this.type = type;
+	}
+
+	public TransactionType getTransactionType() {
+		return transType;
+	}
+
+	public void setTransactionType(TransactionType transType) {
+		this.transType = transType;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public void setExtraValue(String extraValue) {
@@ -161,7 +181,7 @@ public class SimulatorConfigElement  {
 	public void setStringListValue(List<String> o) { listValue = o; }
 	public List<String> getStringListValue() { return listValue; }
 
-	public void setPatientErrorMapValue(gov.nist.asbestos.simapi.toolkit.configDatatypes.client.PatientErrorMap o) { patientErrorMap = o; valueType = ValueType.PATIENT_ERROR_MAP; }
+	public void setPatientErrorMapValue(gov.nist.asbestos.toolkitApi.configDatatypes.client.PatientErrorMap o) { patientErrorMap = o; valueType = ValueType.PATIENT_ERROR_MAP; }
 	public PatientErrorMap getPatientErrorMapValue () { return patientErrorMap; }
 
 	public List<String> getMultiListValue() { return listValue; }

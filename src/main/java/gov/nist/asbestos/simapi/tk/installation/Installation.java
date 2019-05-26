@@ -22,11 +22,15 @@ public class Installation {
         return externalCache;
     }
 
-    public void setExternalCache(File externalCache) throws Exception {
+    public void setExternalCache(File externalCache) {
         this.externalCache = externalCache;
-        if (externalCache == null || !externalCache.exists() || !externalCache.isDirectory()|| !externalCache.canWrite())
-            throw new Exception("External Cache - " + externalCache + " is invalid");
+        validateExternalCache(externalCache);
         defaultEnvironmentFile = new File(externalCache.toString() + "/environment/default");
+    }
+
+    public static void validateExternalCache(File externalCache) {
+        if (externalCache == null || !externalCache.exists() || !externalCache.isDirectory()|| !externalCache.canWrite())
+            throw new RuntimeException("External Cache - " + externalCache + " is invalid");
     }
 
     public File fsimDbFile()  {
@@ -159,5 +163,7 @@ public class Installation {
         return getTestSessions().contains(testSession);
     }
 
-
+    public String getServletContextName() {
+        return servletContextName;
+    }
 }

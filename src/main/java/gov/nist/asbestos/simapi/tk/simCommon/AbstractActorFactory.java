@@ -1,17 +1,16 @@
-package gov.nist.asbestos.simapi.tk.simCommon
+package gov.nist.asbestos.simapi.tk.simCommon;
 
 
 import gov.nist.asbestos.simapi.tk.actors.ActorType;
 import gov.nist.asbestos.simapi.tk.actors.TransactionType;
+import gov.nist.asbestos.simapi.tk.installation.Installation;
 import gov.nist.asbestos.simapi.tk.installation.PropertyServiceManager;
-import gov.nist.asbestos.simapi.tk.siteManagement.Site
+import gov.nist.asbestos.simapi.tk.siteManagement.Site;
+import gov.nist.asbestos.toolkitApi.configDatatypes.server.SimulatorProperties;
 import org.apache.log4j.Logger;
 
 import java.io.File;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -40,7 +39,7 @@ import java.util.Map;
 	 * ActorType.name ==> ActorFactory
 	 */
 	static private Map<String, AbstractActorFactory> theFactories = null;
-	private static Map<String, AbstractActorFactory> factories() throws Exception {
+	private static Map<String, AbstractActorFactory> factories()  {
 	 	if (theFactories != null) return theFactories;
 		theFactories = new HashMap<>();
 
@@ -49,14 +48,17 @@ import java.util.Map;
 		// for this loader to work, the following requirements must be met by the factory class:
 		// 1. Extend class AbstractActorFactory
 
-
-		for (ActorType actorType : ActorType.types) {
-			String factoryClassName = actorType.getSimulatorFactoryName();
-			if (factoryClassName == null) continue;
+		try {
+			for (ActorType actorType : ActorType.types) {
+				String factoryClassName = actorType.getSimulatorFactoryName();
+				if (factoryClassName == null) continue;
 				Class c = Class.forName(factoryClassName);
 				AbstractActorFactory inf = (AbstractActorFactory) c.newInstance();
 				logger.info("Loading ActorType " + actorType.getName());
 				theFactories.put(actorType.getName(), inf);
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
 		initialized = true;
 		return theFactories;
@@ -117,12 +119,12 @@ import java.util.Map;
 
 	protected void configEnv(SimManager simm, SimId simId, SimulatorConfig sc) {
 		if (simId.getEnvironmentName() != null) {
-			gov.nist.asbestos.simapi.toolkit.envSettings.EnvSetting es = new gov.nist.asbestos.simapi.toolkit.envSettings.EnvSetting(simId.getEnvironmentName());
+			gov.nist.asbestos.toolkitApi.envSettings.EnvSetting es = new gov.nist.asbestos.toolkitApi.envSettings.EnvSetting(simId.getEnvironmentName());
 			File codesFile = es.getCodesFile();
-			addEditableConfig(sc, gov.nist.asbestos.simapi.toolkit.configDatatypes.server.SimulatorProperties.codesEnvironment, ParamType.SELECTION, codesFile.toString());
+			addEditableConfig(sc, gov.nist.asbestos.toolkitApi.configDatatypes.server.SimulatorProperties.codesEnvironment, ParamType.SELECTION, codesFile.toString());
 		} else {
-			File codesFile = gov.nist.asbestos.simapi.toolkit.envSettings.EnvSetting.getEnvSetting(simm.sessionId()).getCodesFile();
-			addEditableConfig(sc, gov.nist.asbestos.simapi.toolkit.configDatatypes.server.SimulatorProperties.codesEnvironment, ParamType.SELECTION, codesFile.toString());
+			File codesFile = gov.nist.asbestos.toolkitApi.envSettings.EnvSetting.getEnvSetting(simm.sessionId()).getCodesFile();
+			addEditableConfig(sc, gov.nist.asbestos.toolkitApi.configDatatypes.server.SimulatorProperties.codesEnvironment, ParamType.SELECTION, codesFile.toString());
 		}
 	}
 
@@ -130,21 +132,21 @@ import java.util.Map;
 		SimulatorConfigElement ele;
 
 		ele = new SimulatorConfigElement();
-		ele.name = gov.nist.asbestos.simapi.toolkit.configDatatypes.server.SimulatorProperties.creationTime;
-		ele.type = ParamType.TIME;
+		ele.setName(SimulatorProperties.creationTime);
+		ele.setType(ParamType.TIME);
 		ele.setStringValue(new Date().toString());
 		addFixed(sc, ele);
 
 		ele = new SimulatorConfigElement();
-		ele.name = name;
-		ele.type = ParamType.TEXT;
+		ele.setName(name);
+		ele.setType(ParamType.TEXT);
 		ele.setStringValue(sc.getId().toString());
 		addFixed(sc, ele);
 
-		addEditableConfig(sc, gov.nist.asbestos.simapi.toolkit.configDatatypes.server.SimulatorProperties.locked, ParamType.BOOLEAN, false);
-		addEditableConfig(sc, gov.nist.asbestos.simapi.toolkit.configDatatypes.server.SimulatorProperties.requiresStsSaml, ParamType.BOOLEAN, false);
-        addEditableConfig(sc, gov.nist.asbestos.simapi.toolkit.configDatatypes.server.SimulatorProperties.FORCE_FAULT, ParamType.BOOLEAN, false);
-		addFixedConfig(sc, gov.nist.asbestos.simapi.toolkit.configDatatypes.server.SimulatorProperties.environment, ParamType.TEXT, sc.getEnvironmentName());
+		addEditableConfig(sc, gov.nist.asbestos.toolkitApi.configDatatypes.server.SimulatorProperties.locked, ParamType.BOOLEAN, false);
+		addEditableConfig(sc, gov.nist.asbestos.toolkitApi.configDatatypes.server.SimulatorProperties.requiresStsSaml, ParamType.BOOLEAN, false);
+        addEditableConfig(sc, gov.nist.asbestos.toolkitApi.configDatatypes.server.SimulatorProperties.FORCE_FAULT, ParamType.BOOLEAN, false);
+		addFixedConfig(sc, gov.nist.asbestos.toolkitApi.configDatatypes.server.SimulatorProperties.environment, ParamType.TEXT, sc.getEnvironmentName());
 
         return sc;
 	}
@@ -157,9 +159,10 @@ import java.util.Map;
 	// only used by SimulatorFactory to offer a generic API for building sims
 	 Simulator buildNewSimulator(SimManager simm, String simtype, SimId simID, String environment, boolean save) throws Exception {
         logger.info("Build New Simulator " + simtype);
-		gov.nist.asbestos.simapi.tk.actors.ActorType at = gov.nist.asbestos.simapi.tk.actors.ActorType.findActor(simtype);
+		ActorType at = ActorType.findActor(simtype);
 
-		 assert at : "Simulator type [" + simtype + "] does not exist"
+		if (at == null)
+			throw new RuntimeException("Simulator type [" + simtype + "] does not exist");
 
 		return buildNewSimulator(simm, at, simID, environment, save);
 
@@ -195,7 +198,7 @@ import java.util.Map;
 			for (SimulatorConfig conf : simulator.getConfigs())
 				simIdsInGroup.add(conf.getId().toString());
 			for (SimulatorConfig conf : simulator.getConfigs()) {
-				SimulatorConfigElement ele = new SimulatorConfigElement(gov.nist.asbestos.simapi.toolkit.configDatatypes.server.SimulatorProperties.simulatorGroup, ParamType.LIST, simIdsInGroup);
+				SimulatorConfigElement ele = new SimulatorConfigElement(gov.nist.asbestos.toolkitApi.configDatatypes.server.SimulatorProperties.simulatorGroup, ParamType.LIST, simIdsInGroup);
 				conf.add(ele);
 			}
 		}
@@ -268,16 +271,16 @@ import java.util.Map;
 		return mkEndpoint(asc, ele, asc.getActorType().toLowerCase(), isTLS);
 	}
 
-	protected String mkEndpoint(SimulatorConfig asc, SimulatorConfigElement ele, String actor, boolean isTLS) throws Exception {
+	protected String mkEndpoint(SimulatorConfig asc, SimulatorConfigElement ele, String actor, boolean isTLS) {
 		return mkEndpoint(asc, ele, actor, isTLS, false);
 	}
 
-	protected String mkEndpoint(SimulatorConfig asc, SimulatorConfigElement ele, String actor, boolean isTLS, boolean isProxy) throws Exception {
-		String transtype = SimDb.getTransactionDirName(ele.transType);
+	protected String mkEndpoint(SimulatorConfig asc, SimulatorConfigElement ele, String actor, boolean isTLS, boolean isProxy) {
+		String transtype = SimDb.getTransactionDirName(ele.getTransactionType());
 
-		String contextName = gov.nist.asbestos.simapi.tk.installation.Installation.instance().getServletContextName();
+		String contextName = Installation.instance().getServletContextName();
 
-		String tlsTail = isTLS ? "s" : ""
+		String tlsTail = isTLS ? "s" : "";
 
 		String endpoint =  "http" + tlsTail +
 				"://" +
@@ -285,13 +288,13 @@ import java.util.Map;
 				":" +
 				getEndpointPort(isTLS, isProxy) +
 				contextName +
-				(ele.transType.isHttpOnly() ? "/httpsim/" : "/proxy/" ) +
+				(ele.getTransactionType().isHttpOnly() ? "/httpsim/" : "/proxy/" ) +
 				asc.getId() +
 				"/" +
 				actor +
 				"/" +
 				transtype;
-		return endpoint
+		return endpoint;
 	}
 
 	protected String mkFhirEndpoint(SimulatorConfig asc, SimulatorConfigElement ele, String actor, boolean isTLS) throws Exception {
@@ -312,14 +315,14 @@ import java.util.Map;
 				((isSimProxy) ? "/proxy/" : "/fsim/") +
 				asc.getId() +
 				"/" + actor +
-				((transactionType != null && transactionType.getFhirVerb() == gov.nist.asbestos.simapi.toolkit.configDatatypes.client.FhirVerb.TRANSACTION ? "/" + transactionType.getShortName() : ""))
+				((transactionType != null && transactionType.getFhirVerb() == gov.nist.asbestos.toolkitApi.configDatatypes.client.FhirVerb.TRANSACTION ? "/" + transactionType.getShortName() : ""))
 				;
-		return endpoint
+		return endpoint;
 	}
 
-	private String getEndpointPort(boolean isTLS, boolean isProxy) throws Exception {
+	private String getEndpointPort(boolean isTLS, boolean isProxy) {
 		if (isTLS && isProxy)
-			throw new Exception("Proxy does not support TLS");
+			throw new RuntimeException("Proxy does not support TLS");
 		if (isProxy)
 			return gov.nist.asbestos.simapi.tk.installation.Installation.instance().propertyServiceManager().getProxyPort();
 		return (isTLS) ? gov.nist.asbestos.simapi.tk.installation.Installation.instance().propertyServiceManager().getToolkitTlsPort() : gov.nist.asbestos.simapi.tk.installation.Installation.instance().propertyServiceManager().getToolkitPort();
@@ -411,20 +414,13 @@ import java.util.Map;
 		return configs;
 	}
 
-	/**
-	 * Load simulators - ignore sims not found (length(simlist) &lt; length(idlist))
-	 * @param ids
-	 * @return
-	 * @throws IOException
-	 * @throws ClassNotFoundException
-	 */
-	 List<SimulatorConfig> loadAvailableSimulators(List<SimId> ids) throws Exception {
+	 List<SimulatorConfig> loadAvailableSimulators(List<SimId> ids) {
 		List<SimulatorConfig> configs = new ArrayList<SimulatorConfig>();
 
 		for (SimId id : ids) {
-				if (!SimDb.exists(id)) continue
-				SimDb simdb = new SimDb(id);
-				File simCntlFile = simdb.getSimulatorControlFile();
+				if (!SimDb.exists(id)) continue;
+				SimDb db = new SimDb(id);
+				File simCntlFile = db.getSimulatorControlFile();
 				SimulatorConfig config = restoreSimulator(simCntlFile.toString());
 				configs.add(config);
 		}
@@ -432,11 +428,11 @@ import java.util.Map;
 		return configs;
 	}
 
-	private static SimulatorConfig restoreSimulator(String filename) throws Exception {
+	private static SimulatorConfig restoreSimulator(String filename) {
 		return SimulatorConfigIoFactory.impl().restoreSimulator(filename);
 	}
 
-	 static SimulatorConfig loadSimulator(SimId simid, boolean okifNotExist) throws Exception {
+	 static SimulatorConfig loadSimulator(SimId simid, boolean okifNotExist) {
 		SimDb simdb;
 		File simCntlFile;
 		try {
@@ -450,13 +446,13 @@ import java.util.Map;
 			}
 		} catch (Exception e) {
 			if (okifNotExist) return null;
-			throw e;
+			throw new RuntimeException(e);
 		}
 
 	}
 
 	static  SimulatorConfig getSimConfig(SimId simulatorId)  {
-		assert SimDb.exists(simulatorId) : "No simulator for channelId: " + simulatorId.toString()
+		assert SimDb.exists(simulatorId) : "No simulator for channelId: " + simulatorId.toString();
 			SimDb simdb = new SimDb(simulatorId);
 			File simCntlFile = simdb.getSimulatorControlFile();
 			return restoreSimulator(simCntlFile.toString());
@@ -498,7 +494,7 @@ import java.util.Map;
         addUser(sc, new SimulatorConfigElement(name, type, values, isMultiSelect));
     }
 
-     void addEditableConfig(SimulatorConfig sc, String name, ParamType type, gov.nist.asbestos.simapi.toolkit.configDatatypes.client.PatientErrorMap value) {
+     void addEditableConfig(SimulatorConfig sc, String name, ParamType type, gov.nist.asbestos.toolkitApi.configDatatypes.client.PatientErrorMap value) {
         addUser(sc, new SimulatorConfigElement(name, type, value));
     }
 
@@ -516,55 +512,53 @@ import java.util.Map;
 
 	 void setConfig(SimulatorConfig sc, String name, String value) {
 		SimulatorConfigElement ele = sc.getUserByName(name);
-		 assert ele : "Simulator " + sc.getId() + " does not have a parameter named " + name + " or cannot set its value"
+		if (ele == null)
+			throw new RuntimeException("Simulator " + sc.getId() + " does not have a parameter named " + name + " or cannot set its value");
 		ele.setStringValue(value);
 	}
 
 	 void setConfig(SimulatorConfig sc, String name, Boolean value) {
 		SimulatorConfigElement ele = sc.getUserByName(name);
-		 assert ele : "Simulator " + sc.getId() + " does not have a parameter named " + name + " or cannot set its value"
+		if (ele == null)
+			throw new RuntimeException("Simulator " + sc.getId() + " does not have a parameter named " + name + " or cannot set its value");
 		ele.setBooleanValue(value);
 	}
 
-	 void addEditableEndpoint(SimulatorConfig sc, String endpointName, gov.nist.asbestos.simapi.tk.actors.ActorType actorType, gov.nist.asbestos.simapi.tk.actors.TransactionType transactionType, boolean tls) throws Exception {
+	SimulatorConfigElement addEditableEndpoint(SimulatorConfig sc, String endpointName, ActorType actorType, TransactionType transactionType, boolean tls) {
 		SimulatorConfigElement ele = new SimulatorConfigElement();
-		ele.name = endpointName;
-		ele.type = ParamType.ENDPOINT;
-		ele.transType = transactionType;
+		ele.setName(endpointName);
+		ele.setType(ParamType.ENDPOINT);
+		ele.setTransactionType(transactionType);
 		ele.setTls(tls);
 		ele.setStringValue(mkEndpoint(sc, ele, actorType.getShortName(), tls));
 		addUser(sc, ele);
+		return ele;
 	}
 
-	 void addEditableNullEndpoint(SimulatorConfig sc, String endpointName, gov.nist.asbestos.simapi.tk.actors.ActorType actorType, gov.nist.asbestos.simapi.tk.actors.TransactionType transactionType, boolean tls) {
-		SimulatorConfigElement ele = new SimulatorConfigElement();
-		ele.name = endpointName;
-		ele.type = ParamType.ENDPOINT;
-		ele.transType = transactionType;
-		ele.setTls(tls);
+	 void addEditableNullEndpoint(SimulatorConfig sc, String endpointName, ActorType actorType, TransactionType transactionType, boolean tls) {
+		SimulatorConfigElement ele = addEditableEndpoint(sc, endpointName, actorType, transactionType, tls);
 		ele.setStringValue("");
-		addUser(sc, ele);
 	}
 
-	 void addFixedEndpoint(SimulatorConfig sc, String endpointName, gov.nist.asbestos.simapi.tk.actors.ActorType actorType, gov.nist.asbestos.simapi.tk.actors.TransactionType transactionType, boolean tls) throws Exception {
+	 void addFixedEndpoint(SimulatorConfig sc, String endpointName, ActorType actorType, TransactionType transactionType, boolean tls) throws Exception {
 		SimulatorConfigElement ele = new SimulatorConfigElement();
-		ele.name = endpointName;
-		ele.type = ParamType.ENDPOINT;
-		ele.transType = transactionType;
+		 ele.setName(endpointName);
+		 ele.setType(ParamType.ENDPOINT);
+		 ele.setTransactionType(transactionType);
 		ele.setStringValue(mkEndpoint(sc, ele, actorType.getShortName(), tls));
 		ele.setTls(tls);
 		addFixed(sc, ele);
 	}
 
-	 void addFixedFhirEndpoint(SimulatorConfig sc, String endpointName, gov.nist.asbestos.simapi.tk.actors.ActorType actorType, gov.nist.asbestos.simapi.tk.actors.TransactionType transactionType, boolean tls) throws Exception {
+	 void addFixedFhirEndpoint(SimulatorConfig sc, String endpointName, ActorType actorType, TransactionType transactionType, boolean tls) throws Exception {
 		addFixedFhirEndpoint(sc, endpointName, actorType, transactionType, tls, false);
 	}
 
-	 void addFixedFhirEndpoint(SimulatorConfig sc, String endpointName, gov.nist.asbestos.simapi.tk.actors.ActorType actorType, gov.nist.asbestos.simapi.tk.actors.TransactionType transactionType, boolean tls, boolean proxy) throws Exception {
+	 void addFixedFhirEndpoint(SimulatorConfig sc, String endpointName, ActorType actorType, TransactionType transactionType, boolean tls, boolean proxy) throws Exception {
 		SimulatorConfigElement ele = new SimulatorConfigElement();
-		ele.name = endpointName;
-		ele.type = ParamType.ENDPOINT;
-		ele.transType = transactionType;
+		 ele.setName(endpointName);
+		 ele.setType(ParamType.ENDPOINT);
+		 ele.setTransactionType(transactionType);
 		ele.setStringValue(mkFhirEndpoint(sc, ele, actorType.getShortName(), transactionType, tls, proxy));
 		ele.setTls(tls);
 		addFixed(sc, ele);
