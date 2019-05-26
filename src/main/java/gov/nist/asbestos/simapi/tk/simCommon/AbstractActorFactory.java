@@ -1,9 +1,17 @@
 package gov.nist.asbestos.simapi.tk.simCommon
 
 
+import gov.nist.asbestos.simapi.tk.actors.ActorType;
+import gov.nist.asbestos.simapi.tk.actors.TransactionType;
+import gov.nist.asbestos.simapi.tk.installation.PropertyServiceManager;
 import gov.nist.asbestos.simapi.tk.siteManagement.Site
-import groovy.transform.TypeChecked;
 import org.apache.log4j.Logger;
+
+import java.io.File;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -13,7 +21,7 @@ import org.apache.log4j.Logger;
  * @author bill
  *
  */
-@TypeChecked
+
  abstract class AbstractActorFactory {
 	static Logger logger = Logger.getLogger(AbstractActorFactory.class);
 
@@ -22,17 +30,17 @@ import org.apache.log4j.Logger;
 	 *  Abstracts
 	 *
 	 */
-	protected abstract Simulator buildNew(SimManager simm, SimId simId, String environment, boolean configureBase)
-	protected abstract void verifyActorConfigurationOptions(SimulatorConfig config)
-	 abstract Site buildActorSite(SimulatorConfig asc, Site site)
-	 abstract List<gov.nist.asbestos.simapi.tk.actors.TransactionType> getIncomingTransactions();
+	protected abstract Simulator buildNew(SimManager simm, SimId simId, String environment, boolean configureBase);
+	protected abstract void verifyActorConfigurationOptions(SimulatorConfig config);
+	 abstract Site buildActorSite(SimulatorConfig asc, Site site);
+	 abstract List<TransactionType> getIncomingTransactions();
 
 	private static boolean initialized = false;
 	/**
 	 * ActorType.name ==> ActorFactory
 	 */
 	static private Map<String, AbstractActorFactory> theFactories = null;
-	private static Map<String, AbstractActorFactory> factories() {
+	private static Map<String, AbstractActorFactory> factories() throws Exception {
 	 	if (theFactories != null) return theFactories;
 		theFactories = new HashMap<>();
 
@@ -42,9 +50,9 @@ import org.apache.log4j.Logger;
 		// 1. Extend class AbstractActorFactory
 
 
-		for (gov.nist.asbestos.simapi.tk.actors.ActorType actorType : gov.nist.asbestos.simapi.tk.actors.ActorType.types) {
+		for (ActorType actorType : ActorType.types) {
 			String factoryClassName = actorType.getSimulatorFactoryName();
-			if (!factoryClassName) continue;
+			if (factoryClassName == null) continue;
 				Class c = Class.forName(factoryClassName);
 				AbstractActorFactory inf = (AbstractActorFactory) c.newInstance();
 				logger.info("Loading ActorType " + actorType.getName());
@@ -65,7 +73,7 @@ import org.apache.log4j.Logger;
 		return initialized;
 	}
 
-	 AbstractActorFactory getActorFactory(gov.nist.asbestos.simapi.tk.actors.ActorType at) {
+	 AbstractActorFactory getActorFactory(ActorType at) throws Exception {
 		return factories().get(at.getName());
 	}
 
@@ -89,7 +97,7 @@ import org.apache.log4j.Logger;
 		return this;
 	}
 
-	gov.nist.asbestos.simapi.tk.installation.PropertyServiceManager propertyServiceMgr = null;
+	PropertyServiceManager propertyServiceMgr = null;
 
 	static  gov.nist.asbestos.simapi.tk.actors.ActorType getActorTypeFromName(String name) {
 		return gov.nist.asbestos.simapi.tk.actors.ActorType.findActor(name);

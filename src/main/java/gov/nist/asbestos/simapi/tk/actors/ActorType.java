@@ -1,8 +1,14 @@
-package gov.nist.asbestos.simapi.tk.actors
+package gov.nist.asbestos.simapi.tk.actors;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import groovy.json.JsonSlurper
-import groovy.transform.TypeChecked
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 
 // This file must be kept up to date with SimulatorActorTypes.java
 
@@ -19,86 +25,88 @@ import groovy.transform.TypeChecked
  *
  * So the big picture is that the actorCode/profile/option is now, in some cases, actually the profile/actor/option type.
  */
-@TypeChecked
-class ActorType  {
-    String name;
-    List<String> altNames;
-    String shortName;
-    List<TransactionType> transactionTypes; // TransactionTypes this actor can receive
-    boolean showInConfig;
-    String actorsFileLabel;
-    String simulatorFactoryName;
-    String simulatorClassName;
-    List<TransactionType> httpTransactionTypes;
-    String httpSimulatorClassName;
-    boolean isFhir;
-    List<String> proxyTransforms;
-    String actorCode;
-    IheItiProfile profile;
+public class ActorType  {
+    private String name;
+    private List<String> altNames;
+    private String shortName;
+    private List<TransactionType> transactionTypes; // TransactionTypes this actor can receive
+    private boolean showInConfig;
+    private String actorsFileLabel;
+    private String simulatorFactoryName;
+    private String simulatorClassName;
+    private List<TransactionType> httpTransactionTypes;
+    private String httpSimulatorClassName;
+    private boolean isFhir;
+    private List<String> proxyTransforms;
+    private String actorCode;
+    private IheItiProfile profile;
     /**
      * Conformance Test Options
      */
-    List<OptionType> options;
+    private List<OptionType> options;
 
-    Map asMap() {
-        def x = [:]
-        x.name = name
-        x.altNames = altNames
-        x.shortName = shortName
-        x.transactionTypes = transactionTypes
-        x.showInConfig = showInConfig
-        x.actorsFileLabel = actorsFileLabel
-        x.simulatorFactoryName = simulatorFactoryName
-        x.simulatorClassName = simulatorClassName
-        x.httpTransactionTypes = httpTransactionTypes
-        x.httpSimulatorClassName = httpSimulatorClassName
-        x.isFhir = isFhir
-        x.proxyTransforms = proxyTransforms
-        x.actorCode = actorCode
+//    Map asMap() {
+//        def x = [:]
+//        x.name = name
+//        x.altNames = altNames
+//        x.shortName = shortName
+//        x.transactionTypes = transactionTypes
+//        x.showInConfig = showInConfig
+//        x.actorsFileLabel = actorsFileLabel
+//        x.simulatorFactoryName = simulatorFactoryName
+//        x.simulatorClassName = simulatorClassName
+//        x.httpTransactionTypes = httpTransactionTypes
+//        x.httpSimulatorClassName = httpSimulatorClassName
+//        x.isFhir = isFhir
+//        x.proxyTransforms = proxyTransforms
+//        x.actorCode = actorCode
+//
+//        x
+//    }
 
-        x
-    }
+    public static List<ActorType> types = new ArrayList<>();
 
-    static List<ActorType> types = []
+    private static void init(File ec) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
 
-    static init(File ec) {
-        def jsonSlurper = new JsonSlurper()
-        File typesDir = new File(new File(ec, 'types'), 'actors')
-        typesDir.listFiles().each { File file ->
-            if (!file.name.endsWith('json')) return
-            ActorType type = jsonSlurper.parse(file) as ActorType
-            types << type
+        File typesDir = new File(new File(ec, "types"), "actors");
+        File[] files = typesDir.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (!file.getName().endsWith("json")) continue;
+                ActorType type = objectMapper.readValue(file, ActorType.class);
+                types.add(type);
+            }
         }
-
     }
 
-     String getActor()  {
+     public String getActor()  {
         return shortName;
    }
 
-    boolean isProxy() {
+    public boolean isProxy() {
         if (proxyTransforms == null) return false;
         if (proxyTransforms.size() == 0) return false;
         return true;
    }
 
-    boolean isFhir() { return isFhir; }
+    public boolean isFhir() { return isFhir; }
 
-    String getSimulatorFactoryName() { return simulatorFactoryName; }
+    public String getSimulatorFactoryName() { return simulatorFactoryName; }
 
-     boolean showInConfig() {
+    public boolean showInConfig() {
         return showInConfig;
     }
 
-     String getSimulatorClassName() { return simulatorClassName; }
+    public String getSimulatorClassName() { return simulatorClassName; }
 
-     String getHttpSimulatorClassName() { return httpSimulatorClassName; }
+    public String getHttpSimulatorClassName() { return httpSimulatorClassName; }
 
-     String getActorsFileLabel() {
+    public String getActorsFileLabel() {
         return actorsFileLabel;
     }
 
-    static  List<String> getActorNames() {
+    public static  List<String> getActorNames() {
         List<String> names = new ArrayList<>();
 
         for (ActorType a : types)
@@ -107,7 +115,7 @@ class ActorType  {
         return names;
     }
 
-    static  List<String> getActorNamesForConfigurationDisplays() {
+    public static  List<String> getActorNamesForConfigurationDisplays() {
         List<String> names = new ArrayList<String>();
 
         for (ActorType a : types)
@@ -129,7 +137,7 @@ class ActorType  {
      * @param tt
      * @return
      */
-    static  ActorType getActorType(TransactionType tt) {
+    public static  ActorType getActorType(TransactionType tt) {
         if (tt == null)
             return null;
         for (ActorType at : types) {
@@ -139,7 +147,7 @@ class ActorType  {
         return null;
     }
 
-    static  Set<ActorType> getActorTypes(TransactionType tt) {
+    public static Set<ActorType> getActorTypes(TransactionType tt) {
         Set<ActorType> types = new HashSet<>();
         if (tt == null)
             return types;
@@ -150,7 +158,7 @@ class ActorType  {
         return types;
     }
 
-    static  Set<ActorType> getAllActorTypes() {
+    public static  Set<ActorType> getAllActorTypes() {
         Set<ActorType> types = new HashSet<>();
         for (ActorType at : types) {
                 types.add(at);
@@ -158,7 +166,7 @@ class ActorType  {
         return types;
     }
 
-    static  ActorType findActor(String name) {
+    public static  ActorType findActor(String name) {
         if (name == null)
             return null;
 
@@ -180,7 +188,7 @@ class ActorType  {
      * @param tcCode
      * @return
      */
-    static  ActorType findActorByTcCode(String tcCode) {
+    public static  ActorType findActorByTcCode(String tcCode) {
         if (tcCode == null)
             return null;
 
@@ -190,7 +198,7 @@ class ActorType  {
         return null;
     }
 
-    static  TransactionType find(String receivingActorStr, String transString) {
+    public static  TransactionType find(String receivingActorStr, String transString) {
         if (receivingActorStr == null || transString == null) return null;
 
         ActorType a = findActor(receivingActorStr);
@@ -203,7 +211,7 @@ class ActorType  {
     * or id. Both SOAP and Http transactions are searched
     * @return TransactionType for this name, or null if no match found.
     */
-    TransactionType getTransaction(String name) {
+    public TransactionType getTransaction(String name) {
         for (TransactionType tt : transactionTypes) {
             if (tt.getShortName().equals(name)) return tt;
             if (tt.getName().equals(name)) return tt;
@@ -218,7 +226,7 @@ class ActorType  {
     }
 
 
-     String toString() {
+    public String toString() {
         StringBuffer buf = new StringBuffer();
 
         buf.append(name).append(" [");
@@ -231,21 +239,21 @@ class ActorType  {
         return buf.toString();
     }
 
-     String getName() {
+    public String getName() {
         return name;
     }
 
-     String getShortName() {
+    public String getShortName() {
         return shortName;
     }
 
-     List<TransactionType> getTransactions() {
+    public List<TransactionType> getTransactions() {
         return transactionTypes;
     }
 
-     List<TransactionType> getHTTPTransactions() { return httpTransactionTypes; }
+    public  List<TransactionType> getHTTPTransactions() { return httpTransactionTypes; }
 
-    boolean hasTransaction(TransactionType transType) {
+    public boolean hasTransaction(TransactionType transType) {
       for (TransactionType transType2 : transactionTypes) {
          if (transType2.equals(transType)) return true;
       }
@@ -256,7 +264,7 @@ class ActorType  {
    }
 
 
-     boolean equals(ActorType at) {
+    public  boolean equals(ActorType at) {
         try {
             return name.equals(at.name);
         } catch (Exception e) {
@@ -264,11 +272,11 @@ class ActorType  {
         return false;
     }
 
-     List<String> getProxyTransforms() {
+    public List<String> getProxyTransforms() {
         return proxyTransforms;
     }
 
-     String getActorCode() {
+    public String getActorCode() {
        if (Constants.USE_SHORTNAME == actorCode)
            return shortName;
        else

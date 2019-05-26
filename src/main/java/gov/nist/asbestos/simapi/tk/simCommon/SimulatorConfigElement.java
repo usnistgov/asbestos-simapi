@@ -1,22 +1,16 @@
 package gov.nist.asbestos.simapi.tk.simCommon;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect
-import groovy.transform.TypeChecked;
 
-@TypeChecked
-@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE)
-class SimulatorConfigElement implements Serializable {
+import gov.nist.asbestos.simapi.tk.actors.TransactionType;
+import gov.nist.asbestos.simapi.toolkit.configDatatypes.client.PatientErrorMap;
 
-	private static final long serialVersionUID = 1L;
-	/**
-	 * Parameter name
-	 */
-	String name = null;
-	/**
-	 * Parameter type
-	 */
-	ParamType type = null;
-	gov.nist.asbestos.simapi.tk.actors.TransactionType transType = null;
+import java.util.ArrayList;
+import java.util.List;
+
+public class SimulatorConfigElement  {
+	private String name = null;
+	private ParamType type = null;
+	private TransactionType transType = null;
 
 
 	// cannot use Object class - will not serialize so tricks are necessary
@@ -31,33 +25,33 @@ class SimulatorConfigElement implements Serializable {
 
 	private boolean editable = false;
 
-	SimulatorConfigElement() {   }
+	public SimulatorConfigElement() {   }
 
-	SimulatorConfigElement(String name, ParamType type, Boolean value) {
+	public SimulatorConfigElement(String name, ParamType type, Boolean value) {
 		this.name = name;
 		this.type = type;
 		setBooleanValue(value);
 	}
 
-	SimulatorConfigElement(String name, ParamType type, String value) {
+	public SimulatorConfigElement(String name, ParamType type, String value) {
 		this.name = name;
 		this.type = type;
 		setStringValue(value);
 	}
 
-	SimulatorConfigElement(String name, ParamType type, List<String> values, boolean isMultiSelect) {
+	public SimulatorConfigElement(String name, ParamType type, List<String> values, boolean isMultiSelect) {
 		this.name = name;
 		this.type = type;
 		setListValueWithType(values, ((isMultiSelect) ? ValueType.MULTI_SELECT_LIST : ValueType.SINGLE_SELECT_LIST));
 	}
 
-	SimulatorConfigElement(String name, ParamType type, List<String> values) {
+	public SimulatorConfigElement(String name, ParamType type, List<String> values) {
 		this.name = name;
 		this.type = type;
 		setListValueWithType(values, ValueType.SIMPLE_LIST);
 	}
 
-	SimulatorConfigElement(String name, ParamType type, String[] vals, boolean isMultiSelect) {
+	public SimulatorConfigElement(String name, ParamType type, String[] vals, boolean isMultiSelect) {
 		this.name = name;
 		this.type = type;
 		List<String> values = new ArrayList<>();
@@ -65,28 +59,28 @@ class SimulatorConfigElement implements Serializable {
 		setListValueWithType(values, ((isMultiSelect) ? ValueType.MULTI_SELECT_LIST : ValueType.SINGLE_SELECT_LIST));
 	}
 
-	SimulatorConfigElement(String name, ParamType type, gov.nist.asbestos.simapi.toolkit.configDatatypes.client.PatientErrorMap value) {
+	public SimulatorConfigElement(String name, ParamType type, gov.nist.asbestos.simapi.toolkit.configDatatypes.client.PatientErrorMap value) {
 		this.name = name;
 		this.type = type;
 		setPatientErrorMapValue(value);
 	}
 
-	String getExtraValue() {
+	public String getExtraValue() {
 		return extraValue;
 	}
 
-	void setExtraValue(String extraValue) {
+	public void setExtraValue(String extraValue) {
 		this.extraValue = extraValue;
 	}
 
-	boolean isEditable() { return editable; }
-	void setEditable(boolean v) { editable = v; }
+	public boolean isEditable() { return editable; }
+	public void setEditable(boolean v) { editable = v; }
 
-	gov.nist.asbestos.simapi.toolkit.configDatatypes.client.PatientErrorMap asPatientErrorMap() {
+	public PatientErrorMap asPatientErrorMap() {
 		return patientErrorMap;
 	}
 
-	String asString() {
+	public String asString() {
 		if (valueType == ValueType.STRING)
 			return stringValue;
 		if (valueType == ValueType.SINGLE_SELECT_LIST && listValue != null && listValue.size() > 0)
@@ -94,7 +88,7 @@ class SimulatorConfigElement implements Serializable {
 		return Boolean.toString(false);
 	}
 
-	Boolean asBoolean() {
+	public Boolean asBoolean() {
 		if (valueType == ValueType.STRING) {
 			String v = stringValue;
 			v = v.toLowerCase();
@@ -112,17 +106,17 @@ class SimulatorConfigElement implements Serializable {
 		return false;
 	}
 
-	List<String> asList() { return listValue; }
+	public List<String> asList() { return listValue; }
 
-	boolean hasBoolean() { return valueType == ValueType.BOOLEAN;  }
-	boolean hasString() { return valueType == ValueType.STRING;  }
-	boolean hasSingleList() { return valueType == ValueType.SINGLE_SELECT_LIST; }
-	boolean hasMultiList() { return valueType == ValueType.MULTI_SELECT_LIST; }
-	boolean hasList() { return hasSingleList() || hasMultiList() || valueType == ValueType.SIMPLE_LIST; }
+	public boolean hasBoolean() { return valueType == ValueType.BOOLEAN;  }
+	public boolean hasString() { return valueType == ValueType.STRING;  }
+	public boolean hasSingleList() { return valueType == ValueType.SINGLE_SELECT_LIST; }
+	public boolean hasMultiList() { return valueType == ValueType.MULTI_SELECT_LIST; }
+	public boolean hasList() { return hasSingleList() || hasMultiList() || valueType == ValueType.SIMPLE_LIST; }
 	// removed because it breaks Jackson serialization
 //     boolean isPatientErrorMap() { return valueType == ValueType.PATIENT_ERROR_MAP; }
 
-	String toString() {
+	public String toString() {
 		StringBuffer buf = new StringBuffer();
 
 		buf.append("name=").append(name);
@@ -148,32 +142,32 @@ class SimulatorConfigElement implements Serializable {
 		return buf.toString();
 	}
 
-	void setListValueWithType(List<String> o, ValueType valueType) { listValue = o; this.valueType = valueType; }
+	public void setListValueWithType(List<String> o, ValueType valueType) { listValue = o; this.valueType = valueType; }
 
-	String getName() {
+	public String getName() {
 		return name;
 	}
 
-	void setStringValue(String o) {
+	public void setStringValue(String o) {
 		if (o != null) o = o.trim();
 		stringValue = o;
 		valueType = ValueType.STRING;
 	}
-	String getStringValue() { return stringValue; }
+	public String getStringValue() { return stringValue; }
 
-	void setBooleanValue(Boolean o) { booleanValue = o; valueType = ValueType.BOOLEAN; }
-	boolean getBooleanValue() { return booleanValue; }
+	public void setBooleanValue(Boolean o) { booleanValue = o; valueType = ValueType.BOOLEAN; }
+	public boolean getBooleanValue() { return booleanValue; }
 
-	void setStringListValue(List<String> o) { listValue = o; }
-	List<String> getStringListValue() { return listValue; }
+	public void setStringListValue(List<String> o) { listValue = o; }
+	public List<String> getStringListValue() { return listValue; }
 
-	void setPatientErrorMapValue(gov.nist.asbestos.simapi.toolkit.configDatatypes.client.PatientErrorMap o) { patientErrorMap = o; valueType = ValueType.PATIENT_ERROR_MAP; }
-	gov.nist.asbestos.simapi.toolkit.configDatatypes.client.PatientErrorMap getPatientErrorMapValue () { return patientErrorMap; }
+	public void setPatientErrorMapValue(gov.nist.asbestos.simapi.toolkit.configDatatypes.client.PatientErrorMap o) { patientErrorMap = o; valueType = ValueType.PATIENT_ERROR_MAP; }
+	public PatientErrorMap getPatientErrorMapValue () { return patientErrorMap; }
 
-	List<String> getMultiListValue() { return listValue; }
+	public List<String> getMultiListValue() { return listValue; }
 
 	@Override
-	boolean equals(Object o) {
+	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
@@ -194,7 +188,7 @@ class SimulatorConfigElement implements Serializable {
 	}
 
 	@Override
-	int hashCode() {
+	public int hashCode() {
 		int result = name != null ? name.hashCode() : 0;
 		result = 31 * result + (type != null ? type.hashCode() : 0);
 		result = 31 * result + (transType != null ? transType.hashCode() : 0);
@@ -209,11 +203,11 @@ class SimulatorConfigElement implements Serializable {
 		return result;
 	}
 
-	boolean isTls() {
+	public boolean isTls() {
 		return tls;
 	}
 
-	void setTls(boolean tls) {
+	public void setTls(boolean tls) {
 		this.tls = tls;
 	}
 }

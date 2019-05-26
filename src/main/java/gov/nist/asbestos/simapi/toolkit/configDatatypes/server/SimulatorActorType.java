@@ -1,7 +1,7 @@
 package gov.nist.asbestos.simapi.toolkit.configDatatypes.server;
 
 
-// This file must be kept up to date with ActorType.groovy
+// This file must be kept up to date with ActorType.java
 /**
  * Simulator actor types that can be specified when creating a Simulator. To pass as a parameter use:
  *
@@ -79,7 +79,7 @@ public enum SimulatorActorType {
 
     MHD_DOC_RECIPIENT("mhddocrec");
 
-    String name;  // name that matches ActorType.groovy
+    String name;  // name that matches ActorType.java
 
     SimulatorActorType(String name) {
         this.name = name;
