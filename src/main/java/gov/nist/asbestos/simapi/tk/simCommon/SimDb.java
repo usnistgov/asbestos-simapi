@@ -1,14 +1,15 @@
-package gov.nist.asbestos.simapi.tk.simCommon
+package gov.nist.asbestos.simapi.tk.simCommon;
 
-import gov.nist.asbestos.simapi.tk.actors.ActorType
-import gov.nist.asbestos.simapi.tk.actors.TransactionType
-import gov.nist.asbestos.simapi.tk.installation.Installation
-import groovy.transform.TypeChecked
-import org.apache.log4j.Logger
+import gov.nist.asbestos.simapi.tk.actors.ActorType;
+import gov.nist.asbestos.simapi.tk.actors.TransactionType;
+import gov.nist.asbestos.simapi.tk.installation.Installation;
+import org.apache.log4j.Logger;
 
 import java.io.File;
-import java.text.SimpleDateFormat
-import java.util.Date;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 
 /**
@@ -41,8 +42,9 @@ public class SimDb {
 	 * @param simId
 	 */
 	public SimDb(SimId simId) {
-		assert simId : "SimDb - cannot open SimDb with null channelId"
-		assert simId?.testSession?.value : "SimId not assigned to a TestSession - ${simId}"
+		Objects.requireNonNull(simId);
+		if (simId.getTestSession() == null || simId.getTestSession().getValue() == null)
+			throw new RuntimeException("SimId not assigned to a TestSession - " + simId);
 		File dbRoot = getSimDbFile(simId);
 		this.simId = simId;
 		validateSimId(simId);
@@ -50,31 +52,34 @@ public class SimDb {
 		if (!dbRoot.exists())
 			dbRoot.mkdirs();
 
-		assert dbRoot.canWrite() &&  dbRoot.isDirectory() : "Simulator database location, [" + dbRoot.toString() + "] is not a directory or cannot be written to"
+		if (!dbRoot.isDirectory() || !dbRoot.canWrite())
+			throw new RuntimeException("Simulator database location, [" + dbRoot.toString() + "] is not a directory or cannot be written to");
 
 		String ipdir = simId.toString();
 		simDir = new File(dbRoot.toString()  /*.getAbsolutePath()*/ + File.separatorChar + ipdir);
-		assert simDir.exists() : "Simulator " + simId + " does not exist (" + simDir + ")"
+		if (!simDir.exists())
+			throw new RuntimeException("Simulator " + simId + " does not exist (" + simDir + ")");
 
 		simDir.mkdirs();
 
-		assert simDir.isDirectory() : "Cannot create content in Simulator database, creation of " + simDir.toString() + " failed"
+		if (!simDir.isDirectory())
+			throw new RuntimeException("Cannot create content in Simulator database, creation of " + simDir.toString() + " failed");
 
-		createSimSafetyFile()
+		createSimSafetyFile();
 	}
 
 	public SimDb(SimId simId, ActorType actor, TransactionType transaction, boolean openToLastTransaction) {
-		this(simId, actor.shortName, transaction.shortName, openToLastTransaction)
+		this(simId, actor.getShortName(), transaction.getShortName(), openToLastTransaction);
 	}
 
-	public SimDb(SimId simId, String actor, String transaction, boolean openToLastTransaction) {
+	private SimDb(SimId simId, String actor, String transaction, boolean openToLastTransaction) {
 		this(simId);
-		assert actor
+		Objects.requireNonNull(actor);
 		this.actor = actor;
 		this.transaction = transaction;
 
-		if (actor != null && transaction != null) {
-			transactionDir = transactionDirectory(actor, transaction)
+		if (transaction != null) {
+			transactionDir = transactionDirectory(actor, transaction);
 		} else
 			return;
 
@@ -82,57 +87,54 @@ public class SimDb {
 			openMostRecentEvent(actor, transaction)
 		} else {
 			Date date = new Date()
-			SimpleDateFormat sdf = new SimpleDateFormat('yy_MM_dd_HH_mm_ss_SSS')
-			eventDate = sdf.format(date)
+			SimpleDateFormat sdf = new SimpleDateFormat("yy_MM_dd_HH_mm_ss_SSS");
+			eventDate = sdf.format(date);
 			File eventDir = mkEventDir(eventDate);
 			eventDir.mkdirs();
-			new File(eventDir, 'date.txt').text = eventDate
-		}
-	}
-
-
-
-	SimDb mkSim(SimId simid, String actor) {
-		assert simid?.testSession?.value
-
-			simid.forFhir()
-			return mkfSim(simid)
-
-		File dbRoot = getSimDbFile(simid.testSession);
-		validateSimId(simid);
-		if (!dbRoot.exists())
-			dbRoot.mkdir();
-		assert dbRoot.canWrite() && dbRoot.isDirectory() : "Simulator database location, " + dbRoot.toString() + " is not a directory or cannot be written to"
-
-		File simActorDir = new File(dbRoot.getAbsolutePath() + File.separatorChar + simid + File.separatorChar + actor);
-		simActorDir.mkdirs();
-		assert simActorDir.exists() : "Simulator " + simid + ", " + actor + " cannot be created"
-
-		SimDb db = new SimDb(simid, actor, null, true);
-		return db;
-	}
-
-	/**
-	 * Given partial information (testSession and id) build the full channelId
-	 * @param simId1
-	 * @return
-	 */
-	public static SimId getFullSimId(SimId simId) {
-		assert simId?.testSession?.value
-		SimId ssimId = new SimId(simId.getTestSession(), simId.getId())
-		if (exists(ssimId)) {
-			// soap based proxy
-			SimDb simDb = new SimDb(ssimId)
-			return internalSimIdBuilder(simDb.getSimDir(), simId.testSession)
-		} else {
-			ssimId = ssimId.forFhir()
-			if (exists(ssimId)) {
-				// FHIR based proxy
-				SimDb simDb = new SimDb(ssimId)
-				return internalSimIdBuilder(simDb.getSimDir(), simId.testSession)
+			try {
+				Files.write(Paths.get(new File(eventDir, "date.txt").getPath()), eventDate.getBytes());
+			} catch (Exception e) {
+				throw new RuntimeException(e);
 			}
 		}
-		assert false : "Simulator " + simId.toString() + " does not exist."
+	}
+
+	SimDb mkSim(SimId simid, String actor) {
+		validateSimId(simid);
+			simid.forFhir();
+			return mkfSim(simid);
+
+//		File dbRoot = getSimDbFile(simid.getTestSession());
+//		validateSimId(simid);
+//		if (!dbRoot.exists())
+//			dbRoot.mkdir();
+//		if (!dbRoot.canWrite() || !dbRoot.isDirectory())
+//			throw new RuntimeException("Simulator database location, " + dbRoot.toString() + " is not a directory or cannot be written to");
+//
+//		File simActorDir = new File(dbRoot.getAbsolutePath() + File.separatorChar + simid + File.separatorChar + actor);
+//		simActorDir.mkdirs();
+//		if (!simActorDir.exists())
+//			throw new RuntimeException("Simulator " + simid + ", " + actor + " cannot be created");
+//
+//		return new SimDb(simid, actor, null, true);
+	}
+
+	public static SimId getFullSimId(SimId simId) {
+		validateSimId(simId);
+		SimId ssimId = new SimId(simId.getTestSession(), simId.getId());
+		if (exists(ssimId)) {
+			// soap based proxy
+			SimDb simDb = new SimDb(ssimId);
+			return internalSimIdBuilder(simDb.getSimDir(), simId.getTestSession());
+		} else {
+			ssimId = ssimId.forFhir();
+			if (exists(ssimId)) {
+				// FHIR based proxy
+				SimDb simDb = new SimDb(ssimId);
+				return internalSimIdBuilder(simDb.getSimDir(), simId.getTestSession());
+			}
+		}
+		throw new RuntimeException("Simulator " + simId.toString() + " does not exist.");
 	}
 
 
@@ -142,16 +144,16 @@ public class SimDb {
 	 */
 
 	static File getSimDbFile(SimId simId) {
-		assert simId?.testSession?.value
-		return gov.nist.asbestos.simapi.tk.installation.Installation.instance().simDbFile(simId.testSession);
+		validateSimId(simId);
+		return gov.nist.asbestos.simapi.tk.installation.Installation.instance().simDbFile(simId.getTestSession());
 	}
 
 	static File getSimDbFile(TestSession testSession) {
-		return gov.nist.asbestos.simapi.tk.installation.Installation.instance().simDbFile(testSession)
+		return Installation.instance().simDbFile(testSession);
 	}
 
 	public static boolean isFSim(SimId simId) {
-		true
+		return true;
 	}
 
 	/**
@@ -162,55 +164,66 @@ public class SimDb {
 	 * simdb directory, false otherwise.
 	 */
 	public static boolean exists(SimId simId) {
-		new File(getSimDbFile(simId), simId.toString())?.exists()
+		return new File(getSimDbFile(simId), simId.toString()).exists();
 	}
 
-	void createSimSafetyFile() {
+	private void createSimSafetyFile() {
 		// add this for safety when deleting simulators -
-		simSafetyFile().text = simId.toString()
-		assert simSafetyFile().exists() : "Cannot create proxy safety file ${simSafetyFile()}"
+		try {
+			Files.write(Paths.get(simSafetyFile().getPath()), simId.toString().getBytes());
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
-	void openMostRecentEvent(gov.nist.asbestos.simapi.tk.actors.ActorType actor, gov.nist.asbestos.simapi.tk.actors.TransactionType transaction) {
-		openMostRecentEvent(actor.shortName, transaction.shortName)
+	void openMostRecentEvent(ActorType actor, TransactionType transaction) {
+		openMostRecentEvent(actor.getShortName(), transaction.getShortName());
 	}
 
-	public void openMostRecentEvent(String actor, String transaction) {
-		this.actor = gov.nist.asbestos.simapi.tk.actors.ActorType.findActor(actor).shortName
-		this.transaction = gov.nist.asbestos.simapi.tk.actors.TransactionType.find(transaction).shortName
-		transactionDir = transactionDirectory(actor, transaction)
-		def trans = transactionDir.listFiles()
-		String eventFullPath = (trans.size()) ? trans.sort().last() : null
-		if (eventFullPath) {
-			File eventFile = new File(eventFullPath)
-			event = eventFile.name
+	private void openMostRecentEvent(String actor, String transaction) {
+		this.actor = ActorType.findActor(actor).getShortName();
+		this.transaction = TransactionType.find(transaction).getShortName();
+		transactionDir = transactionDirectory(actor, transaction);
+		File[] trans = transactionDir.listFiles();
+		if (trans != null) {
+			Arrays.sort(trans);
+			String eventFullPath = (trans.length != 0) ? trans[trans.length-1].getPath() : null;
+			if (eventFullPath != null) {
+				File eventFile = new File(eventFullPath);
+				event = eventFile.getName();
+			}
 		}
 	}
 
 	public static SimDb open(SimDbEvent event) {
-		assert event
-		assert event.simId
-		assert event.actor
-		assert event.trans
-		SimDb db = new SimDb(event.simId)
-		db.transactionDir = db.transactionDirectory(event.actor, event.trans)
-		db.event =  event.eventId
-		db.actor = event.actor
-		db.transaction = event.trans
-		return db
+		Objects.requireNonNull(event);
+		Objects.requireNonNull(event.getSimId());
+		Objects.requireNonNull(event.getActor());
+		Objects.requireNonNull(event.getTrans());
+		SimDb db = new SimDb(event.getSimId());
+		db.transactionDir = db.transactionDirectory(event.getActor(), event.getTrans());
+		db.event =  event.getEventId();
+		db.actor = event.getActor();
+		db.transaction = event.getTrans();
+		return db;
 	}
 
-	public static void validateSimId(SimId simId)  {
+	private static void validateSimId(SimId simId)  {
 		String badChars = " \t\n<>{}.";
-		 assert simId : "Simulator ID is null"
+		if (simId == null)
+			throw new RuntimeException("Simulator ID is null");
 		String id = simId.getId();
-		if (id != null) {
+		if (id == null) {
+			throw new RuntimeException("Simulator ID contains null ID");
+		} else {
 			for (int i = 0; i < badChars.length(); i++) {
-				String c = new String(badChars.charAt(i));
-				assert id.indexOf(c) == -1 : String.format("Simulator ID contains bad character at position %d (%s)(%04x)", i, c, (int) c.charAt(0))
+				String c = String.valueOf(badChars.charAt(i));
+				if (id.contains(c))
+					throw new RuntimeException(String.format("Simulator ID contains bad character at position %d (%s)(%04x)", i, c, (int) c.charAt(0)));
 			}
 		}
-		 assert simId.testSession : "Simulator ID TestSession is null"
+		if (simId.getTestSession() == null || simId.getTestSession().getValue() == null)
+			throw new RuntimeException("SimId not assigned to a TestSession - " + simId);
 	}
 
 	private File simSafetyFile() { return new File(simDir, "channelId.txt"); }
@@ -228,7 +241,7 @@ public class SimDb {
 
 
 	public static SimDb createMarker(SimId simId) {
-		return new SimDb(simId, MARKER, MARKER, false)
+		return new SimDb(simId, MARKER, MARKER, false);
 	}
 
 	/**
@@ -238,7 +251,7 @@ public class SimDb {
 	 * @return
 	 */
 	public List<SimDbEvent> getEventsSinceMarker() {
-		getEventsSinceMarker(null, null)
+		return getEventsSinceMarker(null, null);
 	}
 
 	public List<SimDbEvent> getEventsSinceMarker(String actor, String tran) {

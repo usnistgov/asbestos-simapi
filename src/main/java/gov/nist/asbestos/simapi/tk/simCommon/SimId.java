@@ -28,25 +28,24 @@ public class SimId {
     }
 
     // server only
-     SimId(TestSession testSession, String id, String actorType, String environmentName) {
+     public SimId(TestSession testSession, String id, String actorType, String environmentName) {
         this(testSession, id, actorType);
         this.environmentName = environmentName;
     }
 
     // client only
-     SimId(TestSession testSession, String id, String actorType)  {
+     public SimId(TestSession testSession, String id, String actorType)  {
         this(testSession, id);
         this.actorType = actorType;
     }
 
-     SimId(SiteSpec siteSpec, TestSession testSession) {
+     public SimId(SiteSpec siteSpec, TestSession testSession) {
         this(testSession, (siteSpec == null) ? null : siteSpec.getName());
         if (siteSpec != null && siteSpec.getActorType() != null)
             actorType = siteSpec.getTypeName();
     }
 
-    // client and server
-     SimId(TestSession testSession, String id) {
+     public SimId(TestSession testSession, String id) {
          Objects.requireNonNull(testSession);
          Objects.requireNonNull(id);
 
