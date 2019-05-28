@@ -1,4 +1,4 @@
-package gov.nist.asbestos.simapi.tk.simCommon;
+package gov.nist.asbestos.simapi.simCommon;
 
 
 import gov.nist.asbestos.simapi.tk.actors.ActorType;

@@ -1,12 +1,9 @@
-package gov.nist.asbestos.simapi.tk.simCommon
+package gov.nist.asbestos.simapi.simCommon;
 
 
-import groovy.transform.TypeChecked
+import java.util.Objects;
 
-@TypeChecked
-class TestSession implements Serializable {
-    private static final long serialVersionUID = 1L;
-
+class TestSession {
     private String value;
     public transient static final TestSession DEFAULT_TEST_SESSION = new TestSession("default");
     public transient static final TestSession GAZELLE_TEST_SESSION = new TestSession("gazelle");
@@ -18,28 +15,27 @@ class TestSession implements Serializable {
         this.value = value;
     }
 
-    String getValue() {
+    public String getValue() {
         return value;
     }
 
     @Override
-    String toString() {
+    public String toString() {
         return value;
     }
 
     void clean() { value = value.replaceAll("\\.", "_").toLowerCase(); }
 
     @Override
-    boolean equals(Object o) {
+    public boolean equals(Object o) {
+        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         TestSession that = (TestSession) o;
-
-        return value != null ? value.equals(that.value) : that.value == null;
+        return Objects.equals(value, that.value);
     }
 
     @Override
-    int hashCode() {
-        return value != null ? value.hashCode() : 0;
+    public int hashCode() {
+        return Objects.hash(value);
     }
 }

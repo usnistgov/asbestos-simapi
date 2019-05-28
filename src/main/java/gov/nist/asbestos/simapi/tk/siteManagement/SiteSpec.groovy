@@ -35,7 +35,7 @@ import groovy.transform.TypeChecked
 	String gazelleXuaUsername;
 	String stsAssertion;
 	 boolean isAsync = false;
-	 gov.nist.asbestos.simapi.tk.simCommon.TestSession testSession;
+	 gov.nist.asbestos.simapi.simCommon.TestSession testSession;
 
     /**
      * Create a site spec. This is a data transfer model (DTO) used to manage Sites in the UI.
@@ -44,7 +44,7 @@ import groovy.transform.TypeChecked
      * @param toClone if set it is another SiteSpec to get the TLS, SAML, and ASYNC settings from.  If this
      *                parameter is null then default values are used.
      */
-	 SiteSpec(String name, gov.nist.asbestos.simapi.tk.actors.ActorType actorType, SiteSpec toClone, gov.nist.asbestos.simapi.tk.simCommon.TestSession testSession) {
+	 SiteSpec(String name, gov.nist.asbestos.simapi.tk.actors.ActorType actorType, SiteSpec toClone, gov.nist.asbestos.simapi.simCommon.TestSession testSession) {
 		this.name = name;
 		this.actorType = actorType;
 		this.testSession = testSession;
@@ -66,11 +66,11 @@ import groovy.transform.TypeChecked
 	 SiteSpec() {
 	}
 
-	 SiteSpec(String name, gov.nist.asbestos.simapi.tk.simCommon.TestSession testSession) {
+	 SiteSpec(String name, gov.nist.asbestos.simapi.simCommon.TestSession testSession) {
         this(name, null, null, testSession);
     }
 
-	 SiteSpec(gov.nist.asbestos.simapi.tk.simCommon.TestSession testSession) {
+	 SiteSpec(gov.nist.asbestos.simapi.simCommon.TestSession testSession) {
 		this("", null, null, testSession);
 	}
 
@@ -154,7 +154,7 @@ import groovy.transform.TypeChecked
 		siteSpec.setGazelleXuaUsername(getGazelleXuaUsername());
 		siteSpec.setName(name);
 		siteSpec.setActorType(actorType);
-		siteSpec.testSession = new gov.nist.asbestos.simapi.tk.simCommon.TestSession(testSession.toString());
+		siteSpec.testSession = new gov.nist.asbestos.simapi.simCommon.TestSession(testSession.toString());
 		return siteSpec;
 	}
 

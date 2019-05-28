@@ -9,8 +9,8 @@ import groovy.transform.TypeChecked;
 	String defaultSiteName;
 	final  static String ALL_REPOSITORIES = "allRepositories";
 	final  static String FAKE_SITE_NAME = "fake_site";
-	final  static Site FAKE_SITE = new Site(FAKE_SITE_NAME, gov.nist.asbestos.simapi.tk.simCommon.TestSession.DEFAULT_TEST_SESSION);
-	gov.nist.asbestos.simapi.tk.simCommon.TestSession testSession = null;
+	final  static Site FAKE_SITE = new Site(FAKE_SITE_NAME, gov.nist.asbestos.simapi.simCommon.TestSession.DEFAULT_TEST_SESSION);
+	gov.nist.asbestos.simapi.simCommon.TestSession testSession = null;
 
 	 boolean equals(Sites s) {
 		if (s == null)
@@ -81,7 +81,7 @@ import groovy.transform.TypeChecked;
 		}
 	}
 
-	 Sites(gov.nist.asbestos.simapi.tk.simCommon.TestSession testSession) {
+	 Sites(gov.nist.asbestos.simapi.simCommon.TestSession testSession) {
 		this.testSession = testSession;
 	}
 
@@ -92,12 +92,12 @@ import groovy.transform.TypeChecked;
 		validate();
 	}
 
-	private gov.nist.asbestos.simapi.tk.simCommon.TestSession testSessionFromCollection(Collection<Site> sites) {
+	private gov.nist.asbestos.simapi.simCommon.TestSession testSessionFromCollection(Collection<Site> sites) {
 		for (Site site : sites) {
-			if (site.getTestSession() != null && !site.getTestSession().equals(gov.nist.asbestos.simapi.tk.simCommon.TestSession.DEFAULT_TEST_SESSION))
+			if (site.getTestSession() != null && !site.getTestSession().equals(gov.nist.asbestos.simapi.simCommon.TestSession.DEFAULT_TEST_SESSION))
 				return site.getTestSession();
 		}
-		return gov.nist.asbestos.simapi.tk.simCommon.TestSession.DEFAULT_TEST_SESSION;
+		return gov.nist.asbestos.simapi.simCommon.TestSession.DEFAULT_TEST_SESSION;
 	}
 
 	 Sites(Collection<Site> sites) {
@@ -118,7 +118,7 @@ import groovy.transform.TypeChecked;
 	private boolean isTestSessionOk(Site site) {
 		if (testSession == null) return false;
 		if (site.getTestSession() == null) return false;
-		if (site.getTestSession().equals(gov.nist.asbestos.simapi.tk.simCommon.TestSession.DEFAULT_TEST_SESSION)) return true;
+		if (site.getTestSession().equals(gov.nist.asbestos.simapi.simCommon.TestSession.DEFAULT_TEST_SESSION)) return true;
 		if (site.getTestSession().equals(testSession)) return true;
 		return false;
 	}
@@ -152,7 +152,7 @@ import groovy.transform.TypeChecked;
 	// repositories in the configuration.  This allows any repository
 	// to be targetted at a Connectathon. The GUI tool xdstools2 knows
 	// about this special site.
-	 void buildRepositoriesSite(gov.nist.asbestos.simapi.tk.simCommon.TestSession testSession) {
+	 void buildRepositoriesSite(gov.nist.asbestos.simapi.simCommon.TestSession testSession) {
 		Site repSite = new Site(getAllRepositoriesSiteName(), testSession);
 		TransactionCollection repSiteReps = repSite.repositories();
 		for (String siteName : siteMap.keySet()) {
@@ -180,7 +180,7 @@ import groovy.transform.TypeChecked;
 		return buf.toString();
 	}
 
-	 List<Site> getSitesWithActor(gov.nist.asbestos.simapi.tk.actors.ActorType actorType, gov.nist.asbestos.simapi.tk.simCommon.TestSession testSession) {
+	 List<Site> getSitesWithActor(gov.nist.asbestos.simapi.tk.actors.ActorType actorType, gov.nist.asbestos.simapi.simCommon.TestSession testSession) {
 		List<Site> rs = new ArrayList<Site>();
 
 		for (String siteName : siteMap.keySet()) {
@@ -227,7 +227,7 @@ import groovy.transform.TypeChecked;
       return null;
    }
 
-	 List<String> getSiteNamesWithActor(gov.nist.asbestos.simapi.tk.actors.ActorType actorType, gov.nist.asbestos.simapi.tk.simCommon.TestSession testSession) throws Exception {
+	 List<String> getSiteNamesWithActor(gov.nist.asbestos.simapi.tk.actors.ActorType actorType, gov.nist.asbestos.simapi.simCommon.TestSession testSession) throws Exception {
 		List<String> rs = new ArrayList<String>();
 
 		for (Site s : getSitesWithActor(actorType, testSession)) {
@@ -247,7 +247,7 @@ import groovy.transform.TypeChecked;
 //		return rs;
 //	}
 
-	 List<String> getSiteNamesWithRepository(gov.nist.asbestos.simapi.tk.simCommon.TestSession testSession) throws Exception {
+	 List<String> getSiteNamesWithRepository(gov.nist.asbestos.simapi.simCommon.TestSession testSession) throws Exception {
 		List<String> rs = new ArrayList<String>();
 
 		for (String siteName : siteMap.keySet()) {
@@ -268,13 +268,13 @@ import groovy.transform.TypeChecked;
 		return new ArrayList<String>();
 	}
 
-	 Site getDefaultSite(gov.nist.asbestos.simapi.tk.simCommon.TestSession testSession) throws Exception {
+	 Site getDefaultSite(gov.nist.asbestos.simapi.simCommon.TestSession testSession) throws Exception {
 		if (defaultSiteName == null || defaultSiteName.equals(""))
 			throw new Exception("No Default Site");
 		return getSite(defaultSiteName, testSession);
 	}
 
-	 Site getSite(String siteName, gov.nist.asbestos.simapi.tk.simCommon.TestSession testSession) throws Exception {
+	 Site getSite(String siteName, gov.nist.asbestos.simapi.simCommon.TestSession testSession) throws Exception {
    		if (siteName.equals(FAKE_SITE_NAME))
    			return FAKE_SITE;
 		if (siteName == null)

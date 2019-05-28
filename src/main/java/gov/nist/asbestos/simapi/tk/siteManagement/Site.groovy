@@ -53,7 +53,7 @@ class Site implements Serializable {
 
 	String pidAllocateURI = null;
 	transient  boolean changed = false;
-	private gov.nist.asbestos.simapi.tk.simCommon.TestSession testSession = null;  // required to be valid
+	private gov.nist.asbestos.simapi.simCommon.TestSession testSession = null;  // required to be valid
 	private String orchestrationSiteName = null;
 	private boolean isASimulator = false;
 
@@ -324,11 +324,11 @@ class Site implements Serializable {
 		return buf.toString();
 	}
 
-	Site(gov.nist.asbestos.simapi.tk.simCommon.TestSession testSession) {
+	Site(gov.nist.asbestos.simapi.simCommon.TestSession testSession) {
 		this.testSession = testSession;
 	}
 
-	Site(String name, gov.nist.asbestos.simapi.tk.simCommon.TestSession testSession) {
+	Site(String name, gov.nist.asbestos.simapi.simCommon.TestSession testSession) {
 		setName(name);
 		assert testSession : "Site: null TestSession"
 		this.testSession = testSession;
@@ -373,7 +373,7 @@ class Site implements Serializable {
 	}
 
 	SiteSpec siteSpec() {
-		gov.nist.asbestos.simapi.tk.simCommon.TestSession thisTestSession = (testSession != null) ? testSession : gov.nist.asbestos.simapi.tk.simCommon.TestSession.DEFAULT_TEST_SESSION;
+		gov.nist.asbestos.simapi.simCommon.TestSession thisTestSession = (testSession != null) ? testSession : gov.nist.asbestos.simapi.simCommon.TestSession.DEFAULT_TEST_SESSION;
 		SiteSpec siteSpec = new SiteSpec(getSiteName(), thisTestSession);
 		siteSpec.orchestrationSiteName = orchestrationSiteName;
 		return siteSpec;
@@ -394,17 +394,17 @@ class Site implements Serializable {
 
 	boolean isSimulator() { return isASimulator; }
 
-	void setTestSession(gov.nist.asbestos.simapi.tk.simCommon.TestSession testSession) {
+	void setTestSession(gov.nist.asbestos.simapi.simCommon.TestSession testSession) {
 		this.testSession = testSession;
 	}
 
-	gov.nist.asbestos.simapi.tk.simCommon.TestSession getTestSession() {
+	gov.nist.asbestos.simapi.simCommon.TestSession getTestSession() {
 		return testSession;
 	}
 
 	String getOwner() {
 		if (owner == null)
-			return gov.nist.asbestos.simapi.tk.simCommon.TestSession.DEFAULT_TEST_SESSION.getValue();
+			return gov.nist.asbestos.simapi.simCommon.TestSession.DEFAULT_TEST_SESSION.getValue();
 		return owner;
 	}
 
