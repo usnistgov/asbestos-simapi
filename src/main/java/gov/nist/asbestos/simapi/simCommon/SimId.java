@@ -21,7 +21,7 @@ public class SimId {
     private boolean fhir = false;
 
     // server only
-     SimId(TestSession testSession, String id, String actorType, String environmentName, boolean fhir)  {
+    public  SimId(TestSession testSession, String id, String actorType, String environmentName, boolean fhir)  {
         this(testSession, id, actorType);
         this.environmentName = environmentName;
         this.fhir = fhir;

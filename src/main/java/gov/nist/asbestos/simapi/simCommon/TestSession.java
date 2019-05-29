@@ -3,7 +3,7 @@ package gov.nist.asbestos.simapi.simCommon;
 
 import java.util.Objects;
 
-class TestSession {
+public class TestSession {
     private String value;
     public transient static final TestSession DEFAULT_TEST_SESSION = new TestSession("default");
     public transient static final TestSession GAZELLE_TEST_SESSION = new TestSession("gazelle");
@@ -11,7 +11,7 @@ class TestSession {
 
     private TestSession() {}
 
-    TestSession(String value) {
+    public TestSession(String value) {
         this.value = value;
     }
 
