@@ -1,26 +1,27 @@
-package gov.nist.asbestos.simapi.tk.stubs
+package gov.nist.asbestos.simapi.tk.stubs;
 
 
-import gov.nist.asbestos.simapi.tk.simCommon.TestSession
-import gov.nist.asbestos.simapi.tk.siteManagement.Site
-import gov.nist.asbestos.simapi.tk.siteManagement.TransactionBean
-import groovy.transform.TypeChecked
-import org.apache.axiom.om.OMElement
 
-import javax.xml.namespace.QName
+import gov.nist.asbestos.simapi.simCommon.TestSession;
+import gov.nist.asbestos.simapi.tk.siteManagement.Site;
+import gov.nist.asbestos.simapi.tk.siteManagement.TransactionBean;
+import org.apache.axiom.om.OMElement;
 
-@TypeChecked
- abstract class SiteLoader {
-	protected TestSession testSession;
+import javax.xml.namespace.QName;
+import java.util.HashMap;
+import java.util.Objects;
 
-	protected HashMap<String, Site> siteMap = new HashMap<String, Site>();
+public abstract class SiteLoader {
+	TestSession testSession;
 
-	 SiteLoader(TestSession testSession) {
-		 assert testSession : "TestSession is null"
+	HashMap<String, Site> siteMap = new HashMap<String, Site>();
+
+	 public SiteLoader(TestSession testSession) {
+		 Objects.requireNonNull(testSession);
 		this.testSession = testSession;
 	}
 
-	 Site parseSite(OMElement ele) throws Exception {
+	public Site parseSite(OMElement ele) throws Exception {
 		String site_name = ele.getAttributeValue(new QName("name"));
 		if (site_name == null || site_name.equals(""))
 			throw new Exception("Cannot parse Site with empty name from actors config file");
@@ -38,10 +39,10 @@ import javax.xml.namespace.QName
 	}
 
 	 OMElement siteToXML(Site s) {
-		 return null
+		 return null;
 	}
 
-	void addTransactionXML(OMElement site_ele, TransactionBean tb) {
+	public void addTransactionXML(OMElement site_ele, TransactionBean tb) {
 	}
 
 

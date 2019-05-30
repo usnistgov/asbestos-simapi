@@ -1,29 +1,27 @@
-package gov.nist.asbestos.simapi.tk.siteManagement
+package gov.nist.asbestos.simapi.tk.siteManagement;
 
 
-import groovy.transform.TypeChecked;
+import gov.nist.asbestos.simapi.tk.actors.ActorType;
+import gov.nist.asbestos.simapi.tk.actors.TransactionType;
 
-@TypeChecked
- class TransactionCollection implements Serializable {
+import java.util.ArrayList;
+import java.util.List;
 
-	private static final long serialVersionUID = 1L;
-
-	 List<TransactionBean> transactions = new ArrayList<TransactionBean>();
-	 String collectionName;    // never really used
-	boolean isRepositories = false; // a TransactionCollection is either for Repositories
+class TransactionCollection {
+	 private List<TransactionBean> transactions = new ArrayList<TransactionBean>();
+	 private String collectionName;    // never really used
+	private boolean repositories = false; // a TransactionCollection is either for Repositories
 									// or not
 
 	 void mergeIn(TransactionCollection tc) {
-		for (TransactionBean bean : tc.transactions) {
-			transactions.add(bean);
-		}
+		 transactions.addAll(tc.transactions);
 	}
 
 	 boolean equals(TransactionCollection tc) {
 		if (tc == null)
 			return false;
 		return
-				isRepositories == tc.isRepositories &&
+				repositories == tc.repositories &&
 				((collectionName == null) ? tc.collectionName == null : collectionName.equals(tc.collectionName)) &&
 				transactionsEquals(tc.transactions);
 	}
@@ -53,14 +51,14 @@ import groovy.transform.TypeChecked;
 
 	 void fixTlsEndpoints() {
 		for (TransactionBean transbean : transactions) {
-			if (transbean.endpoint == null || transbean.endpoint.equals(""))
+			if (transbean.getEndpoint() == null || transbean.getEndpoint().equals(""))
 				continue;
-			if (transbean.isSecure) {
-				if (transbean.endpoint.startsWith("http:"))
-					transbean.endpoint = transbean.endpoint.replaceFirst("http:", "https:");
+			if (transbean.isSecure()) {
+				if (transbean.getEndpoint().startsWith("http:"))
+					transbean.setEndpoint(transbean.getEndpoint().replaceFirst("http:", "https:"));
 			} else {
-				if (transbean.endpoint.startsWith("https:"))
-					transbean.endpoint = transbean.endpoint.replaceFirst("https:", "http:");
+				if (transbean.getEndpoint().startsWith("https:"))
+					transbean.setEndpoint(transbean.getEndpoint().replaceFirst("https:", "http:"));
 			}
 		}
 	}
@@ -99,19 +97,19 @@ import groovy.transform.TypeChecked;
 			transactions.add(transbean);
 	}
 
-	static gov.nist.asbestos.simapi.tk.actors.TransactionType getTransactionFromCode(String transactionCode) {
-		return gov.nist.asbestos.simapi.tk.actors.TransactionType.find(transactionCode)
+	static TransactionType getTransactionFromCode(String transactionCode) {
+		return TransactionType.find(transactionCode);
 	}
 
 	static  String getTransactionName(String transactionCode) {
-		gov.nist.asbestos.simapi.tk.actors.TransactionType tt = gov.nist.asbestos.simapi.tk.actors.TransactionType.find(transactionCode);
+		TransactionType tt = TransactionType.find(transactionCode);
 		if (tt == null)
 			return "";
 		return tt.getName();
 	}
 
-	static  List<gov.nist.asbestos.simapi.tk.actors.ActorType> getActorTypes() {
-		return gov.nist.asbestos.simapi.tk.actors.ActorType.types
+	static  List<ActorType> getActorTypes() {
+		return ActorType.types;
 	}
 
 	static List<String> asList(String[] arry) {
@@ -130,8 +128,8 @@ import groovy.transform.TypeChecked;
 	 TransactionCollection() {} // For GWT
 
 	// instead of the boolean, subtypes should be used
-	 TransactionCollection(boolean isRepositories) {
-		this.isRepositories = isRepositories;
+	 TransactionCollection(boolean repositories) {
+		this.repositories = repositories;
 	}
 
 	// Not used
@@ -167,8 +165,8 @@ import groovy.transform.TypeChecked;
 			return null;
 		for (TransactionBean t : transactions) {
 			if (t.hasName(name) &&
-					isSecure == t.isSecure &&
-					isAsync == t.isAsync)
+					isSecure == t.isSecure() &&
+					isAsync == t.isAsync())
 				return t;
 		}
 		return null;
@@ -180,25 +178,25 @@ import groovy.transform.TypeChecked;
 			return null;
 		for (TransactionBean t : transactions) {
 			if (t.hasName(transactionName) &&
-					isSecure == t.isSecure &&
-					isAsync == t.isAsync)
+					isSecure == t.isSecure() &&
+					isAsync == t.isAsync())
 				tbs.add(t);
 		}
 		return tbs;
 	}
 
-	 String get(gov.nist.asbestos.simapi.tk.actors.TransactionType name, boolean isSecure, boolean isAsync) {
+	 String get(TransactionType name, boolean isSecure, boolean isAsync) {
 		TransactionBean t = find(name, isSecure, isAsync);
 		if (t == null)
 			return null;
-		return t.endpoint;
+		return t.getEndpoint();
 	}
 
 	 String get(String name, boolean isSecure, boolean isAsync) {
 		TransactionBean t = find(name, isSecure, isAsync);
 		if (t == null)
 			return null;
-		return t.endpoint;
+		return t.getEndpoint();
 	}
 
 	 void add(String transactionName, String endpoint, boolean isSecure, boolean isAsync) throws Exception {
@@ -210,13 +208,13 @@ import groovy.transform.TypeChecked;
 		// Issue 98 TODO: set the repositoryType here
 		transactions.add(new TransactionBean(
 				transactionName,
-				isRepositories ? TransactionBean.RepositoryType.REPOSITORY : TransactionBean.RepositoryType.NONE,
+				repositories ? TransactionBean.RepositoryType.REPOSITORY : TransactionBean.RepositoryType.NONE,
 				endpoint,
 				isSecure,
 				isAsync));
 	}
 
-	 String toString() {
+	 public String toString() {
 
 		StringBuffer buf = new StringBuffer();
 
@@ -232,4 +230,7 @@ import groovy.transform.TypeChecked;
 
      String describe() { return toString(); }
 
+	public List<TransactionBean> getTransactions() {
+		return transactions;
+	}
 }

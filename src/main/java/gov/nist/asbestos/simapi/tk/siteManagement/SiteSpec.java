@@ -1,8 +1,8 @@
-package gov.nist.asbestos.simapi.tk.siteManagement
+package gov.nist.asbestos.simapi.tk.siteManagement;
 
 
-import groovy.transform.TypeChecked
-
+import gov.nist.asbestos.simapi.simCommon.TestSession;
+import gov.nist.asbestos.simapi.tk.actors.ActorType;
 
 /**
  * A Site is the collection of endpoints and parameters for a single site or as Gazelle calls it a system.
@@ -16,26 +16,26 @@ import groovy.transform.TypeChecked
  * @author bill
  *
  */
-@TypeChecked
- class SiteSpec implements Serializable {
 
-	 String name = "";   // site name
+public class SiteSpec{
+
+	private String name = "";   // site name
 	// For tests that depend on Orchestration, we sometimes need to configure supporting actors into the
 	// Site. To do this and not alter the Vendor configured Site, a Orchestration Site is created with the following
 	// rules.
 	//   1. name refers to vendor site
 	//   2. orchestrationSiteName refers to orchestration site
 	//   3. When searching for endpoint or other facet, look in orchestration site first, vendor site second
-	 String orchestrationSiteName = null;
-	 gov.nist.asbestos.simapi.tk.actors.ActorType actorType = null;
-	 String homeId = "";
-	 String homeName = "";
-	 boolean isTls = false;
-	 boolean isSaml = false;
-	String gazelleXuaUsername;
-	String stsAssertion;
-	 boolean isAsync = false;
-	 gov.nist.asbestos.simapi.simCommon.TestSession testSession;
+	private  String orchestrationSiteName = null;
+	private ActorType actorType = null;
+	private String homeId = "";
+	private String homeName = "";
+	private boolean isTls = false;
+	private boolean isSaml = false;
+	private String gazelleXuaUsername;
+	private String stsAssertion;
+	private boolean async = false;
+	private TestSession testSession;
 
     /**
      * Create a site spec. This is a data transfer model (DTO) used to manage Sites in the UI.
@@ -52,11 +52,11 @@ import groovy.transform.TypeChecked
 		if (toClone == null) {
 			isTls = false;
 			isSaml = false;
-			isAsync = false;
+			async = false;
 		} else {
 			isTls = toClone.isTls;
 			isSaml = toClone.isSaml;
-			isAsync = toClone.isAsync;
+			async = toClone.async;
 			this.testSession = toClone.testSession;
 			this.setGazelleXuaUsername(toClone.getGazelleXuaUsername());
 			this.setStsAssertion(toClone.getStsAssertion());
@@ -70,22 +70,22 @@ import groovy.transform.TypeChecked
         this(name, null, null, testSession);
     }
 
-	 SiteSpec(gov.nist.asbestos.simapi.simCommon.TestSession testSession) {
+	 public SiteSpec(gov.nist.asbestos.simapi.simCommon.TestSession testSession) {
 		this("", null, null, testSession);
 	}
 
 	 boolean isNullSite() { return name.equals(""); }
 
-	 String getTypeName() {
+	 public String getTypeName() {
 		if (actorType == null) return null;
 		return actorType.getShortName();
 	}
 
-	 String getName() {
+	 public String getName() {
 		return name;
 	}
 
-	 gov.nist.asbestos.simapi.tk.actors.ActorType getActorType() {
+	 public gov.nist.asbestos.simapi.tk.actors.ActorType getActorType() {
 		return actorType;
 	}
 
@@ -105,11 +105,11 @@ import groovy.transform.TypeChecked
 		this.isSaml = isSaml;
 	}
 
-	 void setName(String name) {
+	 public void setName(String name) {
 		this.name = name;
 	}
 
-	 void setActorType(gov.nist.asbestos.simapi.tk.actors.ActorType actorType) {
+	 public void setActorType(gov.nist.asbestos.simapi.tk.actors.ActorType actorType) {
 		this.actorType = actorType;
 	}
 
@@ -137,13 +137,19 @@ import groovy.transform.TypeChecked
 		this.stsAssertion = stsAssertion;
 	}
 
-	 void validate() {
-		 assert name : "SiteSpec does not validate - no name - " + toString()
-		 assert testSession : "SiteSpec does not validate - no TestSession - " + toString()
+	public TestSession getTestSession() {
+		return testSession;
+	}
+
+	void validate() {
+	 	if (name == null)
+	 		throw new RuntimeException("SiteSpec does not validate - no name - " + toString());
+	 	if (testSession == null)
+	 		throw new RuntimeException("SiteSpec does not validate - no TestSession - " + toString());
 	}
 
 	@Override
-	 String toString() {
+	 public String toString() {
 		return testSession.getValue() + "/" + name;
 	}
 

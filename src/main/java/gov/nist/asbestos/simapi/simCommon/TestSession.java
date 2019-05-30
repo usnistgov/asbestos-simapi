@@ -9,8 +9,6 @@ public class TestSession {
     public transient static final TestSession GAZELLE_TEST_SESSION = new TestSession("gazelle");
     public transient static final TestSession CAT_TEST_SESSION = new TestSession("cat");
 
-    private TestSession() {}
-
     public TestSession(String value) {
         this.value = value;
     }

@@ -52,7 +52,7 @@ public class SimId {
         build(testSession, id);
     }
 
-    static SimId buildFromRawId(String rawid) {
+    public static SimId buildFromRawId(String rawid) {
          Objects.requireNonNull(rawid);
         if (!rawid.contains("__"))
             throw new RuntimeException("buildFromRawId: SimId is testsession__id : " + rawid + " is not valid format");

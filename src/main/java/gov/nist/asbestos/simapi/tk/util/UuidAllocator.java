@@ -1,11 +1,11 @@
 package gov.nist.asbestos.simapi.tk.util;
 
 
-import gov.nist.asbestos.simapi.tk.stubs.UUIDFactory
-import groovy.transform.TypeChecked
+import gov.nist.asbestos.simapi.tk.stubs.UUIDFactory;
 
-@TypeChecked
-class UuidAllocator {
+import java.util.UUID;
+
+public class UuidAllocator {
     static UUIDFactory fact = null;
 
     static String allocate() {

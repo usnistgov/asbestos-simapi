@@ -1,15 +1,13 @@
 package gov.nist.asbestos.simapi.tk.actors;
 
 
-import gov.nist.asbestos.toolkitApi.configDatatypes.client.FhirVerb;
-
-class ProxyTransformConfig  {
+public class ProxyTransformConfig  {
     private TransactionType transactionType;
     private TransactionDirection transactionDirection;
     private String transformClassName;
-    private gov.nist.asbestos.toolkitApi.configDatatypes.client.FhirVerb fhirVerb;
+    private FhirVerb fhirVerb;
 
-     public ProxyTransformConfig(TransactionType transactionType, TransactionDirection transactionDirection, gov.nist.asbestos.toolkitApi.configDatatypes.client.FhirVerb fhirVerb, String transformClassName) {
+     public ProxyTransformConfig(TransactionType transactionType, TransactionDirection transactionDirection, FhirVerb fhirVerb, String transformClassName) {
         this.transactionType = transactionType;
         this.transactionDirection = transactionDirection;
         this.fhirVerb = fhirVerb;
@@ -44,7 +42,7 @@ class ProxyTransformConfig  {
             dir = TransactionDirection.RESPONSE;
         else
             throw new Exception("ProxyTransformConfig: bad TransactionDirection: " + parts[1]);
-        return new ProxyTransformConfig(ttype, dir, gov.nist.asbestos.toolkitApi.configDatatypes.client.FhirVerb.valueOf(parts[2]), parts[3]);
+        return new ProxyTransformConfig(ttype, dir, FhirVerb.valueOf(parts[2]), parts[3]);
     }
 
      public String toString() {

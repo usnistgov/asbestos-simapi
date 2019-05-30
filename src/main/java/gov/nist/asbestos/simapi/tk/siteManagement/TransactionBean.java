@@ -1,7 +1,8 @@
-package gov.nist.asbestos.simapi.tk.siteManagement
+package gov.nist.asbestos.simapi.tk.siteManagement;
 
 
-import groovy.transform.TypeChecked;
+import gov.nist.asbestos.simapi.tk.actors.ActorType;
+import gov.nist.asbestos.simapi.tk.actors.TransactionType;
 
 /**
  * Configuration of a single instance of a actor. Transactions are
@@ -13,17 +14,16 @@ import groovy.transform.TypeChecked;
  * @author bill
  *
  */
-@TypeChecked
- class TransactionBean implements Serializable {
-	private static final long serialVersionUID = 1L;
-	 boolean isSecure = false;
-	 boolean isAsync = false;
-	 String endpoint = "";   // make private
+
+ public class TransactionBean {
+	 private boolean secure = false;
+	 private boolean async = false;
+	 private String endpoint = "";
 
 	String name = "";   // can be actor name or repository uid
 						// when a actor name, it is related to transType
-	gov.nist.asbestos.simapi.tk.actors.TransactionType transType = null;
-	gov.nist.asbestos.simapi.tk.actors.ActorType actorType = null;
+	private TransactionType transType = null;
+	private ActorType actorType = null;
 
 
 	// REMOVE this? Not used for anything real yet.
@@ -39,8 +39,8 @@ import groovy.transform.TypeChecked;
 
 	 boolean hasSameIndex(TransactionBean b) {
 		return
-				isSecure == b.isSecure &&
-				isAsync == b.isAsync &&
+				secure == b.secure &&
+				async == b.async &&
 				((name == null) ? b.name == null : name.equals(b.name)) &&
 				((transType == null) ? b.transType == null : transType == b.transType) &&
 				((actorType == null) ? b.actorType == null : actorType == b.actorType) &&
@@ -74,13 +74,13 @@ import groovy.transform.TypeChecked;
 	}
 
 	@Override
-    String toString() {
+    public String toString() {
 		if (transType != null)
 			return "[trans=" + transType +
 //					" RepositoryType=" + repositoryType +
 					" ActorType=" + (actorType == null ? "?" : actorType.getName()) +
-					" isSecure=" + isSecure + " isAsync=" + isAsync + "] : " + endpoint;
-		return "[repositoryUniqueId=" + name + " isSecure=" + isSecure + " isAsync=" + isAsync + "] : " + endpoint;
+					" secure=" + secure + " async=" + async + "] : " + endpoint;
+		return "[repositoryUniqueId=" + name + " secure=" + secure + " async=" + async + "] : " + endpoint;
 	}
 
 	 boolean isRetrieve() {
@@ -114,7 +114,7 @@ import groovy.transform.TypeChecked;
 	}
 
 	// Used by simulator factories, ActorConfigTab and the Gazelle interface
-	 TransactionBean(String name, RepositoryType repositoryType, String endpoint, boolean isSecure, boolean isAsync) {
+	 TransactionBean(String name, RepositoryType repositoryType, String endpoint, boolean secure, boolean async) {
 		this.name = name;  // comes from TransactionType.XXX.getCode()
 							// param should be TransactionType
 							// This constructor should be retired in favor of the next one which depends on TransactionType
@@ -123,34 +123,49 @@ import groovy.transform.TypeChecked;
 		transType = gov.nist.asbestos.simapi.tk.actors.TransactionType.find(name);
 		this.repositoryType = repositoryType;
 		this.endpoint = endpoint;
-		this.isSecure = isSecure;
-		this.isAsync = isAsync;
+		this.secure = secure;
+		this.async = async;
 	}
 
 	// Used only by ActorConfigTab
-	 TransactionBean(gov.nist.asbestos.simapi.tk.actors.TransactionType transType, RepositoryType repositoryType, String endpoint, boolean isSecure, boolean isAsync) {
+	 TransactionBean(gov.nist.asbestos.simapi.tk.actors.TransactionType transType, RepositoryType repositoryType, String endpoint, boolean secure, boolean async) {
 		this.transType = transType;
 		this.name = transType.getName();
 		this.repositoryType = repositoryType;
 		this.endpoint = endpoint;
-		this.isSecure = isSecure;
-		this.isAsync = isAsync;
+		this.secure = secure;
+		this.async = async;
 	}
 
 	// Used only by Gazelle interface
 	@Deprecated
-	 TransactionBean(gov.nist.asbestos.simapi.tk.actors.TransactionType transType, RepositoryType repositoryType, gov.nist.asbestos.simapi.tk.actors.ActorType actorType, String endpoint, boolean isSecure, boolean isAsync) {
+	 TransactionBean(gov.nist.asbestos.simapi.tk.actors.TransactionType transType, RepositoryType repositoryType, gov.nist.asbestos.simapi.tk.actors.ActorType actorType, String endpoint, boolean secure, boolean async) {
 		this.transType = transType;
 		this.name = transType.getName();
 		this.repositoryType = repositoryType;
 		this.actorType = actorType;
 		this.endpoint = endpoint;
-		this.isSecure = isSecure;
-		this.isAsync = isAsync;
+		this.secure = secure;
+		this.async = async;
 	}
 
 	 void setName(String name) {
 		this.name = name;
 	}
 
+	public boolean isSecure() {
+		return secure;
+	}
+
+	public boolean isAsync() {
+		return async;
+	}
+
+	public RepositoryType getRepositoryType() {
+		return repositoryType;
+	}
+
+	public ActorType getActorType() {
+		return actorType;
+	}
 }

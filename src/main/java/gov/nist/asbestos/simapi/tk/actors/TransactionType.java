@@ -2,7 +2,6 @@ package gov.nist.asbestos.simapi.tk.actors;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gov.nist.asbestos.toolkitApi.configDatatypes.client.FhirVerb;
 
 import java.io.File;
 import java.io.IOException;

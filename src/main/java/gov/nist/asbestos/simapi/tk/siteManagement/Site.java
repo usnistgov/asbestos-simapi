@@ -1,8 +1,9 @@
-package gov.nist.asbestos.simapi.tk.siteManagement
+package gov.nist.asbestos.simapi.tk.siteManagement;
 
 
-import groovy.transform.TypeChecked;
+import gov.nist.asbestos.simapi.simCommon.TestSession;
 
+import java.util.*;
 
 /**
  * A Site is the collection of endpoints and parameters for a single site or as Gazelle calls it a system.
@@ -35,29 +36,27 @@ import groovy.transform.TypeChecked;
  *
  */
 
-// Transaction names are listed in TransactionCollection.groovy
-@TypeChecked
-class Site implements Serializable {
-	private static final long serialVersionUID = 1L;
+// Transaction names are listed in TransactionCollection.java
+public class Site  {
 	private String name = null;
-	TransactionCollection transactions = new TransactionCollection(false);
+	private TransactionCollection transactions = new TransactionCollection(false);
 	// There can be only one ODDS, one XDS.b, and one IDS repository in a site.
 	// An XDS.b Repository and a ODDS Repository
 	// can have the same repositoryUniqueId and endpoint. But
 	// they require two entries to identify them.
-	TransactionCollection repositories = new TransactionCollection(true);
-	String home = null;
-	String pifHost = null;
-	String pifPort = null;
+	private TransactionCollection repositories = new TransactionCollection(true);
+	private String home = null;
+	private String pifHost = null;
+	private String pifPort = null;
 	private String owner = null;
 
-	String pidAllocateURI = null;
-	transient  boolean changed = false;
-	private gov.nist.asbestos.simapi.simCommon.TestSession testSession = null;  // required to be valid
+	private String pidAllocateURI = null;
+	private transient  boolean changed = false;
+	private TestSession testSession = null;  // required to be valid
 	private String orchestrationSiteName = null;
 	private boolean isASimulator = false;
 
-	Site() {
+	public Site() {
 	}
 
 	/**
@@ -79,25 +78,27 @@ class Site implements Serializable {
 	}
 
 	@Override
-	int hashCode() {
-		return 41 + ((name == null) ? 0 : name.hashCode());
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Site site = (Site) o;
+		return changed == site.changed &&
+				isASimulator == site.isASimulator &&
+				Objects.equals(name, site.name) &&
+				Objects.equals(transactions, site.transactions) &&
+				Objects.equals(repositories, site.repositories) &&
+				Objects.equals(home, site.home) &&
+				Objects.equals(pifHost, site.pifHost) &&
+				Objects.equals(pifPort, site.pifPort) &&
+				Objects.equals(owner, site.owner) &&
+				Objects.equals(pidAllocateURI, site.pidAllocateURI) &&
+				Objects.equals(testSession, site.testSession) &&
+				Objects.equals(orchestrationSiteName, site.orchestrationSiteName);
 	}
 
 	@Override
-	boolean equals(Object o) {
-		if (o == null) return false;
-		if (!(o instanceof Site)) return false;
-		Site s = (Site) o;
-		boolean b =
-				((name == null) ? s.name == null : name == s.name) &&
-						((testSession == null) ? s.testSession == null : testSession == s.testSession) &&
-						((home == null) ? s.home == null : home == s.home) &&
-						((pifHost == null) ? s.pifHost == null : pifHost == s.pifHost) &&
-						((pifPort == null) ? s.pifPort == null : pifPort == s.pifPort) &&
-						((pidAllocateURI == null) ? s.pidAllocateURI == null : pidAllocateURI == s.pidAllocateURI) &&
-						transactions == s.transactions &&
-						repositories == s.repositories
-		b
+	public int hashCode() {
+		return Objects.hash(name, transactions, repositories, home, pifHost, pifPort, owner, pidAllocateURI, changed, testSession, orchestrationSiteName, isASimulator);
 	}
 
 	boolean isValid() {
@@ -105,7 +106,8 @@ class Site implements Serializable {
 	}
 
 	void validate() {
-		assert isValid() : "Site " + toString() + " is not valid"
+		if (!isValid())
+			throw new RuntimeException("Site " + toString() + " is not valid");
 	}
 
 	TransactionCollection transactions() {
@@ -127,30 +129,20 @@ class Site implements Serializable {
 		if (name.contains("__"))
 			buf.append("Site name cannot contain double underscore (__)\n");
 
-		for (TransactionBean b : transactions.transactions) {
-			for (TransactionBean c : transactions.transactions) {
-				if (b == c)
+		for (TransactionBean b : transactions.getTransactions()) {
+			for (TransactionBean c : transactions.getTransactions()) {
+				if (b.equals(c))
 					continue;
-				if (b.hasSameIndex(c) && !b.equals(c)) {
-					buf.append("Site ").append(name).append(" has a conflict:\n");
-					buf.append("\tThese entries conflict\n");
-					buf.append("\t\t").append(b).append("\n");
-					buf.append("\t\t").append(c).append("\n");
-				}
+				reportIndexProblems(buf, b, c);
 			}
 		}
 
-		for (TransactionBean b : repositories.transactions) {
-			if (gov.nist.asbestos.simapi.tk.actors.ActorType.findActor('rep') == b.actorType)
-				for (TransactionBean c : repositories.transactions) {
+		for (TransactionBean b : repositories.getTransactions()) {
+			if (gov.nist.asbestos.simapi.tk.actors.ActorType.findActor("rep").equals(b.getActorType()))
+				for (TransactionBean c : repositories.getTransactions()) {
 					if (b == c)
 						continue;
-					if (b.hasSameIndex(c) && !b.equals(c)) {
-						buf.append("Site ").append(name).append(" has a conflict:\n");
-						buf.append("\tThese entries conflict\n");
-						buf.append("\t\t").append(b).append("\n");
-						buf.append("\t\t").append(c).append("\n");
-					}
+					reportIndexProblems(buf, b, c);
 				}
 		}
 
@@ -162,7 +154,14 @@ class Site implements Serializable {
 		}
 	}
 
-
+	private void reportIndexProblems(StringBuffer buf, TransactionBean b, TransactionBean c) {
+		if (b.hasSameIndex(c) && !b.equals(c)) {
+			buf.append("Site ").append(name).append(" has a conflict:\n");
+			buf.append("\tThese entries conflict\n");
+			buf.append("\t\t").append(b).append("\n");
+			buf.append("\t\t").append(c).append("\n");
+		}
+	}
 
 	void cleanup() {
 		repositories.removeEmptyNames();
@@ -197,8 +196,8 @@ class Site implements Serializable {
 	 * @return TransactionBean
 	 */
 	TransactionBean getRepositoryBean(TransactionBean.RepositoryType repositoryType, boolean isSecure) {
-		for (TransactionBean b : repositories.transactions) {
-			if (b.repositoryType == repositoryType && b.isSecure == isSecure)
+		for (TransactionBean b : repositories.getTransactions()) {
+			if (b.getRepositoryType().equals(repositoryType) && b.isSecure() == isSecure)
 				return b;
 		}
 		return null;
@@ -246,7 +245,7 @@ class Site implements Serializable {
 	int repositoryBCount(TransactionBean.RepositoryType repositoryType) {
 		int cnt = 0;
 		if (name != null && name.equals("allRepositories")) return 0;
-		for (TransactionBean b : repositories.transactions) {
+		for (TransactionBean b : repositories.getTransactions()) {
 //			if (b.repositoryType == RepositoryType.REPOSITORY || b.repositoryType == RepositoryType.ODDS)
 			if (b.repositoryType == repositoryType)
 				cnt++;
@@ -256,7 +255,7 @@ class Site implements Serializable {
 
 	Set<String> repositoryUniqueIds() {
 		Set<String> ids = new HashSet<String>();
-		for (TransactionBean b : repositories.transactions) {
+		for (TransactionBean b : repositories.getTransactions()) {
 			if (b.repositoryType == TransactionBean.RepositoryType.REPOSITORY || b.repositoryType == TransactionBean.RepositoryType.ODDS) {
 				ids.add(b.name); // repositoryUniqueId since this is a retrieve
 			}
@@ -268,7 +267,7 @@ class Site implements Serializable {
 		List<TransactionBean> tbs = new ArrayList<TransactionBean>();
 		if (repuid == null || repuid.equals(""))
 			return tbs;
-		for (TransactionBean b : repositories.transactions) {
+		for (TransactionBean b : repositories.getTransactions()) {
 			if (repuid.equals(b.name))
 				tbs.add(b);
 		}
@@ -282,7 +281,7 @@ class Site implements Serializable {
 	 * @return TransactionBean for match, or null
 	 */
 	TransactionBean transactionBeanForRepositoryUniqueId(String repuid, TransactionBean.RepositoryType tType) {
-		for (TransactionBean bean : repositories.transactions) {
+		for (TransactionBean bean : repositories.getTransactions()) {
 			if (bean.repositoryType == tType && bean.name.equals(repuid)) return bean;
 		}
 		return null;
@@ -313,7 +312,7 @@ class Site implements Serializable {
 	}
 
 	@Override
-	String toString() {
+	public String toString() {
 		return getFullName();
 	}
 
@@ -324,18 +323,18 @@ class Site implements Serializable {
 		return buf.toString();
 	}
 
-	Site(gov.nist.asbestos.simapi.simCommon.TestSession testSession) {
+	Site(TestSession testSession) {
 		this.testSession = testSession;
 	}
 
-	Site(String name, gov.nist.asbestos.simapi.simCommon.TestSession testSession) {
+	public Site(String name, TestSession testSession) {
+		Objects.requireNonNull(testSession);
 		setName(name);
-		assert testSession : "Site: null TestSession"
 		this.testSession = testSession;
 	}
 
 	void setName(String name) {
-		assert name : "Site: null name"
+		Objects.requireNonNull(name);
 		this.name = name;
 		transactions.setName(name);
 		repositories.setName(name);
@@ -375,7 +374,7 @@ class Site implements Serializable {
 	SiteSpec siteSpec() {
 		gov.nist.asbestos.simapi.simCommon.TestSession thisTestSession = (testSession != null) ? testSession : gov.nist.asbestos.simapi.simCommon.TestSession.DEFAULT_TEST_SESSION;
 		SiteSpec siteSpec = new SiteSpec(getSiteName(), thisTestSession);
-		siteSpec.orchestrationSiteName = orchestrationSiteName;
+		siteSpec.setOrchestrationSiteName(orchestrationSiteName);
 		return siteSpec;
 	}
 
