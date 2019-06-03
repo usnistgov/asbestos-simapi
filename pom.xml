@@ -76,48 +76,28 @@
             <version>3.5</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
-            <version>1.9.12</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.containers</groupId>
-            <!-- if your container implements Servlet API older than 3.0, use "jersey-container-servlet-core"  -->
-            <artifactId>jersey-container-servlet</artifactId>
-            <version>${jersey.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.glassfish.jersey.containers</groupId>-->
+<!--            &lt;!&ndash; if your container implements Servlet API older than 3.0, use "jersey-container-servlet-core"  &ndash;&gt;-->
+<!--            <artifactId>jersey-container-servlet</artifactId>-->
+<!--            <version>${jersey.version}</version>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>org.glassfish.jersey.core</groupId>
-            <artifactId>jersey-client</artifactId>
-            <version>${jersey.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.media</groupId>
-            <artifactId>jersey-media-json-jackson</artifactId>
-            <version>${jersey.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.core</groupId>
-            <artifactId>jersey-common</artifactId>
-            <version>${jersey.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.glassfish.jersey.core</groupId>-->
+<!--            <artifactId>jersey-client</artifactId>-->
+<!--            <version>${jersey.version}</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.glassfish.jersey.media</groupId>-->
+<!--            <artifactId>jersey-media-json-jackson</artifactId>-->
+<!--            <version>${jersey.version}</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.glassfish.jersey.core</groupId>-->
+<!--            <artifactId>jersey-common</artifactId>-->
+<!--            <version>${jersey.version}</version>-->
+<!--        </dependency>-->
     </dependencies>
 
     <build>
